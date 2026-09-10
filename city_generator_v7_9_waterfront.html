@@ -1813,7 +1813,7 @@ class CityGenerator{
   }
   planWaterfrontZones(layout,rng){
     const zones=[];
-    const classify=(x,z)=>{const st=layout.styleAt(x,z),civicD=Math.hypot(x-layout.civic.x,z-layout.civic.z);if(st.indF>.30)return'industrial';if(st.cbdF>.16||st.commercial>.46)return'urban';if(civicD<620||this.parkStrength(x,z,layout)>.08)return'promenade';return rng.chance(.42)?'urban':'promenade'};
+    const classify=(x,z)=>{const st=layout.styleAt(x,z),civicD=Math.hypot(x-layout.civic.x,z-layout.civic.z);if(st.indF>.30)return'industrial';if(st.cbdF>.16||st.commercial>.46)return'urban';if(civicD<620||this.parkStrength(x,z,layout)>.08)return'promenade';const r=rng.next();return r<.30?'urban':r<.66?'promenade':'natural'};
     const build=(kind,side,zMin,zMax,landX)=>{let z=zMin,i=0;while(z<zMax-80){const len=clamp(rng.range(470,760),360,zMax-z),z1=Math.min(zMax,z+len),mz=(z+z1)*.5,x=landX(mz),type=classify(x,mz);zones.push({id:`WF_${kind}_${side}_${i++}`,kind,side,z0:z,z1,type});z=z1}};
     if(layout.hasCoast)build('coast','east',-layout.hd+120,layout.hd-120,z=>layout.coastWest(z)+95);
     if(layout.hasRiver){build('river','left',-layout.hd+120,layout.hd-120,z=>layout.river.center(z)-layout.river.widthAt(z)*.5-75);build('river','right',-layout.hd+120,layout.hd-120,z=>layout.river.center(z)+layout.river.widthAt(z)*.5+75)}
@@ -1899,6 +1899,16 @@ class CityGenerator{
       this._infrastructureStats.bridges++;this._infrastructureStats.bridgeStyles[style]=(this._infrastructureStats.bridgeStyles[style]||0)+1;
     }
   }
+  addMarinaBoats(chunks,s,shoreX,dir,len,fingerZs,rng){
+    // Small moored hulls in the slips between finger piers. Empty piers read as bare infrastructure;
+    // a few boats make the marina legible as a marina at a glance, even unlit and all-white.
+    for(let i=0;i<fingerZs.length-1;i++){
+      if(!rng.chance(.68))continue;
+      const pz=(fingerZs[i]+fingerZs[i+1])*.5,hullLen=rng.range(6,11),hullW=rng.range(2.0,2.8),bx=shoreX+dir*(len*.62+rng.range(-5,5)),b=this.pierBuilder(chunks,bx,pz,s);if(!b)continue;
+      b.ellipsePrism(bx,pz,hullLen*.5,hullW*.5,.55,.05,COLORS.buildingAccent,10);
+      if(rng.chance(.45))b.box(bx-dir*hullLen*.12,pz,hullLen*.30,hullW*.55,.42,.58,COLORS.building);
+    }
+  }
   makeDock(chunks,s,shoreX,z,dir,type,rng,maxLength=105,family=null){
     family=family||(type==='industrial'?'port':type==='urban'?(rng.chance(.12)?'ferry':'urban'):(rng.chance(.62)?'marina':'civic'));
     const base=.10,top=.34,accessW=family==='port'?10:family==='marina'?6.5:8;this.dockPrism(chunks,s,shoreX-dir*52,.17,z,shoreX-dir*3,.17,z,accessW,.14,COLORS.road);
@@ -1909,7 +1919,7 @@ class CityGenerator{
     }else if(family==='ferry'){
       const len=clamp(rng.range(72,98),62,maxLength),w=rng.range(16,22);this.dockBox(chunks,s,shoreX+dir*len*.5,z,len,w,.36,base,COLORS.infrastructure);this.dockBox(chunks,s,shoreX+dir*(len-11),z,22,w*1.9,.42,base,COLORS.infrastructure);this.dockBox(chunks,s,shoreX-dir*22,z,44,34,5.4,.12,COLORS.infrastructure);this.dockBox(chunks,s,shoreX-dir*18,z,30,44,.34,.18,COLORS.promenade);
     }else if(family==='marina'){
-      const len=clamp(rng.range(58,82),50,maxLength),spineW=6;this.dockBox(chunks,s,shoreX+dir*len*.5,z,len,spineW,.26,base,COLORS.infrastructure);const fingers=rng.int(DOCK_TUNING.marinaFingerMin,DOCK_TUNING.marinaFingerMax),spread=rng.range(DOCK_TUNING.marinaSpreadMin,DOCK_TUNING.marinaSpreadMax);for(let i=0;i<fingers;i++){const pz=z-spread*.5+spread*(i/(Math.max(1,fingers-1))),flen=rng.range(26,44);this.dockBox(chunks,s,shoreX+dir*(len*.62),pz,flen,3.6,.22,base+.02,COLORS.infrastructure)}this.dockBox(chunks,s,shoreX-dir*10,z,22,18,2.8,.12,COLORS.infrastructure);
+      const len=clamp(rng.range(58,82),50,maxLength),spineW=6;this.dockBox(chunks,s,shoreX+dir*len*.5,z,len,spineW,.26,base,COLORS.infrastructure);const fingers=rng.int(DOCK_TUNING.marinaFingerMin,DOCK_TUNING.marinaFingerMax),spread=rng.range(DOCK_TUNING.marinaSpreadMin,DOCK_TUNING.marinaSpreadMax),fingerZs=[];for(let i=0;i<fingers;i++){const pz=z-spread*.5+spread*(i/(Math.max(1,fingers-1))),flen=rng.range(26,44);this.dockBox(chunks,s,shoreX+dir*(len*.62),pz,flen,3.6,.22,base+.02,COLORS.infrastructure);fingerZs.push(pz)}this.dockBox(chunks,s,shoreX-dir*10,z,22,18,2.8,.12,COLORS.infrastructure);this.addMarinaBoats(chunks,s,shoreX,dir,len,fingerZs,rng);
     }else if(family==='civic'){
       const len=clamp(rng.range(45,68),40,maxLength),w=rng.range(13,18);this.dockBox(chunks,s,shoreX+dir*len*.5,z,len,w,.32,base,COLORS.infrastructure);this.dockBox(chunks,s,shoreX+dir*(len-8),z,18,w*1.8,.36,base,COLORS.infrastructure);this.dockBox(chunks,s,shoreX-dir*15,z,28,26,3.4,.12,COLORS.infrastructure);
     }else{
@@ -1917,18 +1927,42 @@ class CityGenerator{
     }
     this._infrastructureStats.docks++;this._infrastructureStats.dockFamilies[family]=(this._infrastructureStats.dockFamilies[family]||0)+1;
   }
+  addQuayBollards(chunks,s,x0,z0,x1,z1,landDir,topY,rng,chance=1){
+    // Repeated small posts along an engineered quay/promenade edge - cheap rhythm and scale cues
+    // that read clearly on an unlit white model, where flat wall faces otherwise give the eye nothing to lock onto.
+    const dx=x1-x0,dz=z1-z0,len=Math.hypot(dx,dz);if(len<14)return;
+    const n=Math.max(1,Math.round(len/9));
+    for(let i=1;i<n;i++){
+      if(chance<1&&!rng.chance(chance))continue;
+      const t=i/n,x=x0+dx*t+landDir*.35,z=z0+dz*t,b=this.infraBuilder(chunks,x,z,s);if(!b)continue;
+      b.frustum(x,z,.14,.10,.42,topY,COLORS.infrastructure,6,1);
+    }
+  }
   makeBankSegment(chunks,roads,layout,s,rng,x0,z0,x1,z1,landDir,waterDir,type,index,maxDockLength,familyHint=null,allowDock=false){
     const ar=this.airportBounds(layout,28);if(ar&&clipSegmentRect(x0,z0,x1,z1,ar.minX,ar.minZ,ar.maxX,ar.maxZ))return;
     const waterfrontScale=neutralScale(s.waterfrontDevelopment,.55,1.48),mx=(x0+x1)*.5,mz=(z0+z1)*.5,landOffset=(type==='industrial'?25:type==='urban'?18:15)*neutralScale(s.waterfrontDevelopment,.88,1.10),stripW=(type==='industrial'?44:type==='urban'?22:18)*neutralScale(s.waterfrontDevelopment,.72,1.30);
-    if(type==='promenade'){
+    if(type==='natural'){
+      // undeveloped bank: no engineered wall or paved strip, just a soft raised grass edge
+      // meeting the water, with a loose scatter of bankside trees for a natural break in the skyline.
+      this.infraPrism(chunks,s,x0,.03,z0,x1,.03,z1,3.0,.16,COLORS.park);
+      const len=Math.hypot(x1-x0,z1-z0),count=Math.max(1,Math.round(len/26));
+      for(let i=0;i<count;i++){
+        const t=(i+.5)/count,bx=lerp(x0,x1,t)+landDir*rng.range(4,11),bz=lerp(z0,z1,t)+rng.range(-6,6);
+        if(this.cityTreeClear(bx,bz,layout,roads,3.0))this.addCityTree(chunks,s,bx,bz,rng,'street',rng.range(.85,1.10));
+      }
+    }else if(type==='promenade'){
       // softer terraced edge in parks/outskirts
       this.infraPrism(chunks,s,x0,.05,z0,x1,.05,z1,4.2,.45,COLORS.infrastructure);this.infraPrism(chunks,s,x0+landDir*5,.10,z0,x1+landDir*5,.10,z1,7.5,.28,COLORS.promenade);
+      this.addQuayBollards(chunks,s,x0,z0,x1,z1,landDir,.50,rng,.60);
     }else{
       // developed waterfront gets a clear engineered quay / retaining wall
       this.infraPrism(chunks,s,x0,.02,z0,x1,.02,z1,3.8,1.45,COLORS.infrastructure);this._infrastructureStats.quays++;
+      this.addQuayBollards(chunks,s,x0,z0,x1,z1,landDir,1.47,rng,1);
     }
-    this.infraPrism(chunks,s,x0+landDir*landOffset,.18,z0,x1+landDir*landOffset,.18,z1,stripW,.24,type==='promenade'?COLORS.promenade:COLORS.infrastructure);
-    if(type==='promenade')this._infrastructureStats.promenades++;
+    if(type!=='natural'){
+      this.infraPrism(chunks,s,x0+landDir*landOffset,.18,z0,x1+landDir*landOffset,.18,z1,stripW,.24,type==='promenade'?COLORS.promenade:COLORS.infrastructure);
+      if(type==='promenade')this._infrastructureStats.promenades++;
+    }
     this.addInfrastructureReserve(layout,mx+landDir*(landOffset+stripW*.25),mz,Math.abs(x1-x0)+stripW+48,Math.abs(z1-z0)+22,type);
     if(type==='urban'||type==='industrial')layout.waterfrontBuildingBands.push({x:mx+landDir*(landOffset+stripW*.5+34),z:mz,w:Math.abs(x1-x0)+82,d:Math.abs(z1-z0)+12,type});
     const nearBridge=(roads.bridges||[]).some(b=>Math.abs(b.az-mz)<105),dockMinSpacing=DOCK_TUNING.clusterMinSpacing,tooClose=(this._dockClusterAnchors||[]).some(q=>Math.hypot(mx-q.x,mz-q.z)<dockMinSpacing);
@@ -1955,7 +1989,7 @@ class CityGenerator{
         if(best>=0)selected.push(best);
       }
       for(let i=0;i<count;i++){
-        const z0=lerp(q.z0,q.z1,i/count),z1=lerp(q.z0,q.z1,(i+1)/count),mz=(z0+z1)*.5,mid=i===preferred,allowDock=selected.includes(i);let family=null;
+        const z0=lerp(q.z0,q.z1,i/count),z1=lerp(q.z0,q.z1,(i+1)/count),mz=(z0+z1)*.5,mid=i===preferred,allowDock=selected.includes(i)&&q.type!=='natural';let family=null;
         if(mid&&q===urbanTarget)family='ferry';else if(mid&&q===industrialTarget)family='port';else if(mid&&q===civicTarget)family='civic';
         if(q.kind==='coast'){
           const x0=layout.coastWest(z0)+1.5,x1=layout.coastWest(z1)+1.5;this.makeBankSegment(chunks,roads,layout,s,rng,x0,z0,x1,z1,1,-1,q.type,i,125,family,allowDock);
@@ -3204,7 +3238,7 @@ precision highp float;void main(){}`;const p=this.gl.createProgram();this.gl.att
   builderXZBounds(builder){if(!builder||!builder.p.length)return null;let minX=Infinity,maxX=-Infinity,minZ=Infinity,maxZ=-Infinity;for(let i=0;i<builder.p.length;i+=3){minX=Math.min(minX,builder.p[i]);maxX=Math.max(maxX,builder.p[i]);minZ=Math.min(minZ,builder.p[i+2]);maxZ=Math.max(maxZ,builder.p[i+2])}return{minX,maxX,minZ,maxZ}}
   upload(builder,layer,topOnly=false,bounds=null){if(!builder.p.length)return null;const gl=this.gl,vao=gl.createVertexArray();gl.bindVertexArray(vao);let pp=builder.p,nn=builder.n,cc=builder.c;if(topOnly){pp=[];nn=[];cc=[];for(let i=0;i<builder.p.length;i+=9){const ny=(builder.n[i+1]+builder.n[i+4]+builder.n[i+7])/3;if(ny<0.5)continue;for(let j=0;j<9;j++){pp.push(builder.p[i+j]);nn.push(builder.n[i+j]);cc.push(builder.c[i+j])}}}if(!pp.length){gl.bindVertexArray(null);gl.deleteVertexArray(vao);return null}const make=(data,loc)=>{const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.STATIC_DRAW);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,0,0);return b};const buffers=[make(pp,this.aPos),make(nn,this.aNormal),make(cc,this.aColor)];gl.bindVertexArray(null);return{vao,buffers,count:pp.length/3,layer,bounds}}
   clearMeshes(){const gl=this.gl;for(const m of this.meshes){gl.deleteVertexArray(m.vao);for(const b of m.buffers)gl.deleteBuffer(b)}this.meshes=[]}
-  setCity(data){this.setQuality(data?.settings?.geometryQuality||'high');this.clearMeshes();const waterMesh=this.upload(data.water,'water',true);if(waterMesh)this.meshes.push(waterMesh);const groundMesh=this.upload(data.ground,'ground',false);if(groundMesh)this.meshes.push(groundMesh);for(const ch of data.chunks.values()){for(const [b,layer,topOnly] of [[ch.parks,'parks',true],[ch.roads,'roads',true],[ch.infrastructure,'infrastructure',false],[ch.piers,'piers',false],[ch.buildings,'buildings',false]]){const mesh=this.upload(b,layer,topOnly,this.builderXZBounds(b));if(mesh)this.meshes.push(mesh)}}this.maxDim=Math.max(data.settings.cityWidth,data.settings.cityDepth);this.maxHeight=data.settings.maxHeight||160;this.layout=data.layout;this.shadowDirty=true;this.resetCamera(data.layout);this.invalidate(true)}
+  setCity(data){this.setQuality(data?.settings?.geometryQuality||'high');this.clearMeshes();const waterMesh=this.upload(data.water,'water',true);if(waterMesh)this.meshes.push(waterMesh);const groundMesh=this.upload(data.ground,'ground',false);if(groundMesh)this.meshes.push(groundMesh);for(const ch of data.chunks.values()){for(const [b,layer,topOnly] of [[ch.parks,'parks',false],[ch.roads,'roads',true],[ch.infrastructure,'infrastructure',false],[ch.piers,'piers',false],[ch.buildings,'buildings',false]]){const mesh=this.upload(b,layer,topOnly,this.builderXZBounds(b));if(mesh)this.meshes.push(mesh)}}this.maxDim=Math.max(data.settings.cityWidth,data.settings.cityDepth);this.maxHeight=data.settings.maxHeight||160;this.layout=data.layout;this.shadowDirty=true;this.resetCamera(data.layout);this.invalidate(true)}
   resetCamera(layout=null){this.yaw=1.04;this.pitch=1.09;this.distance=this.maxDim*1.72;if(layout){this.target=[layout.cbd.x+300,this.maxDim*.047,layout.cbd.z+220]}else this.target=[0,this.maxDim*.047,0];this.invalidate(false)}
   camera(){const cp=Math.cos(this.pitch),sp=Math.sin(this.pitch),sy=Math.sin(this.yaw),cy=Math.cos(this.yaw);return[this.target[0]+this.distance*cp*sy,this.target[1]+this.distance*sp,this.target[2]+this.distance*cp*cy]}
   lightVP(){const t=[this.layout?this.layout.cbd.x:0,0,this.layout?this.layout.cbd.z:0],d=this.maxDim*1.35,eye=[t[0]-d*.62,d*.92,t[2]-d*.34],view=M4.lookAt(eye,t,[0,1,0]),range=this.maxDim*.88,proj=M4.ortho(-range,range,-range,range,10,d*2.8);return M4.multiply(proj,view)}
