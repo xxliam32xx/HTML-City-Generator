@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cold Routes · Building Studio</title>
+<style>
+:root{font-family:Arial,Helvetica,sans-serif;color:#39434a;background:#e9edef;font-size:13px}*{box-sizing:border-box}body{margin:0}header{height:70px;background:#fafbfb;border-bottom:1px solid #d4dade;display:flex;align-items:center;justify-content:space-between;padding:0 26px}h1{font-size:17px;font-weight:500;letter-spacing:4px;margin:0}header small{display:block;letter-spacing:2px;color:#88939a;margin-top:7px;font-size:10px}.tag{font-size:10px;letter-spacing:2px;color:#78868d}main{display:grid;grid-template-columns:315px 1fr;height:calc(100vh - 70px)}aside{background:#f7f9f9;border-right:1px solid #d3dadd;overflow:auto;padding:22px}h2{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#829097;margin:24px 0 15px}h2:first-child{margin-top:0}label{display:block;margin:13px 0 6px;font-size:12px}select,input[type=text]{width:100%;padding:10px;background:white;border:1px solid #ccd4d8;color:#39434a;border-radius:3px}input[type=range]{width:100%;accent-color:#718991}label output{float:right;color:#718991;font-variant-numeric:tabular-nums}button{cursor:pointer;padding:10px 12px;border:1px solid #cbd4d8;border-radius:3px;background:#fff;color:#43545d;font:inherit}button:hover{background:#e8eef0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #597d89;outline-offset:2px}.row{display:flex;gap:8px;margin-top:12px}.row>*{flex:1}.primary{background:#526d78;color:white;width:100%;border-color:#526d78}.primary:hover{background:#405d68}.check{display:flex;align-items:center;gap:7px;font-size:12px}.hint{color:#819097;font-size:11px;line-height:1.6}section{position:relative;min-width:0;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.top{position:absolute;top:24px;left:28px;pointer-events:none}.top b{font-weight:500;font-size:20px}.top p{color:#87959c;font-size:11px;letter-spacing:1px}.tools{position:absolute;right:24px;top:24px;display:flex;gap:6px}.bottom{position:absolute;bottom:23px;left:28px;right:28px;display:flex;justify-content:space-between;color:#7a8b94;font-size:11px;pointer-events:none}#toast{position:absolute;left:50%;bottom:65px;transform:translateX(-50%);background:#526d78;color:white;padding:12px 20px;border-radius:4px;display:none}details summary{cursor:pointer;color:#657b85;margin-top:18px;font-size:11px}details p{font-size:11px;line-height:1.7;color:#778990}@media(max-width:720px){main{grid-template-columns:245px 1fr}aside{padding:14px}.tools{top:90px;right:10px;flex-direction:column}.top{left:15px}.bottom{left:15px;right:15px;display:block}header{padding:0 16px}h1{font-size:14px}.tag{display:none}}@media(max-width:480px){main{display:flex;flex-direction:column;height:auto}section{height:60vh;order:-1}aside{max-height:60vh}header{height:65px}}
+</style></head><body>
+<header><div><h1>COLD ROUTES</h1><small>BUILDING STUDIO / 01</small></div><span class="tag">PROCEDURAL ARCHITECTURE · OFFLINE EDITION</span></header>
+<main><aside><h2>01 / Building</h2><label for="type">Building category</label><select id="type"></select><label for="seed">Generation seed</label><input id="seed" type="text" value="COLD-001" maxlength="100"><div class="row"><button id="generate">Apply seed</button><button id="random">Randomize</button></div><h2>02 / Massing</h2><div id="massing"></div><label for="form">Massing</label><select id="form"><option value="auto">Seeded city style</option><option value="rect">Rectangular</option><option value="step">Stepped</option><option value="slab">Slab</option><option value="offset">Offset volumes</option><option value="compound">Compound block</option></select><div id="roofControls" hidden><label for="terraceRoof">Housing roof</label><select id="terraceRoof"><option value="flat">Flat</option><option value="pitched">Pitched / gable</option><option value="hipped">Hipped</option><option value="auto">Seeded mix</option></select><label for="roofRise">Roof rise <output id="o_roofRise"></output></label><input id="roofRise" type="range" min="0.5" max="4" step="0.1" value="1.8"></div><div id="towerControls" hidden><label for="towerStyle">Tower silhouette</label><select id="towerStyle"><option value="auto">Seeded mix · mostly simple</option><option value="simple">Simple tower</option><option value="tiered">Tiered crown & spire</option><option value="offset">Offset volumes</option><option value="tapered">Tapered spire</option><option value="portal">Open crown</option><option value="terraces">Recessed sky terraces</option></select></div><p class="hint">Original city building routines: carved entrances, bevelled edges, sparse white facade relief and restrained roofs. Warehouse uses a simple rectangular shell with minimal roof detail.</p><div id="detail"></div><h2>04 / Export</h2><button class="primary" id="export">Download building ZIP ↓</button><div class="row"><button id="save">Save settings</button><button id="load">Load settings</button></div><input id="file" type="file" accept=".json,application/json" hidden><p class="hint">OBJ + MTL + metadata JSON<br>Metres · Y up · centered at ground level<br>Building geometry only. No preview ground.</p><details><summary>Studio guide</summary><p>Drag to orbit. Shift-drag or right-drag to pan. Scroll or pinch to zoom. Double-click to frame. The seed creates repeatable parameters; every slider updates the geometry immediately. Settings JSON restores the complete design. ZIP contains uncompressed standard files, with real facade meshes and material assignments. The supplied city generator’s massing, bevels, carved entrances, facade relief and warehouse routines generate this building directly.</p></details><p id="notice" class="hint"></p></aside>
+<section><canvas id="view" aria-label="Interactive 3D building preview"></canvas><div class="top"><b id="title"></b><p id="subtitle"></p></div><div class="tools"><button id="frame">Frame</button><button id="spin" aria-pressed="false">Auto orbit</button><button id="wire" aria-pressed="false">Wireframe</button></div><div class="bottom"><span>DRAG TO ORBIT / SCROLL TO ZOOM</span><span id="stats"></span></div><div id="toast" role="status"></div></section></main>
+<script>
+'use strict';
+// Building geometry routines copied from the supplied Cold Routes v7.9 source.
+
+const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const neutralScale=(v,low,high)=>{v=clamp(Number.isFinite(+v)?+v:.5,0,1);return v<=.5?lerp(low,1,v*2):lerp(1,high,(v-.5)*2)};
+const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t)};
+
+// Fidelity is deliberately separate from world scale. Higher profiles keep the exact same building
+// dimensions while spending more pixels / triangles on silhouettes, chamfers and curved geometry.
+const GEOMETRY_QUALITY=Object.freeze({
+  performance:Object.freeze({key:'performance',renderScale:1.00,maxDpr:1.35,shadowSize:1536,curveScale:.92,groundResolution:1.00,parkResolution:1.00,clipResolution:1.00,genericBevel:false,genericBevelScale:.70,genericBevelMax:.38,majorBevel:true,majorBevelScale:.72,majorBevelMax:.62,infrastructureBevel:false,detailMultiplier:.92}),
+  high:Object.freeze({key:'high',renderScale:1.50,maxDpr:2.50,shadowSize:3072,curveScale:1.75,groundResolution:1.52,parkResolution:1.22,clipResolution:1.42,genericBevel:true,genericBevelScale:1.08,genericBevelMax:.72,majorBevel:true,majorBevelScale:1.18,majorBevelMax:1.22,infrastructureBevel:true,detailMultiplier:1.24}),
+  ultra:Object.freeze({key:'ultra',renderScale:2.00,maxDpr:3.25,shadowSize:4096,curveScale:2.45,groundResolution:2.12,parkResolution:1.58,clipResolution:1.88,genericBevel:true,genericBevelScale:1.42,genericBevelMax:.98,majorBevel:true,majorBevelScale:1.54,majorBevelMax:1.62,infrastructureBevel:true,detailMultiplier:1.42})
+});
+let ACTIVE_GEOMETRY_QUALITY=GEOMETRY_QUALITY.high;
+const geometryProfile=name=>GEOMETRY_QUALITY[name]||GEOMETRY_QUALITY.high;
+const setActiveGeometryQuality=name=>(ACTIVE_GEOMETRY_QUALITY=geometryProfile(name));
+const qualitySides=base=>clamp(Math.round(Math.max(3,base)*ACTIVE_GEOMETRY_QUALITY.curveScale),6,64);
+
+// V7.4 shape-carving pass. These settings are deliberately independent from building height/story logic:
+// detail comes from real recessed massing, deeper notches, stepped footprints and larger breathing room.
+const ARCHITECTURE_TUNING=Object.freeze({
+  outputWorldScale:1.40,
+  indentChance:Object.freeze({performance:.16,high:.84,ultra:.96}),
+  indentBudget:Object.freeze({performance:1,high:4,ultra:6}),
+  specialIndentChance:Object.freeze({performance:.12,high:.84,ultra:.97}),
+  urbanIndentDepth:[.10,.22],industrialIndentDepth:[.16,.30],
+  urbanIndentWidth:[.22,.46],industrialIndentWidth:[.30,.62],
+  detailPassScale:Object.freeze({performance:.98,high:1.96,ultra:2.52}),
+  windowPassScale:Object.freeze({performance:.70,high:.72,ultra:.76})
+});
+
+// V7.4 restrained building-polish pass. These rules add readable architectural depth without
+// changing the clean, textureless Cold Routes language. Everything is centralized so later building
+// families / districts can tune the same six ideas independently instead of scattering magic values.
+const BUILDING_POLISH_TUNING=Object.freeze({
+  parapet:Object.freeze({
+    chance:Object.freeze({core:.44,inner:.39,mid:.31,outer:.20,industrial:.24}),
+    commercialChance:.43,
+    minShort:10,
+    thickness:[.18,.34],
+    height:[.28,.60]
+  }),
+  entranceRecess:Object.freeze({
+    chance:Object.freeze({core:.72,inner:.68,mid:.58,outer:.44}),
+    minShort:10,minArea:250,minHeight:6.2,
+    widthRatio:[.12,.22],depth:[.65,1.35],height:[2.8,4.2],offsetRatio:.18
+  }),
+  footprintIndent:Object.freeze({maxCount:2}),
+  heightStep:Object.freeze({
+    chance:Object.freeze({core:.48,inner:.44,mid:.36,outer:.24}),
+    minArea:300,minHeight:10,
+    footprintScale:[.50,.72],height:[.65,2.25],offsetRatio:.14
+  }),
+  roofStructure:Object.freeze({
+    chance:Object.freeze({core:.44,inner:.38,mid:.30,outer:.18,industrial:.32}),
+    commercialChance:.40,
+    count:[1,2],footprintRatio:[.09,.20],height:[.45,1.25]
+  }),
+  groundFloor:Object.freeze({
+    chance:Object.freeze({core:.62,inner:.56,mid:.46,outer:.30}),
+    commercialChance:.68,
+    minArea:360,minShort:12,minHeight:9,
+    height:[3.1,4.2],inset:[.45,1.10]
+  })
+});
+
+// V7.4: large logistics buildings no longer share the generic city-mass detail path.
+// All warehouse proportions live here so the family can be expanded later without scattering magic numbers.
+const WAREHOUSE_TUNING=Object.freeze({
+  minLong:46,minShort:27,minArea:1450,
+  shellLong:.90,shellDepth:.76,
+  loadingBaySpacing:13.5,loadingBayMin:4,loadingBayMax:10,
+  loadingBayWidthMin:5.0,loadingBayWidthMax:8.4,
+  loadingRecessDepthMin:.16,loadingRecessDepthMax:.25,
+  officeLongMin:14,officeLongMax:31,officeDepthScale:.34,
+  roofMonitorSpacing:24,roofMonitorMin:3,roofMonitorMax:7,
+  sideRibSpacing:13,sideRibMin:3,sideRibMax:7,
+  largeParcelLongMin:60,largeParcelLongMax:150,
+  largeParcelDepthMin:34,largeParcelDepthMax:78
+});
+
+// V7.4: adds a hidden land underlay beneath the carved street network so tiny mesh seams never reveal the blue water plane.
+// The logical road graph, centrelines, widths and city layout are unchanged; only the visual mesh
+// construction changes. The road bed sits below the block surface, while curb/pavement geometry
+// bridges the height difference. Road paint is intentionally disabled until the street section itself
+// reads correctly.
+const ROAD_STYLE_TUNING=Object.freeze({
+  groundTopY:0,groundBottomY:-.58,
+  seamSealY:-.262,
+  // Pre-scale values: with the 1.40x world output scale this produces ~35cm from block top to road.
+  roadBaseY:-.320,roadSurfaceThickness:.070,roadTopY:-.250,
+  // Local streets intentionally overlap the road they meet. A microscopic depth bias lets the
+  // dominant/main carriageway win the depth test instead of requiring visible square junction pads.
+  localRoadLayerOffsetX:.004,localRoadLayerOffsetZ:.006,
+  gutterWidth:.24,gutterHeight:.018,gutterY:-.248,
+  // The cut reaches exactly past the gutter + curb so the curb becomes the real block edge.
+  groundCutCurbMargin:.80,
+  groundCutCell:Object.freeze({performance:5.5,high:3.4,ultra:2.2}),
+  arterialCornerRadius:1.15,collectorCornerRadius:.95,localCornerRadius:.70,industrialCornerRadius:1.25,
+  connectorCornerRadius:.85,
+  industrialJunctionExtra:.20,
+  curbWidth:.54,curbHeight:.275,curbY:-.250,
+  sidewalkArterial:2.95,sidewalkCollector:2.35,sidewalkLocal:1.62,sidewalkWaterfront:3.55,
+  sidewalkHeight:.038,sidewalkY:0,
+  edgeJunctionClear:1.35,sidewalkIntersectionClear:1.15,intersectionCornerClearScale:.68,
+  sidewalkBackfillWidth:.18,sidewalkBackfillHeight:.025,sidewalkBackfillY:-.012,
+  industrialShoulderWidth:1.45,industrialShoulderHeight:.070,industrialShoulderY:-.090,
+  outerArterialShoulderWidth:.95,
+  medianWidth:1.75,medianHeight:.070,medianY:-.020,medianEndClear:15,
+  arterialMarkChance:0,dashLength:5.2,dashGap:20.0,dashWidth:.12,arterialLaneOffset:0,
+  industrialDashLength:6.0,industrialDashGap:22.0,
+  junctionMarkClear:18,
+  crosswalkChance:0,crosswalkStripes:0,crosswalkStripeThickness:.12,crosswalkStripeSpacing:1.15,crosswalkSetback:4.0,
+  stopBarThickness:.12,markY:-.181,markHeight:.003,
+  edgeSegmentLength:145
+});
+
+// V7.4 road-generation quality gates. These rules validate proposed streets BEFORE meshes,
+// parcels or road graph edges are created. Irregularity is still allowed, but ugly geometry is not:
+// no shallow-angle joins, no near-parallel sliver corridors, no tiny forced fragments, and no
+// almost-adjacent junctions. Values live in one block so future road families can tune them safely.
+const ROAD_GENERATION_TUNING=Object.freeze({
+  minIntersectionAngleDeg:58,
+  parallelAngleDeg:12,
+  minJunctionSpacing:74,
+  minConnectorLength:165,
+  maxConnectorLength:520,
+  industrialMinConnectorLength:430,
+  industrialMaxConnectorLength:760,
+  minRoadFragmentLength:42,
+  minSliverWidth:30,
+  parallelClearance:42,
+  connectorCoordinateJitter:34,
+  localParallelClearance:24,
+  localMinLength:38,
+  waterfrontMaxLateralRatio:.38,
+  waterfrontParallelClearance:52
+});
+
+// City-scale visual composition rules. Kept separate from geometry-quality settings so future
+// district/building families can inherit the same planning language without duplicating magic values.
+const CITY_VISUAL_TUNING=Object.freeze({
+  frontage:Object.freeze({
+    maxDistance:Object.freeze({core:72,inner:78,mid:88,outer:96,industrial:125}),
+    orientationRatio:1.10,
+    roadClassBias:Object.freeze({local:-4,collector:-2,arterial:1,waterfront:-1,industrial_collector:-3,bridge:18}),
+    preferRoadFacingRecess:.72
+  }),
+  blockComposition:Object.freeze({
+    frontageDepth:Object.freeze({core:[22,34],inner:[20,31],mid:[20,30],outer:[18,27]}),
+    rearMassChance:Object.freeze({core:.58,inner:.66,mid:.70,outer:.72}),
+    sideWingChance:Object.freeze({core:.44,inner:.48,mid:.38,outer:.24}),
+    courtInset:7,
+    // Urban courts are deliberate breathing space, never most of the block.
+    courtMaxRatio:Object.freeze({core:.12,inner:.16,mid:.19,outer:.22}),
+    courtMaxAxis:Object.freeze({core:52,inner:62,mid:72,outer:86}),
+    preserveCoverage:.70
+  }),
+  // CBD footprint limits stop a single procedural slab from swallowing most of a city block.
+  // Height remains independent: tall towers are still allowed, but their podium/base is compact.
+  // The softer inner-city cap fades the rule out beyond the downtown influence instead of creating
+  // an obvious hard ring around the CBD. Large CBD blocks are handled by cbdClusterBlock(), which
+  // uses several separate buildings plus real gaps/courts rather than one shrunken mega-building.
+  cbdFootprints:Object.freeze({
+    coreMaxAxis:85,
+    coreMaxArea:6000,
+    innerMaxAxis:100,
+    innerMaxArea:7600,
+    innerInfluenceStart:.24,
+    coreInfluenceStart:.62,
+    towerPodiumMaxAxis:68,
+    towerPodiumMaxArea:4200,
+    splitMin:2,
+    splitMax:6,
+    largeSplitMin:3,
+    largeSplitThreshold:115,
+    gap:[5,9],
+    clusterPreserveCoverage:.78
+  }),
+  openSpace:Object.freeze({
+    // Standalone empty plots are effectively banned in the CBD / inner city. Dense districts get
+    // their breathing room from compact courts and alleys instead of giant undeveloped parcels.
+    chance:Object.freeze({core:0,inner:0,mid:.08,outer:.28,industrial:.10}),
+    size:Object.freeze({inner:[.04,.08],mid:[.07,.13],outer:[.12,.22]}),
+    maxRatio:Object.freeze({inner:.08,mid:.14,outer:.22,industrial:.26}),
+    fillerCoverageScale:.94
+  }),
+  microLevels:Object.freeze({
+    parkTop:.082,
+    parkBottom:.010,
+    compositionCourtTop:.068,
+    commercialYardTop:.052,
+    industrialYardTop:.024
+  }),
+  silhouette:Object.freeze({
+    wingChance:Object.freeze({core:.36,inner:.46,mid:.52,outer:.58,industrial:.68}),
+    roofStepChance:Object.freeze({core:.72,inner:.66,mid:.54,outer:.34,industrial:.48}),
+    maxWingHeightRatio:.58,
+    minFootprint:260
+  }),
+  districtProfiles:Object.freeze({
+    downtown:Object.freeze({heightMinFloors:5,heightMaxFloors:20,heightScale:1.08,coverage:[.76,.88]}),
+    inner_city:Object.freeze({heightMinFloors:2,heightMaxFloors:8,heightScale:.94,coverage:[.72,.86]}),
+    commercial_corridor:Object.freeze({heightMinFloors:1,heightMaxFloors:5,heightScale:.82,coverage:[.60,.74]}),
+    waterfront:Object.freeze({heightMinFloors:2,heightMaxFloors:7,heightScale:.92,coverage:[.64,.80]}),
+    industrial_logistics:Object.freeze({heightMinFloors:1,heightMaxFloors:3,heightScale:.76,coverage:[.25,.55]}),
+    industrial_waterfront:Object.freeze({heightMinFloors:1,heightMaxFloors:3,heightScale:.76,coverage:[.25,.52]}),
+    airport_district:Object.freeze({heightMinFloors:1,heightMaxFloors:4,heightScale:.72,coverage:[.30,.48]}),
+    stadium_district:Object.freeze({heightMinFloors:1,heightMaxFloors:5,heightScale:.80,coverage:[.38,.60]}),
+    outer_neighbourhood:Object.freeze({heightMinFloors:1,heightMaxFloors:4,heightScale:.76,coverage:[.34,.52]}),
+    mid_city:Object.freeze({heightMinFloors:2,heightMaxFloors:6,heightScale:.88,coverage:[.50,.70]}),
+    secondary_centre:Object.freeze({heightMinFloors:2,heightMaxFloors:8,heightScale:.96,coverage:[.58,.78]})
+  })
+});
+
+class RNG{constructor(seed){this.s=RNG.hash(seed)||1}static hash(v){let h=2166136261>>>0;const s=String(v);for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}next(){let t=this.s+=0x6D2B79F5;t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296}range(a,b){return lerp(a,b,this.next())}int(a,b){return Math.floor(this.range(a,b+1))}chance(p){return this.next()<p}pick(a){return a[Math.floor(this.next()*a.length)]}}
+function distPointSegment(px,pz,ax,az,bx,bz){const abx=bx-ax,abz=bz-az,apx=px-ax,apz=pz-az,l=abx*abx+abz*abz;if(l<1e-8)return Math.hypot(px-ax,pz-az);const t=clamp((apx*abx+apz*abz)/l,0,1);return Math.hypot(px-(ax+abx*t),pz-(az+abz*t))}
+function clipSegmentRect(ax,az,bx,bz,minX,minZ,maxX,maxZ){const dx=bx-ax,dz=bz-az;let t0=0,t1=1;const p=[-dx,dx,-dz,dz],q=[ax-minX,maxX-ax,az-minZ,maxZ-az];for(let i=0;i<4;i++){if(Math.abs(p[i])<1e-9){if(q[i]<0)return null}else{const r=q[i]/p[i];if(p[i]<0){if(r>t1)return null;if(r>t0)t0=r}else{if(r<t0)return null;if(r<t1)t1=r}}}return{ax:ax+dx*t0,az:az+dz*t0,bx:ax+dx*t1,bz:az+dz*t1}}
+
+class MeshBuilder{constructor(){this.p=[];this.n=[];this.c=[]}get triangles(){return this.p.length/9}vertex(x,y,z,nx,ny,nz,r,g,b){this.p.push(x,y,z);this.n.push(nx,ny,nz);this.c.push(r,g,b)}tri(a,b,c,n,col){for(const v of [a,b,c])this.vertex(v[0],v[1],v[2],n[0],n[1],n[2],col[0],col[1],col[2])}quad(a,b,c,d,n,col){this.tri(a,b,c,n,col);this.tri(a,c,d,n,col)}flatRect(cx,cz,w,d,y,col){const x0=cx-w/2,x1=cx+w/2,z0=cz-d/2,z1=cz+d/2;this.quad([x0,y,z0],[x0,y,z1],[x1,y,z1],[x1,y,z0],[0,1,0],col)}road(ax,az,bx,bz,w,thickness,col,base=ROAD_STYLE_TUNING.roadBaseY){const dx=bx-ax,dz=bz-az,l=Math.hypot(dx,dz);if(l<.001||thickness<=0)return;const tx=dx/l,tz=dz/l,nx=-tz,nz=tx,h=w/2,y0=base,y1=y0+thickness;const aL=[ax+nx*h,y0,az+nz*h],aR=[ax-nx*h,y0,az-nz*h],bR=[bx-nx*h,y0,bz-nz*h],bL=[bx+nx*h,y0,bz+nz*h],aLt=[aL[0],y1,aL[2]],aRt=[aR[0],y1,aR[2]],bRt=[bR[0],y1,bR[2]],bLt=[bL[0],y1,bL[2]];this.quad(aLt,aRt,bRt,bLt,[0,1,0],col);this.quad(aR,aL,bL,bR,[0,-1,0],col);this.quad(aL,aLt,bLt,bL,[nx,0,nz],col);this.quad(bR,bRt,aRt,aR,[-nx,0,-nz],col);this.quad(aR,aRt,aLt,aL,[-tx,0,-tz],col);this.quad(bL,bLt,bRt,bR,[tx,0,tz],col)}prismSegment(ax,ay,az,bx,by,bz,w,h,col){const dx=bx-ax,dy=by-ay,dz=bz-az,len=Math.hypot(dx,dy,dz);if(len<.001||w<=0||h<=0)return;const ux=dx/len,uy=dy/len,uz=dz/len;let sx=uz,sy=0,sz=-ux,sl=Math.hypot(sx,sy,sz);if(sl<.001){sx=1;sy=0;sz=0;sl=1}sx/=sl;sy/=sl;sz/=sl;let vx=uy*sz-uz*sy,vy=uz*sx-ux*sz,vz=ux*sy-uy*sx;const vl=Math.hypot(vx,vy,vz)||1;vx/=vl;vy/=vl;vz/=vl;const hw=w*.5,hh=h*.5;const pt=(x,y,z,ss,vv)=>[x+sx*ss*hw+vx*vv*hh,y+sy*ss*hw+vy*vv*hh,z+sz*ss*hw+vz*vv*hh];const a00=pt(ax,ay,az,-1,-1),a01=pt(ax,ay,az,-1,1),a11=pt(ax,ay,az,1,1),a10=pt(ax,ay,az,1,-1),b00=pt(bx,by,bz,-1,-1),b01=pt(bx,by,bz,-1,1),b11=pt(bx,by,bz,1,1),b10=pt(bx,by,bz,1,-1);this.quad(a01,b01,b11,a11,[vx,vy,vz],col);this.quad(a10,b10,b00,a00,[-vx,-vy,-vz],col);this.quad(a11,b11,b10,a10,[sx,sy,sz],col);this.quad(a00,b00,b01,a01,[-sx,-sy,-sz],col);this.quad(a00,a01,a11,a10,[-ux,-uy,-uz],col);this.quad(b10,b11,b01,b00,[ux,uy,uz],col)}box(cx,cz,w,d,h,base,col){if(w<=0||d<=0||h<=0)return;const x0=cx-w/2,x1=cx+w/2,z0=cz-d/2,z1=cz+d/2,y0=base,y1=base+h;this.quad([x0,y1,z0],[x1,y1,z0],[x1,y1,z1],[x0,y1,z1],[0,1,0],col);this.quad([x0,y0,z1],[x1,y0,z1],[x1,y0,z0],[x0,y0,z0],[0,-1,0],col);this.quad([x0,y0,z1],[x0,y1,z1],[x1,y1,z1],[x1,y0,z1],[0,0,1],col);this.quad([x1,y0,z0],[x1,y1,z0],[x0,y1,z0],[x0,y0,z0],[0,0,-1],col);this.quad([x1,y0,z1],[x1,y1,z1],[x1,y1,z0],[x1,y0,z0],[1,0,0],col);this.quad([x0,y0,z0],[x0,y1,z0],[x0,y1,z1],[x0,y0,z1],[-1,0,0],col)}
+  chamferedBoxXZ(cx,cz,w,d,h,base,col,chamfer=1){
+    if(w<=0||d<=0||h<=0)return;const x0=cx-w*.5,x1=cx+w*.5,z0=cz-d*.5,z1=cz+d*.5,y0=base,y1=base+h,c=clamp(chamfer,0,Math.min(w,d)*.42);
+    if(c<.025){this.box(cx,cz,w,d,h,base,col);return}
+    const ring=[[x0+c,z0],[x1-c,z0],[x1,z0+c],[x1,z1-c],[x1-c,z1],[x0+c,z1],[x0,z1-c],[x0,z0+c]],top=ring.map(q=>[q[0],y1,q[1]]),bottom=ring.map(q=>[q[0],y0,q[1]]),tc=[cx,y1,cz],bc=[cx,y0,cz];
+    for(let i=0;i<8;i++){const j=(i+1)%8;this.tri(tc,top[i],top[j],[0,1,0],col);this.tri(bc,bottom[j],bottom[i],[0,-1,0],col);const dx=ring[j][0]-ring[i][0],dz=ring[j][1]-ring[i][1],l=Math.hypot(dx,dz)||1;this.quad(bottom[i],top[i],top[j],bottom[j],[dz/l,0,-dx/l],col)}
+  }
+  beveledBox(cx,cz,w,d,h,base,col,bevel=.42){
+    if(w<=0||d<=0||h<=0)return;const maxB=Math.min(w*.16,d*.16,h*.18);const b=clamp(bevel,.04,maxB);if(b<.07||Math.min(w,d)<b*3.2||h<b*2.2){this.box(cx,cz,w,d,h,base,col);return}
+    const hx=w*.5,hz=d*.5,c=Math.min(b,Math.min(hx,hz)*.38),y0=base,yShoulder=base+h-b*.66,y1=base+h,inset=b*.68;
+    const ring=(rx,rz,ch,y)=>[[cx-rx+ch,y,cz-rz],[cx+rx-ch,y,cz-rz],[cx+rx,y,cz-rz+ch],[cx+rx,y,cz+rz-ch],[cx+rx-ch,y,cz+rz],[cx-rx+ch,y,cz+rz],[cx-rx,y,cz+rz-ch],[cx-rx,y,cz-rz+ch]];
+    const lower=ring(hx,hz,c,y0),shoulder=ring(hx,hz,c,yShoulder),top=ring(Math.max(.05,hx-inset),Math.max(.05,hz-inset),Math.max(.025,c*.72),y1);
+    const edgeNormal=(a,bp,y=.0)=>{const dx=bp[0]-a[0],dz=bp[2]-a[2],l=Math.hypot(dx,dz)||1,nx=dz/l,nz=-dx/l,nl=Math.hypot(nx,y,nz)||1;return[nx/nl,y/nl,nz/nl]};
+    for(let i=0;i<8;i++){const j=(i+1)%8,n=edgeNormal(lower[i],lower[j],0);this.quad(lower[i],lower[j],shoulder[j],shoulder[i],n,col);const bn=edgeNormal(shoulder[i],shoulder[j],.82);this.quad(shoulder[i],shoulder[j],top[j],top[i],bn,col)}
+    const tc=[cx,y1,cz],bc=[cx,y0,cz];for(let i=0;i<8;i++){const j=(i+1)%8;this.tri(tc,top[i],top[j],[0,1,0],col);this.tri(bc,lower[j],lower[i],[0,-1,0],col)}
+  }
+  recessedBox(cx,cz,w,d,h,base,col,opts={}){
+    if(w<=0||d<=0||h<=0)return;
+    const side=opts.side||'z+',depthAxis=side[0]==='z'?d:w,faceSpan=side[0]==='z'?w:d;
+    const notchDepth=clamp(opts.notchDepth??depthAxis*.14,.35,Math.max(.36,depthAxis*.42));
+    const recessHeight=clamp(opts.recessHeight??h,h*.18,h);
+    const rawNotches=Array.isArray(opts.notches)&&opts.notches.length?opts.notches:[{offset:opts.offset||0,width:opts.notchWidth??faceSpan*.32}];
+    const half=faceSpan*.5,notches=rawNotches.map(n=>({
+      a:clamp((n.offset||0)-(n.width||faceSpan*.30)*.5,-half+.25,half-.25),
+      b:clamp((n.offset||0)+(n.width||faceSpan*.30)*.5,-half+.25,half-.25)
+    })).filter(n=>n.b-n.a>.5).sort((a,b)=>a.a-b.a);
+    const merged=[];for(const n of notches){const q=merged[merged.length-1];if(q&&n.a<=q.b+.18)q.b=Math.max(q.b,n.b);else merged.push({...n})}
+    const add=(x,z,ww,dd,hh,y)=>{if(ww<=.08||dd<=.08||hh<=.08)return;const q=ACTIVE_GEOMETRY_QUALITY,can=q.genericBevel&&Math.min(ww,dd)>=2.2&&hh>=1.4;if(can){const bv=clamp(Math.min(ww,dd)*.020*q.genericBevelScale,.055,Math.min(.34,q.genericBevelMax*.52));this.beveledBox(x,z,ww,dd,hh,y,col,bv)}else this.box(x,z,ww,dd,hh,y,col)};
+    const lowH=Math.min(h,recessHeight),upperH=Math.max(0,h-lowH),eps=.006;
+    if(side[0]==='z'){
+      const sgn=side[1]==='-'?-1:1,backD=Math.max(.10,d-notchDepth),backZ=cz-sgn*notchDepth*.5;
+      add(cx,backZ,w,backD,lowH,base);
+      let cursor=-half;
+      for(const n of merged){if(n.a>cursor){const seg=n.a-cursor,segC=(cursor+n.a)*.5;add(cx+segC,cz+sgn*(d-notchDepth)*.5,seg,notchDepth,lowH,base)}cursor=Math.max(cursor,n.b)}
+      if(cursor<half){const seg=half-cursor,segC=(cursor+half)*.5;add(cx+segC,cz+sgn*(d-notchDepth)*.5,seg,notchDepth,lowH,base)}
+    }else{
+      const sgn=side[1]==='-'?-1:1,backW=Math.max(.10,w-notchDepth),backX=cx-sgn*notchDepth*.5;
+      add(backX,cz,backW,d,lowH,base);
+      let cursor=-half;
+      for(const n of merged){if(n.a>cursor){const seg=n.a-cursor,segC=(cursor+n.a)*.5;add(cx+sgn*(w-notchDepth)*.5,cz+segC,notchDepth,seg,lowH,base)}cursor=Math.max(cursor,n.b)}
+      if(cursor<half){const seg=half-cursor,segC=(cursor+half)*.5;add(cx+sgn*(w-notchDepth)*.5,cz+segC,notchDepth,seg,lowH,base)}
+    }
+    // A partial-height recess gets a continuous upper mass. The tiny epsilon prevents coplanar internal faces.
+    if(upperH>.08)add(cx,cz,w,d,upperH,base+lowH+eps);
+  }
+  frustum(cx,cz,r0,r1,h,base,col,sides=8,scaleZ=1){sides=qualitySides(sides);if(r0<=0||r1<0||h<=0||sides<3)return;const y0=base,y1=base+h,b=[],t=[];for(let i=0;i<sides;i++){const a=i*Math.PI*2/sides;b.push([cx+Math.cos(a)*r0,y0,cz+Math.sin(a)*r0*scaleZ]);t.push([cx+Math.cos(a)*r1,y1,cz+Math.sin(a)*r1*scaleZ])}for(let i=0;i<sides;i++){const j=(i+1)%sides,a=(i+.5)*Math.PI*2/sides,nx=Math.cos(a),nz=Math.sin(a)/Math.max(.001,scaleZ),nl=Math.hypot(nx,nz)||1;this.quad(b[i],t[i],t[j],b[j],[nx/nl,0,nz/nl],col)}for(let i=1;i<sides-1;i++){this.tri(t[0],t[i],t[i+1],[0,1,0],col);this.tri(b[0],b[i+1],b[i],[0,-1,0],col)}}
+  ellipsePrism(cx,cz,rx,rz,h,base,col,sides=14){sides=qualitySides(sides);if(rx<=0||rz<=0||h<=0)return;const y0=base,y1=base+h,b=[],t=[];for(let i=0;i<sides;i++){const a=i*Math.PI*2/sides;b.push([cx+Math.cos(a)*rx,y0,cz+Math.sin(a)*rz]);t.push([cx+Math.cos(a)*rx,y1,cz+Math.sin(a)*rz])}for(let i=0;i<sides;i++){const j=(i+1)%sides,a=(i+.5)*Math.PI*2/sides,nx=Math.cos(a)/Math.max(.001,rx),nz=Math.sin(a)/Math.max(.001,rz),nl=Math.hypot(nx,nz)||1;this.quad(b[i],t[i],t[j],b[j],[nx/nl,0,nz/nl],col)}for(let i=1;i<sides-1;i++){this.tri(t[0],t[i],t[i+1],[0,1,0],col);this.tri(b[0],b[i+1],b[i],[0,-1,0],col)}}}
+
+const COLORS={water:[.79,.87,.94],ground:[.938,.941,.936],park:[.82,.90,.84],parkPath:[.93,.94,.935],parkSport:[.79,.88,.81],parkTree:[.54,.70,.58],parkTreeLight:[.64,.78,.66],parkWater:[.76,.86,.94],road:[.700,.732,.758],roadArterial:[.655,.690,.722],roadCollector:[.700,.730,.755],roadLocal:[.745,.768,.788],roadIndustrial:[.680,.706,.726],roadWaterfront:[.690,.722,.748],roadGutter:[.560,.594,.622],roadMark:[.900,.910,.915],crosswalk:[.915,.922,.925],curb:[.865,.872,.868],sidewalk:[.966,.968,.963],waterfrontWalk:[.952,.960,.960],roadShoulder:[.760,.782,.800],median:[.840,.858,.845],building:[.985,.985,.98],buildingAccent:[.952,.952,.948],pier:[.95,.955,.95],infrastructure:[.965,.968,.965],promenade:[.93,.94,.935],districtYard:[.91,.92,.918],alley:[.865,.876,.878]};
+class CityBuildingGenerator {
+mass(m,x,z,w,d,h,type,s,rng,info=null){
+    // Subtle seeded per-building lightness jitter: keeps the pale Cold Routes palette but stops every
+    // building reading as one flat painted mass. Deterministic per seed, no textures required.
+    const jitter=rng.range(-.017,.017),cb=COLORS.building,c=[clamp(cb[0]+jitter,0,1),clamp(cb[1]+jitter,0,1),clamp(cb[2]+jitter*.9,0,1)];
+    const base=0,sections=[],quality=ACTIVE_GEOMETRY_QUALITY;
+    // Contact-shadow plinth: a thin darker base band under every footprint fakes ground-contact AO
+    // cheaply, without textures or a real AO pass. Sits just under the building so it never z-fights.
+    const plinth=[clamp(c[0]-.115,0,1),clamp(c[1]-.115,0,1),clamp(c[2]-.105,0,1)];
+    // Preview contact plinth omitted from building-only output.
+    const detailSetting=clamp((s.buildingDetail??.95)/.75,.16,1.78),zoneHint=info?.zone||'mid',districtHint=info?.district||'';
+    const longSide=Math.max(w,d),shortSide=Math.min(w,d),warehouseCandidate=zoneHint==='industrial'&&longSide>=WAREHOUSE_TUNING.minLong&&shortSide>=WAREHOUSE_TUNING.minShort&&w*d>=WAREHOUSE_TUNING.minArea;
+    if(type==='warehouse'||warehouseCandidate){this.warehouseArchitecture(m,x,z,w,d,h,s,rng,info);return}
+    let indentCount=0,indentBudget=Math.min(ARCHITECTURE_TUNING.indentBudget[quality.key]||1,BUILDING_POLISH_TUNING.footprintIndent.maxCount),groundSeparationUsed=false,entranceRecessUsed=false;
+    const bx=(xx,zz,ww,dd,hh,yy=0,col=c)=>{
+      if(ww<=0||dd<=0||hh<=0) return null;
+      if(yy>0.001){
+        const eps=.03,cx0=xx-ww*.5,cx1=xx+ww*.5,cz0=zz-dd*.5,cz1=zz+dd*.5;let supported=false;
+        for(const q of sections){if(Math.abs(q.top-yy)>eps)continue;const qx0=q.x-q.w*.5,qx1=q.x+q.w*.5,qz0=q.z-q.d*.5,qz1=q.z+q.d*.5,ox=Math.min(cx1,qx1)-Math.max(cx0,qx0),oz=Math.min(cz1,qz1)-Math.max(cz0,qz0);if(ox>0.35&&oz>0.35){supported=true;break}}
+        if(!supported){if(this._detailValidation)this._detailValidation.primaryRejected++;return null}
+      }
+      const industrial=zoneHint==='industrial',commercial=districtHint==='commercial_corridor';
+      const gfCfg=BUILDING_POLISH_TUNING.groundFloor,entryCfg=BUILDING_POLISH_TUNING.entranceRecess;
+      const gfChance=commercial?gfCfg.commercialChance:(gfCfg.chance[zoneHint]??gfCfg.chance.mid);
+      const canGroundSeparate=!groundSeparationUsed&&!industrial&&yy<.001&&ww*dd>=gfCfg.minArea&&Math.min(ww,dd)>=gfCfg.minShort&&hh>=gfCfg.minHeight;
+      if(canGroundSeparate&&rng.chance(gfChance)){
+        const gfH=clamp(rng.range(gfCfg.height[0],gfCfg.height[1]),2.8,Math.min(hh*.46,4.5)),inset=clamp(rng.range(gfCfg.inset[0],gfCfg.inset[1]),.35,Math.min(ww,dd)*.08),gw=Math.max(3,ww-inset*2),gd=Math.max(3,dd-inset*2);
+        const alongX=gw>=gd,frontSide=info?.frontage?this.frontageSideForAxis(info.frontage,alongX,rng):(alongX?(rng.chance(.5)?'z+':'z-'):(rng.chance(.5)?'x+':'x-'));
+        const entryChance=entryCfg.chance[zoneHint]??entryCfg.chance.mid,face=alongX?gw:gd,depthAxis=alongX?gd:gw,canEntry=!entranceRecessUsed&&gw*gd>=entryCfg.minArea&&Math.min(gw,gd)>=entryCfg.minShort&&hh>=entryCfg.minHeight&&rng.chance(entryChance);
+        if(canEntry){
+          const ew=clamp(face*rng.range(entryCfg.widthRatio[0],entryCfg.widthRatio[1]),2.3,Math.min(6.8,face*.28)),ed=clamp(rng.range(entryCfg.depth[0],entryCfg.depth[1]),.55,depthAxis*.16),eh=clamp(rng.range(entryCfg.height[0],entryCfg.height[1]),2.6,gfH*.96),off=rng.range(-face*entryCfg.offsetRatio,face*entryCfg.offsetRatio);
+          m.recessedBox(xx,zz,gw,gd,gfH,yy,col,{side:frontSide,notchDepth:ed,recessHeight:eh,notches:[{offset:off,width:ew}]});
+          entranceRecessUsed=true;indentCount++;if(this._detailValidation){this._detailValidation.indents++;this._detailValidation.entrance++}
+        }else{
+          const gb=Math.min(gw,gd)>=9&&quality.genericBevel?clamp(Math.min(gw,gd)*.014*quality.genericBevelScale,.10,quality.genericBevelMax*.65):0;
+          if(gb)m.beveledBox(xx,zz,gw,gd,gfH,yy,col,gb);else m.box(xx,zz,gw,gd,gfH,yy,col);
+        }
+        const upperH=hh-gfH,upperY=yy+gfH;
+        if(upperH>.08){const ub=quality.genericBevel&&ww>=9&&dd>=9?clamp(Math.min(ww,dd)*.018*quality.genericBevelScale,.14,quality.genericBevelMax):0;if(ub)m.beveledBox(xx,zz,ww,dd,upperH,upperY,col,ub);else m.box(xx,zz,ww,dd,upperH,upperY,col)}
+        const groundSection={x:xx,z:zz,w:gw,d:gd,h:gfH,y:yy,top:yy+gfH,frontage:info?.frontage||null},upperSection={x:xx,z:zz,w:ww,d:dd,h:upperH,y:upperY,top:yy+hh,frontage:info?.frontage||null};sections.push(groundSection);if(upperH>.08)sections.push(upperSection);groundSeparationUsed=true;return upperH>.08?upperSection:groundSection;
+      }
+      const canIndent=quality.key!=='performance'&&indentCount<indentBudget&&ww>=15&&dd>=13&&hh>=6.5;
+      const large=Math.max(ww,dd)>24,indentChance=(ARCHITECTURE_TUNING.indentChance[quality.key]||.2)*detailSetting*(industrial?1.15:large?1:.78);
+      if(canIndent&&rng.chance(clamp(indentChance,0,.94))){
+        const alongX=ww>=dd,roadSide=info?.frontage&&rng.chance(CITY_VISUAL_TUNING.frontage.preferRoadFacingRecess)?this.frontageSideForAxis(info.frontage,alongX,rng):null,side=roadSide||(alongX?(rng.chance(.5)?'z+':'z-'):(rng.chance(.5)?'x+':'x-')),face=alongX?ww:dd,depthAxis=alongX?dd:ww;
+        const widthRange=industrial?ARCHITECTURE_TUNING.industrialIndentWidth:ARCHITECTURE_TUNING.urbanIndentWidth,depthRange=industrial?ARCHITECTURE_TUNING.industrialIndentDepth:ARCHITECTURE_TUNING.urbanIndentDepth;
+        const notchDepth=clamp(depthAxis*rng.range(depthRange[0],depthRange[1]),1.15,depthAxis*.34),fullHeight=!industrial&&hh>13&&rng.chance(.34),recessHeight=fullHeight?hh:clamp(hh*rng.range(industrial?.34:.30,industrial?.62:.68),2.8,hh*.78);
+        let notches;
+        if(industrial&&face>30){
+          const count=clamp(Math.floor(face/20),2,4),usable=face*.68,bayW=clamp((usable/count)*rng.range(.44,.64),4.2,9.5);notches=[];
+          for(let i=0;i<count;i++){const u=count===1?0:(i/(count-1)-.5)*usable;notches.push({offset:u,width:bayW})}
+        }else if(face>30&&quality.key!=='performance'&&rng.chance(.58)){
+          const spacing=face*rng.range(.18,.25),notchW=clamp(face*rng.range(.14,.22),3.2,face*.26);notches=[{offset:-spacing,width:notchW},{offset:spacing,width:notchW*rng.range(.88,1.10)}]
+        }else{
+          const notchW=clamp(face*rng.range(widthRange[0],widthRange[1]),3.0,face*.66),off=rng.range(-Math.max(0,face-notchW)*.22,Math.max(0,face-notchW)*.22);notches=[{offset:off,width:notchW}]
+        }
+        m.recessedBox(xx,zz,ww,dd,hh,yy,col,{side,notchDepth,recessHeight,notches});indentCount++;if(this._detailValidation)this._detailValidation.indents++;
+      }else{
+        const canBevel=quality.genericBevel&&ww>=9&&dd>=9&&hh>=4;
+        if(canBevel){const bevel=clamp(Math.min(ww,dd)*.018*quality.genericBevelScale,.14,quality.genericBevelMax);m.beveledBox(xx,zz,ww,dd,hh,yy,col,bevel)}else m.box(xx,zz,ww,dd,hh,yy,col)
+      }
+      const section={x:xx,z:zz,w:ww,d:dd,h:hh,y:yy,top:yy+hh,frontage:info?.frontage||null};sections.push(section);return section;
+    };
+    if(type==='cross'){
+      const aw=w*rng.range(.28,.42),ad=d*rng.range(.28,.42);bx(x,z,aw,d,h,base,c);bx(x,z,w,ad,h*rng.range(.82,.96),base,c);if(h>20&&rng.chance(.35))bx(x,z,aw*.55,ad*.55,h*rng.range(.16,.28),h,c);
+    }else if(type==='twin'){
+      const podium=h*rng.range(.24,.34),tw=w*rng.range(.24,.32),gap=w*rng.range(.10,.16);bx(x,z,w,d,podium,base,c);bx(x-(gap+tw)/2,z,tw,d*rng.range(.56,.78),h-podium,podium,c);bx(x+(gap+tw)/2,z,tw,d*rng.range(.56,.78),(h-podium)*rng.range(.88,.98),podium,c);
+    }else if(type==='offset'){
+      const low=h*rng.range(.38,.56),uw=w*rng.range(.48,.72),ud=d*rng.range(.48,.72),sx=rng.chance(.5)?1:-1,sz=rng.chance(.5)?1:-1;bx(x,z,w,d,low,base,c);bx(x+sx*(w-uw)*.18,z+sz*(d-ud)*.18,uw,ud,h-low,low,c);if(h>40&&rng.chance(.24))bx(x+sx*(w-uw)*.24,z+sz*(d-ud)*.24,uw*.45,ud*.45,h*.08,h,c);
+    }else if(type==='slab'){
+      const tiered=(w>22||d>22)&&rng.chance(.68),low=tiered?h*rng.range(.56,.72):h*rng.range(.70,.86);bx(x,z,w,d,low,base,c);if(tiered||((w>30||d>30)&&rng.chance(.48))){const uw=w*rng.range(.50,.76),ud=d*rng.range(.50,.76),ox=rng.range(-(w-uw)*.16,(w-uw)*.16),oz=rng.range(-(d-ud)*.16,(d-ud)*.16);bx(x+ox,z+oz,uw,ud,h-low,low,c)}
+    }else if(type==='l'){
+      const mw=w*rng.range(.48,.66),wd=d*rng.range(.40,.58),sx=rng.chance(.5)?1:-1,sz=rng.chance(.5)?1:-1;bx(x-sx*(w-mw)/2,z,mw,d,h,base,c);bx(x,z-sz*(d-wd)/2,w,wd,h*rng.range(.68,.88),base,c);
+    }else if(type==='u'){
+      const bar=d*rng.range(.22,.32),wing=w*rng.range(.22,.3),wingD=d*rng.range(.64,.84);bx(x,z+(d-bar)/2,w,bar,h,base,c);bx(x-(w-wing)/2,z-(d-wingD)/2,wing,wingD,h*rng.range(.75,.9),base,c);bx(x+(w-wing)/2,z-(d-wingD)/2,wing,wingD,h*rng.range(.75,.9),base,c);
+    }else if(type==='tee'){
+      const stemW=w*rng.range(.26,.40),capD=d*rng.range(.34,.48),capH=h*rng.range(.86,.98),stemH=h*rng.range(.72,.92),dir=rng.chance(.5)?1:-1;bx(x,z+dir*(d-capD)*.18,w,capD,capH,base,c);bx(x,z-dir*(d-capD)*.14,stemW,d,stemH,base,c);
+    }else if(type==='notch'){
+      const rearD=d*rng.range(.46,.64),wingW=w*rng.range(.26,.36),notchDepth=d*rng.range(.20,.30);bx(x,z-(d-rearD)*.18,w,rearD,h,base,c);bx(x-(w-wingW)*.5,z+(d-notchDepth)*.22,wingW,d-notchDepth,h*rng.range(.78,.92),base,c);bx(x+(w-wingW)*.5,z+(d-notchDepth)*.22,wingW,d-notchDepth,h*rng.range(.78,.92),base,c);
+    }else if(type==='step'){
+      const low=h*rng.range(.45,.62),uw=w*rng.range(.54,.78),ud=d*rng.range(.54,.78);bx(x,z,w,d,low,base,c);bx(x+rng.range(-w*.04,w*.04),z+rng.range(-d*.04,d*.04),uw,ud,h-low,low,c);if(h>45&&rng.chance(.28))bx(x,z,uw*.42,ud*.42,h*.08,h,c);
+    }else if(type==='courtyard'){
+      const ringZ=clamp(d*rng.range(.18,.26),5,d*.34);
+      bx(x,z+(d-ringZ)*.5,w,ringZ,h,base,c);bx(x,z-(d-ringZ)*.5,w,ringZ,h*rng.range(.86,.98),base,c);
+      const innerD=Math.max(8,d-ringZ*2),wingW=clamp(w*rng.range(.18,.24),4,w*.28);
+      bx(x-(w-wingW)*.5,z,wingW,innerD,h*rng.range(.82,.96),base,c);bx(x+(w-wingW)*.5,z,wingW,innerD,h*rng.range(.82,.96),base,c);
+      // Rooftop equipment is added later on a verified ring/wing roof section; never over the courtyard void.
+    }else if(type==='terrace'){
+      const low=h*rng.range(.34,.48);bx(x,z,w,d,low,base,c);
+      let cw=w*rng.range(.72,.88),cd=d*rng.range(.72,.88),cy=low;
+      for(let i=0;i<2+(h>28&&rng.chance(.55));i++){
+        const sh=i===2?h-cy:Math.min(h-cy,h*rng.range(.14,.24)); if(sh<=1.2) break;
+        const sx=rng.range(-Math.max(0,w-cw)*.18,Math.max(0,w-cw)*.18),sz=rng.range(-Math.max(0,d-cd)*.18,Math.max(0,d-cd)*.18);
+        bx(x+sx,z+sz,cw,cd,sh,cy,c); cy+=sh; cw*=rng.range(.72,.86); cd*=rng.range(.72,.86);
+      }
+    }else if(type==='wedge'){
+      const horizontal=w>=d,levels=3;let cy=0;
+      for(let i=0;i<levels;i++){
+        const sh=i===levels-1?h-cy:h*rng.range(.22,.34),shrink=.12+.12*i;
+        const ww=horizontal?w*(1-shrink):w*rng.range(.82,.96),dd=horizontal?d*rng.range(.82,.96):d*(1-shrink);
+        const ox=horizontal?(i-1)*w*.08:0,oz=horizontal?0:(i-1)*d*.08;
+        const actualH=Math.max(1.2,sh);bx(x+ox,z+oz,ww,dd,actualH,cy,c);cy+=actualH;
+      }
+    }else if(type==='oct'){
+      const coreW=w*rng.range(.54,.70),coreD=d*rng.range(.54,.70);bx(x,z,coreW,coreD,h,base,c);
+      bx(x,z+(d-coreD)*.5,w*rng.range(.46,.64),d-coreD,h*rng.range(.82,.96),base,c);bx(x,z-(d-coreD)*.5,w*rng.range(.46,.64),d-coreD,h*rng.range(.82,.96),base,c);
+      bx(x-(w-coreW)*.5,z,w-coreW,d*rng.range(.46,.64),h*rng.range(.82,.96),base,c);bx(x+(w-coreW)*.5,z,w-coreW,d*rng.range(.46,.64),h*rng.range(.82,.96),base,c);
+    }else if(type==='pinwheel'){
+      const hubW=w*rng.range(.26,.38),hubD=d*rng.range(.26,.38),hubH=h*rng.range(.86,.98);bx(x,z,hubW,hubD,hubH,base,c);
+      const armW=w*rng.range(.28,.42),armD=d*rng.range(.18,.28),armH=h*rng.range(.62,.86);
+      bx(x+w*.18,z+d*.12,armW,armD,armH,base,c);bx(x-w*.16,z+d*.18,armD,armW,armH*rng.range(.92,1),base,c);bx(x-w*.18,z-d*.12,armW,armD,armH*rng.range(.84,.96),base,c);bx(x+w*.16,z-d*.18,armD,armW,armH*rng.range(.84,.96),base,c);
+    }else if(type==='podium'){
+      const podiumH=h*rng.range(.28,.40),tw=w*rng.range(.48,.70),td=d*rng.range(.48,.70),sx=rng.range(-w*.055,w*.055),sz=rng.range(-d*.055,d*.055);
+      bx(x,z,w,d,podiumH,base,c);
+      bx(x+sx,z+sz,tw,td,Math.max(2,h-podiumH),podiumH,c);
+    }else if(type==='winged'){
+      const spineAlongX=w>=d,spineW=spineAlongX?w*rng.range(.62,.82):w*rng.range(.28,.42),spineD=spineAlongX?d*rng.range(.28,.42):d*rng.range(.62,.82),spineH=h*rng.range(.82,.98);
+      bx(x,z,spineW,spineD,spineH,base,c);
+      if(spineAlongX){const wingW=w*rng.range(.24,.34),wingD=d*rng.range(.52,.72);bx(x-w*.30,z+d*.08,wingW,wingD,h*rng.range(.58,.82),base,c);bx(x+w*.30,z-d*.08,wingW,wingD,h*rng.range(.58,.82),base,c)}
+      else{const wingW=w*rng.range(.52,.72),wingD=d*rng.range(.24,.34);bx(x+w*.08,z-d*.30,wingW,wingD,h*rng.range(.58,.82),base,c);bx(x-w*.08,z+d*.30,wingW,wingD,h*rng.range(.58,.82),base,c)}
+    }else if(type==='compound'){
+      if(rng.chance(.5)){const aw=w*rng.range(.55,.72),bw=Math.max(4,w-aw);bx(x-(w-aw)/2,z,aw,d,h,base,c);bx(x+(w-bw)/2,z,bw,d*rng.range(.64,.88),h*rng.range(.58,.82),base,c)}else{const ad=d*rng.range(.55,.72),bd=Math.max(4,d-ad);bx(x,z-(d-ad)/2,w,ad,h,base,c);bx(x,z+(d-bd)/2,w*rng.range(.64,.88),bd,h*rng.range(.58,.82),base,c)}
+    }else{
+      if((w>18||d>18)&&h>8&&rng.chance(.64)){
+        const low=h*rng.range(.58,.76),uw=w*rng.range(.66,.86),ud=d*rng.range(.66,.86),ox=rng.range(-(w-uw)*.20,(w-uw)*.20),oz=rng.range(-(d-ud)*.20,(d-ud)*.20);bx(x,z,w,d,low,base,c);bx(x+ox,z+oz,uw,ud,h-low,low,c);
+      }else bx(x,z,w,d,h,base,c);
+    }
+    const silhouetteZone=info?.zone||'mid',silhouetteCfg=CITY_VISUAL_TUNING.silhouette,groundMasses=sections.filter(q=>q.y<.01).sort((a,b)=>b.w*b.d-a.w*a.d);
+    if(groundMasses.length&&w*d>=silhouetteCfg.minFootprint&&rng.chance(silhouetteCfg.wingChance[silhouetteZone]??.45)){
+      const g=groundMasses[0],front=info?.frontage,alongFront=front?.axis==='x',wingAlongX=front?alongFront:(g.w>=g.d),rearSign=front?this.frontageSignForAxis(front,wingAlongX,rng)*-1:(rng.chance(.5)?1:-1),wingH=clamp(h*rng.range(.28,silhouetteCfg.maxWingHeightRatio),2.8,Math.max(3.0,h*.62));
+      if(wingAlongX){const ww=clamp(g.w*rng.range(.24,.42),7,g.w*.46),dd=clamp(g.d*rng.range(.32,.56),6,g.d*.62),ox=(rng.chance(.5)?1:-1)*Math.max(0,(g.w-ww)*.36),oz=rearSign*Math.max(0,(g.d-dd)*.36);if(bx(g.x+ox,g.z+oz,ww,dd,wingH,0,c)&&this._detailValidation)this._detailValidation.silhouetteWings++}
+      else{const ww=clamp(g.w*rng.range(.32,.56),6,g.w*.62),dd=clamp(g.d*rng.range(.24,.42),7,g.d*.46),ox=rearSign*Math.max(0,(g.w-ww)*.36),oz=(rng.chance(.5)?1:-1)*Math.max(0,(g.d-dd)*.36);if(bx(g.x+ox,g.z+oz,ww,dd,wingH,0,c)&&this._detailValidation)this._detailValidation.silhouetteWings++}
+    }
+    const silhouetteRoof=this.highestRoofSection(sections);
+    if(silhouetteRoof&&silhouetteRoof.w*silhouetteRoof.d>180&&silhouetteRoof.h>7&&rng.chance(silhouetteCfg.roofStepChance[silhouetteZone]??.5)){
+      const rw=silhouetteRoof.w*rng.range(.36,.64),rd=silhouetteRoof.d*rng.range(.36,.64),rh=clamp(silhouetteRoof.h*rng.range(.08,.16),.65,2.8),ox=rng.range(-(silhouetteRoof.w-rw)*.16,(silhouetteRoof.w-rw)*.16),oz=rng.range(-(silhouetteRoof.d-rd)*.16,(silhouetteRoof.d-rd)*.16);
+      if(bx(silhouetteRoof.x+ox,silhouetteRoof.z+oz,rw,rd,rh,silhouetteRoof.top,c)&&this._detailValidation)this._detailValidation.silhouetteRoofSteps++;
+    }
+    const heightStepCfg=BUILDING_POLISH_TUNING.heightStep,heightStepChance=heightStepCfg.chance[silhouetteZone]??heightStepCfg.chance.mid;
+    const polishedRoof=this.highestRoofSection(sections);
+    if(polishedRoof&&polishedRoof.w*polishedRoof.d>=heightStepCfg.minArea&&h>=heightStepCfg.minHeight&&rng.chance(heightStepChance*.42)){
+      const rw=polishedRoof.w*rng.range(heightStepCfg.footprintScale[0],heightStepCfg.footprintScale[1]),rd=polishedRoof.d*rng.range(heightStepCfg.footprintScale[0],heightStepCfg.footprintScale[1]),rh=rng.range(heightStepCfg.height[0],heightStepCfg.height[1]),ox=rng.range(-(polishedRoof.w-rw)*heightStepCfg.offsetRatio,(polishedRoof.w-rw)*heightStepCfg.offsetRatio),oz=rng.range(-(polishedRoof.d-rd)*heightStepCfg.offsetRatio,(polishedRoof.d-rd)*heightStepCfg.offsetRatio);
+      if(bx(polishedRoof.x+ox,polishedRoof.z+oz,rw,rd,rh,polishedRoof.top,c)&&this._detailValidation)this._detailValidation.silhouetteRoofSteps++;
+    }
+    const zone=info?.zone||'mid',district=info?.district||'';
+    const detailBias=s.cityDetailBias==='cleaner'?.90:s.cityDetailBias==='dense'?1.18:1;let detailScale=(zone==='core'?1.04:zone==='inner'?.98:zone==='mid'?.80:zone==='industrial'?.88:.48)*detailSetting*detailBias;
+    if(district==='commercial_corridor')detailScale=Math.max(detailScale,.94);
+    else if(district==='waterfront'||district==='station_district')detailScale=Math.max(detailScale,.88);
+    else if(district==='airport_district')detailScale=Math.max(detailScale,.66);
+    const facadeSections=sections.filter(q=>q.h>=7&&q.w>=9&&q.d>=9&&q.w*q.d>=w*d*.085),groundSections=sections.filter(q=>q.y<.01).sort((a,b)=>b.w*b.d-a.w*a.d);
+    const facadePick=()=>facadeSections.length?rng.pick(facadeSections):null;
+    const passScale=ARCHITECTURE_TUNING.detailPassScale[ACTIVE_GEOMETRY_QUALITY.key]||1,windowScale=ARCHITECTURE_TUNING.windowPassScale[ACTIVE_GEOMETRY_QUALITY.key]||1;
+    const sculptBase=zone==='core'?5:(zone==='inner'||district==='commercial_corridor'||district==='waterfront'||district==='station_district')?4:(zone==='industrial'?4:3),sculptPasses=clamp(Math.round(sculptBase*passScale),1,8);
+    for(let pass=0;pass<sculptPasses;pass++)if((h>9||Math.max(w,d)>14)&&rng.chance(clamp((h>26?.88:.66)*detailScale,0,.96))){const q=facadePick();if(q)this.addVerticalFacadeArticulation(m,q,rng,detailScale,zone,district)}
+    const stepBase=zone==='core'?5:(zone==='inner'||district==='commercial_corridor'||district==='waterfront')?4:(zone==='industrial'?3:3),stepPasses=clamp(Math.round(stepBase*passScale),1,7);
+    for(let pass=0;pass<stepPasses;pass++)if((h>11||(w>17&&d>17))&&rng.chance(clamp((h>28?.78:.56)*detailScale,0,.94))){const q=facadePick();if(q)this.addFacadeStepDetail(m,q,rng,rng.chance(.5)?'x':'z')}
+    const windowBase=zone==='core'?3:(zone==='inner'||district==='commercial_corridor'||district==='waterfront'||zone==='industrial')?2:1,windowPasses=clamp(Math.round(windowBase*windowScale),1,4);
+    for(let pass=0;pass<windowPasses;pass++)if((h>11||Math.max(w,d)>18)&&rng.chance(clamp((h>24?.70:.46)*detailScale,0,.82))){const q=facadePick();if(q)this.addWindowRelief(m,q,rng,detailScale,pass)}
+    if(zone==='industrial'&&groundSections.length)this.addIndustrialDetails(m,groundSections[0],rng,detailScale);
+    else if(district==='commercial_corridor'&&groundSections.length)this.addCommercialDetails(m,groundSections[0],rng,detailScale);
+    if(zone!=='industrial'&&groundSections.length&&rng.chance(clamp(.88*detailScale+.14,0,.98)))this.addEntranceDetail(m,groundSections[0],rng,detailScale);
+    const roof=this.highestRoofSection(sections);if(roof)this.addRoofDetails(m,roof,rng,zone,district);
+    if((zone==='core'||zone==='inner'||district==='commercial_corridor'||district==='waterfront'||zone==='industrial')&&sections.length>1&&rng.chance(clamp(.52*detailScale,0,.94))){
+      const secondary=[...sections].filter(q=>q!==roof&&q.top>6&&q.w*q.d>80).sort((a,b)=>b.top-a.top||b.w*b.d-a.w*a.d)[0];
+      if(secondary)this.addRoofDetails(m,secondary,rng,zone,district,true);
+    }
+  }
+warehouseArchitecture(m,x,z,w,d,h,s,rng,info=null){
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,q=ACTIVE_GEOMETRY_QUALITY;
+    const alongX=w>=d,long=alongX?w:d,deep=alongX?d:w,frontSign=this.frontageSignForAxis(info?.frontage,alongX,rng);
+    let elements=0;
+    const world=(u,v)=>alongX?{x:x+u,z:z+v*frontSign}:{x:x+v*frontSign,z:z+u};
+    const dims=(l,dep)=>alongX?{w:l,d:dep}:{w:dep,d:l};
+    const add=(u,v,l,dep,hh,base=0,col=c,bevel=true)=>{
+      if(l<=.08||dep<=.08||hh<=.08)return null;const p=world(u,v),sz=dims(l,dep),bv=clamp(Math.min(l,dep)*.022*q.genericBevelScale,.07,Math.min(.42,q.genericBevelMax*.66));
+      if(bevel&&q.genericBevel&&Math.min(l,dep)>1.7&&hh>.4)m.beveledBox(p.x,p.z,sz.w,sz.d,hh,base,col,bv);else m.box(p.x,p.z,sz.w,sz.d,hh,base,col);elements++;return{...p,w:sz.w,d:sz.d,h:hh,y:base,top:base+hh};
+    };
+    const sideFront=alongX?(frontSign>0?'z+':'z-'):(frontSign>0?'x+':'x-');
+    const sideBack=alongX?(frontSign>0?'z-':'z+'):(frontSign>0?'x-':'x+');
+    const shellLong=long*WAREHOUSE_TUNING.shellLong,shellDeep=deep*WAREHOUSE_TUNING.shellDepth,shellV=-deep*.015;
+    const bayCount=clamp(Math.round(shellLong/WAREHOUSE_TUNING.loadingBaySpacing),WAREHOUSE_TUNING.loadingBayMin,WAREHOUSE_TUNING.loadingBayMax),usable=shellLong*.72;
+    const bayWidth=clamp((usable/Math.max(1,bayCount))*rng.range(.55,.72),WAREHOUSE_TUNING.loadingBayWidthMin,WAREHOUSE_TUNING.loadingBayWidthMax),bayOffsets=[];
+    for(let i=0;i<bayCount;i++)bayOffsets.push(bayCount===1?0:(i/(bayCount-1)-.5)*usable);
+    const p=world(0,shellV),sz=dims(shellLong,shellDeep),loadingDepth=clamp(shellDeep*rng.range(WAREHOUSE_TUNING.loadingRecessDepthMin,WAREHOUSE_TUNING.loadingRecessDepthMax),3.0,shellDeep*.29),bayH=clamp(h*rng.range(.48,.62),3.4,7.2);
+    m.recessedBox(p.x,p.z,sz.w,sz.d,h,0,c,{side:sideFront,notchDepth:loadingDepth,recessHeight:bayH,notches:bayOffsets.map((u,i)=>({offset:u,width:bayWidth*(i%3===0?1.06:1)}))});elements++;
+    if(this._detailValidation)this._detailValidation.indents++;
+
+    const frontEdge=shellV+shellDeep*.5,rearEdge=shellV-shellDeep*.5;
+    // End shoulders make the footprint step in/out instead of reading as one rectangular extrusion.
+    const shoulderL=clamp(long*.115,8,19),shoulderD=clamp(deep*.23,7,18),shoulderU=shellLong*.5-shoulderL*.46;
+    add(-shoulderU,frontEdge-shoulderD*.18,shoulderL,shoulderD,h*.86);add(shoulderU,frontEdge-shoulderD*.18,shoulderL,shoulderD,h*.82);
+    // Two rear service shoulders leave a genuine central rear indentation in the silhouette.
+    const rearL=clamp(long*.22,14,34),rearD=clamp(deep*.17,6,14),rearU=shellLong*.29;
+    add(-rearU,rearEdge-rearD*.34,rearL,rearD,h*.70);add(rearU,rearEdge-rearD*.34,rearL,rearD,h*.76);
+
+    // Architectural loading dock: deep cut-outs are already in the shell; these are the visible portal frames and ledge.
+    add(0,frontEdge+1.05,usable+bayWidth*.35,2.1,.62,.22,c,false);
+    const pierUs=[-usable*.5-bayWidth*.56,...bayOffsets.map(u=>u-bayWidth*.55),...bayOffsets.map(u=>u+bayWidth*.55),usable*.5+bayWidth*.56].sort((a,b)=>a-b);
+    const uniquePiers=[];for(const u of pierUs)if(!uniquePiers.length||Math.abs(u-uniquePiers[uniquePiers.length-1])>1.3)uniquePiers.push(u);
+    for(const u of uniquePiers)add(u,frontEdge+.22,.72,1.25,Math.max(4.0,h*.72),.12,c);
+    for(let i=0;i<bayOffsets.length;i++){
+      const u=bayOffsets[i],canopyY=bayH+.30;add(u,frontEdge+.78,bayWidth*1.13,1.55,.34,canopyY,c);
+      if(i%2===0)add(u,frontEdge-loadingDepth*.48,bayWidth*.72,.55,.32,1.15,accent,false);
+    }
+
+    // Integrated office/admin block: a real stepped corner volume with its own recessed entrance.
+    const officeSide=rng.chance(.5)?1:-1,officeL=clamp(long*rng.range(.17,.24),WAREHOUSE_TUNING.officeLongMin,WAREHOUSE_TUNING.officeLongMax),officeD=clamp(deep*WAREHOUSE_TUNING.officeDepthScale,10,24),officeU=officeSide*(shellLong*.5-officeL*.48),officeV=frontEdge-officeD*.22,officeH=clamp(h*rng.range(.58,.76),4.6,9.2),op=world(officeU,officeV),os=dims(officeL,officeD),entryW=clamp(officeL*.22,3.2,6.8);
+    m.recessedBox(op.x,op.z,os.w,os.d,officeH,0,c,{side:sideFront,notchDepth:clamp(officeD*.18,1.4,3.2),recessHeight:officeH*.72,notches:[{offset:0,width:entryW}]});elements++;if(this._detailValidation)this._detailValidation.indents++;
+    add(officeU-officeSide*officeL*.08,officeV-.06,officeL*.74,officeD*.72,clamp(officeH*.34,1.6,3.0),officeH,c);
+    add(officeU,frontEdge+1.10,entryW*1.55,2.2,.38,clamp(officeH*.58,2.8,5.0),c);
+    add(officeU-officeSide*officeL*.27,officeV-officeD*.31,officeL*.24,officeD*.24,officeH*.58,0,c);
+
+    // Opposite service annex and corner step keep the rear/side elevations equally readable.
+    const serviceU=-officeSide*(shellLong*.5-clamp(long*.11,7,15)),serviceD=clamp(deep*.30,9,20);
+    add(serviceU,rearEdge+serviceD*.06,clamp(long*.16,10,23),serviceD,h*.52,0,c);
+    add(serviceU,rearEdge-serviceD*.24,clamp(long*.09,6,13),serviceD*.42,h*.68,0,c);
+
+    // Roof silhouette: parapet ring, a raised central roof plate, clerestory/monitor rhythm and plant housings.
+    const parapetH=clamp(h*.055,.48,.90),parapetT=clamp(Math.min(long,deep)*.018,.70,1.25);
+    add(0,frontEdge-parapetT*.55,shellLong,parapetT,parapetH,h-.03,c,false);add(0,rearEdge+parapetT*.55,shellLong,parapetT,parapetH,h-.03,c,false);
+    add(-shellLong*.5+parapetT*.55,shellV,parapetT,shellDeep,parapetH,h-.03,c,false);add(shellLong*.5-parapetT*.55,shellV,parapetT,shellDeep,parapetH,h-.03,c,false);
+    add(0,shellV-deep*.025,shellLong*.56,shellDeep*.54,clamp(h*.075,.70,1.45),h+.08,c);
+    const monitorCount=clamp(Math.round(shellLong/WAREHOUSE_TUNING.roofMonitorSpacing),WAREHOUSE_TUNING.roofMonitorMin,WAREHOUSE_TUNING.roofMonitorMax),monitorSpan=shellLong*.61;
+    for(let i=0;i<monitorCount;i++){
+      const u=monitorCount===1?0:(i/(monitorCount-1)-.5)*monitorSpan,ml=clamp(shellLong*.055,4.8,9.5),md=clamp(shellDeep*.31,8,18),mh=clamp(h*.10,.75,1.65);add(u,shellV-deep*.035,ml,md,mh,h+1.0,c);
+      if(q.key==='ultra'||(q.key==='high'&&i%2===0))add(u,shellV-deep*.035,ml*.60,md*.62,.42,h+1.0+mh,accent);
+    }
+    const plantU=officeSide*shellLong*.19;add(plantU,shellV-shellDeep*.15,clamp(long*.12,8,18),clamp(deep*.18,6,13),clamp(h*.12,1.0,2.2),h+1.0,c);
+    add(plantU-officeSide*clamp(long*.07,4,9),shellV-shellDeep*.13,clamp(long*.055,4,8),clamp(deep*.11,4,8),clamp(h*.16,1.1,2.6),h+1.0,c);
+
+    // Side-wall structure: repeated deep vertical bays on BOTH end elevations rather than blank walls.
+    const ribCount=clamp(Math.round(shellDeep/WAREHOUSE_TUNING.sideRibSpacing),WAREHOUSE_TUNING.sideRibMin,WAREHOUSE_TUNING.sideRibMax),ribSpan=shellDeep*.68;
+    for(const end of[-1,1])for(let i=0;i<ribCount;i++){
+      const v=ribCount===1?shellV:(i/(ribCount-1)-.5)*ribSpan+shellV,u=end*(shellLong*.5+.18);add(u,v,1.15,clamp(deep*.085,2.4,4.5),Math.max(3.8,h*.68),.10,c);
+      if(i%2===1&&h>7)add(u-end*.38,v,1.05,clamp(deep*.050,1.6,3.0),Math.max(2.8,h*.42),h*.44,c);
+    }
+
+    // A few compact rooftop exhaust/service shapes add scale without turning the roof into texture noise.
+    const ventCount=clamp(Math.round(long/36),2,5);for(let i=0;i<ventCount;i++){
+      const u=(i/(Math.max(1,ventCount-1))-.5)*shellLong*.42+rng.range(-2,2),v=shellV+shellDeep*.16+rng.range(-1.5,1.5),vp=world(u,v),vb=this._settings?.geometryQuality==='performance'?6:8;
+      m.frustum(vp.x,vp.z,clamp(deep*.025,.9,1.7),clamp(deep*.020,.7,1.4),clamp(h*.10,.8,1.8),h+1.0,c,vb,1);elements++;
+    }
+    if(this._detailValidation){this._detailValidation.warehouseArchitectures++;this._detailValidation.warehouseElements+=elements;this._detailValidation.industrial+=elements}
+  }
+frontageSignForAxis(frontage,alongX,rng){
+    if(frontage){if(alongX&&frontage.side==='north')return 1;if(alongX&&frontage.side==='south')return-1;if(!alongX&&frontage.side==='east')return 1;if(!alongX&&frontage.side==='west')return-1}
+    return rng.chance(.5)?1:-1;
+  }
+frontageSideForAxis(frontage,alongX,rng){
+    const sign=this.frontageSignForAxis(frontage,alongX,rng);return alongX?(sign>0?'z+':'z-'):(sign>0?'x+':'x-');
+  }
+highestRoofSection(sections){
+    if(!sections||!sections.length)return null;
+    let best=null;
+    for(const q of sections){
+      if(!best||q.top>best.top+.001||(Math.abs(q.top-best.top)<=.001&&q.w*q.d>best.w*best.d))best=q;
+    }
+    return best;
+  }
+addVerticalFacadeArticulation(m,parentOrX,z,w,d,h,rngArg,scaleArg=1,zoneArg='mid',districtArg=''){
+    let parent,rng,scale=1,zone='mid',district='';
+    if(typeof parentOrX==='object'){parent=parentOrX;rng=z;scale=w??1;zone=d??'mid';district=h??''}
+    else{parent={x:parentOrX,z,w,d,h,y:0,top:h};rng=rngArg;scale=scaleArg;zone=zoneArg;district=districtArg}
+    if(!parent||!rng||parent.h<8||Math.min(parent.w,parent.d)<8)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c;
+    const alongX=(parent.w>=parent.d)?rng.chance(.66):!rng.chance(.66),faceLen=alongX?parent.w:parent.d,depthAxis=alongX?parent.d:parent.w;
+    const sign=rng.chance(.5)?1:-1,edge=alongX?parent.z+sign*parent.d*.5:parent.x+sign*parent.w*.5;
+    const strong=zone==='core'||zone==='inner'||district==='commercial_corridor',proj=clamp(depthAxis*(strong?0.13:0.095),.34,1.55),ribDepth=proj*.82;
+    const baseY=parent.y+(rng.chance(.60)?0:parent.h*rng.range(.05,.15));
+    const ribH=clamp(parent.h*rng.range(strong?0.72:0.58,.98),Math.min(5,parent.h*.52),parent.h*.985);
+    const count=zone==='core'?rng.int(3,6):strong?rng.int(2,4):rng.int(1,3);
+    const usable=faceLen*clamp(rng.range(.58,.90),.54,.92),start=-usable*.5,step=count===1?0:usable/(count-1),ribSpan=clamp(faceLen/(count*6.6),.95,2.8);
+    for(let i=0;i<count;i++){
+      const u=count===1?rng.range(-faceLen*.18,faceLen*.18):start+step*i+rng.range(-step*.07,step*.07);
+      if(alongX)this.detailBox(m,parent,parent.x+u,edge+sign*proj*.54,ribSpan,ribDepth,ribH,baseY,i%2?accent:c,'facade');
+      else this.detailBox(m,parent,edge+sign*proj*.54,parent.z+u,ribDepth,ribSpan,ribH,baseY,i%2?accent:c,'facade');
+    }
+    if(parent.h>14&&faceLen>12&&rng.chance(.84*scale)){
+      const midH=clamp(parent.h*rng.range(.24,.46),3.2,Math.min(11,parent.h*.52)),midBase=parent.y+parent.h*rng.range(.18,.40),midLen=clamp(faceLen*rng.range(.40,.70),6.0,faceLen*.82),midDepth=proj*1.02;
+      if(alongX)this.detailBox(m,parent,parent.x+rng.range(-faceLen*.10,faceLen*.10),edge+sign*proj*.69,midLen,midDepth,midH,midBase,c,'facade');
+      else this.detailBox(m,parent,edge+sign*proj*.69,parent.z+rng.range(-faceLen*.10,faceLen*.10),midDepth,midLen,midH,midBase,c,'facade');
+    }
+    if(parent.h>10&&rng.chance(.76*scale)){
+      const gH=clamp(parent.h*rng.range(.20,.32),2.4,5.6),gLen=clamp(faceLen*rng.range(.30,.54),4.4,faceLen*.70),gDepth=proj*1.18;
+      if(alongX)this.detailBox(m,parent,parent.x+rng.range(-faceLen*.14,faceLen*.14),edge+sign*proj*.80,gLen,gDepth,gH,parent.y+.05,accent,'facade');
+      else this.detailBox(m,parent,edge+sign*proj*.80,parent.z+rng.range(-faceLen*.14,faceLen*.14),gDepth,gLen,gH,parent.y+.05,accent,'facade');
+    }
+    if(parent.h>18&&faceLen>16&&rng.chance(.68*scale)){
+      const topBase=parent.y+parent.h*rng.range(.58,.76),topH=clamp(parent.h*.18,2.2,6.2),topLen=clamp(faceLen*rng.range(.28,.46),4.4,faceLen*.58),topDepth=proj*.86;
+      if(alongX)this.detailBox(m,parent,parent.x+rng.range(-faceLen*.12,faceLen*.12),edge+sign*proj*.58,topLen,topDepth,topH,topBase,c,'facade');
+      else this.detailBox(m,parent,edge+sign*proj*.58,parent.z+rng.range(-faceLen*.12,parent.d*.12),topDepth,topLen,topH,topBase,c,'facade');
+    }
+    if(strong&&parent.h>12&&faceLen>15&&rng.chance(.62*scale)){
+      const wingSpan=clamp(faceLen*rng.range(.10,.16),2.0,4.6),wingDepth=proj*.95,wingH=clamp(parent.h*rng.range(.42,.72),4.2,parent.h*.86),wingBase=parent.y+parent.h*rng.range(.06,.16);
+      for(const sideU of[-1,1]){
+        const u=sideU*(faceLen*.5-wingSpan*.72);
+        if(alongX)this.detailBox(m,parent,parent.x+u,edge+sign*proj*.62,wingSpan,wingDepth,wingH,wingBase,sideU>0?accent:c,'facade');
+        else this.detailBox(m,parent,edge+sign*proj*.62,parent.z+u,wingDepth,wingSpan,wingH,wingBase,sideU>0?accent:c,'facade');
+      }
+    }
+  }
+detailBox(m,parent,x,z,w,d,h,base,col,kind='facade'){
+    if(!parent||w<=0||d<=0||h<=0)return null;
+    const eps=.025,px0=parent.x-parent.w*.5,px1=parent.x+parent.w*.5,pz0=parent.z-parent.d*.5,pz1=parent.z+parent.d*.5,
+      cx0=x-w*.5,cx1=x+w*.5,cz0=z-d*.5,cz1=z+d*.5,pTop=parent.top??(parent.y+parent.h),cTop=base+h;
+    let ok=false;
+    if(kind==='roof'){
+      ok=Math.abs(base-pTop)<=eps&&cx0>=px0-eps&&cx1<=px1+eps&&cz0>=pz0-eps&&cz1<=pz1+eps;
+    }else{
+      const ox=Math.min(px1,cx1)-Math.max(px0,cx0),oz=Math.min(pz1,cz1)-Math.max(pz0,cz0);
+      ok=ox>eps&&oz>eps&&base>=parent.y-eps&&cTop<=pTop+eps;
+    }
+    if(!ok){if(this._detailValidation)this._detailValidation.rejected++;return null}
+    const q=ACTIVE_GEOMETRY_QUALITY,bevelDetail=q.genericBevel&&kind!=='window'&&Math.min(w,d)>=1.8&&h>=.34;
+    if(bevelDetail)m.beveledBox(x,z,w,d,h,base,col,clamp(Math.min(w,d)*.024,.055,Math.min(.22,q.genericBevelMax*.34)));else m.box(x,z,w,d,h,base,col);
+    if(this._detailValidation){this._detailValidation.placed++;if(kind==='roof')this._detailValidation.roof++;else if(kind==='window')this._detailValidation.window++;else if(kind==='entrance')this._detailValidation.entrance++;else if(kind==='industrial')this._detailValidation.industrial++;else this._detailValidation.facade++}
+    return{x,z,w,d,h,y:base,top:cTop};
+  }
+addFacadeStepDetail(m,parentOrX,z,w,d,h,rngArg,axisArg='x'){
+    let parent,rng,axis;
+    if(typeof parentOrX==='object'){parent=parentOrX;rng=z;axis=w||'x'}else{parent={x:parentOrX,z,w,d,h,y:0,top:h};rng=rngArg;axis=axisArg}
+    if(!parent||!rng||parent.h<12||parent.w<14||parent.d<14)return;
+    const c=COLORS.building,sh=clamp(parent.h*rng.range(.18,.34),3,Math.min(10,parent.h*.48)),baseY=parent.y+rng.range(parent.h*.20,parent.h*.48);
+    if(axis==='x'){
+      const sw=clamp(parent.w*rng.range(.18,.28),2.2,parent.w*.38),sd=clamp(parent.d*rng.range(.54,.82),4,parent.d*.88),sx=(parent.w-sw)*.5*(rng.chance(.5)?1:-1);
+      this.detailBox(m,parent,parent.x+sx,parent.z,sw,sd,sh,baseY,c,'facade');
+    }else{
+      const sd=clamp(parent.d*rng.range(.18,.28),2.2,parent.d*.38),sw=clamp(parent.w*rng.range(.54,.82),4,parent.w*.88),sz=(parent.d-sd)*.5*(rng.chance(.5)?1:-1);
+      this.detailBox(m,parent,parent.x,parent.z+sz,sw,sd,sh,baseY,c,'facade');
+    }
+  }
+addWindowRelief(m,parentOrX,z,w,d,h,rngArg,scaleArg=1,passArg=0){
+    let parent,rng,scale,pass=0;
+    if(typeof parentOrX==='object'){parent=parentOrX;rng=z;scale=w??1;pass=d??0}else{parent={x:parentOrX,z,w,d,h,y:0,top:h};rng=rngArg;scale=scaleArg;pass=passArg}
+    if(!parent||!rng||parent.h<7||Math.min(parent.w,parent.d)<9)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,floors=Math.max(2,Math.min(14,Math.floor(parent.h/3.35))),rows=Math.max(2,Math.min(9,Math.round(floors*(.42+.42*scale)))),panelH=clamp(parent.h/(floors*4.8),.26,.74),localBase=clamp(parent.h*.11,.9,Math.min(4.6,parent.h*.26));
+    let alongX=parent.w>=parent.d;if(pass%2===1)alongX=!alongX;
+    const faceSign=this.frontageSignForAxis(parent.frontage,alongX,rng),faceLen=alongX?parent.w:parent.d,edge=alongX?parent.z+faceSign*parent.d*.5:parent.x+faceSign*parent.w*.5,panelLong=clamp(faceLen*rng.range(.62,.90),6,faceLen*.93),th=.18,offset=.05;
+    const bayCount=clamp(Math.round(panelLong/(scale>.82?6.6:8.8)),2,10),frameW=clamp(panelLong/(bayCount*13.5),.18,.56);
+    for(let i=0;i<rows;i++){
+      const t=rows===1?.5:i/(rows-1),yy=parent.y+localBase+t*Math.max(.4,parent.h-localBase-panelH-1.10);
+      if(alongX){
+        const pz=edge+faceSign*offset;this.detailBox(m,parent,parent.x,pz,panelLong,th,panelH,yy,accent,'window');
+        if(scale>.36){for(let b=1;b<bayCount;b++){const bx=parent.x-panelLong*.5+panelLong*b/bayCount;this.detailBox(m,parent,bx,edge+faceSign*.09,frameW,.32,panelH+.24,Math.max(parent.y+.03,yy-.12),c,'facade')}}
+        if(i===0||i===rows-1||rng.chance(.56)){const railZ=edge+faceSign*.10;this.detailBox(m,parent,parent.x,railZ,panelLong*1.04,.34,.14,yy+panelH+.08,c,'facade')}
+      }else{
+        const px=edge+faceSign*offset;this.detailBox(m,parent,px,parent.z,th,panelLong,panelH,yy,accent,'window');
+        if(scale>.36){for(let b=1;b<bayCount;b++){const bz=parent.z-panelLong*.5+panelLong*b/bayCount;this.detailBox(m,parent,edge+faceSign*.09,bz,.32,frameW,panelH+.24,Math.max(parent.y+.03,yy-.12),c,'facade')}}
+        if(i===0||i===rows-1||rng.chance(.56)){const railX=edge+faceSign*.10;this.detailBox(m,parent,railX,parent.z,.34,panelLong*1.04,.14,yy+panelH+.08,c,'facade')}
+      }
+    }
+    if(scale>.64&&parent.h>14&&faceLen>14&&rng.chance(.78)){
+      const capBase=parent.y+parent.h*rng.range(.16,.30),capH=clamp(parent.h*.09,1.0,2.6),capLen=panelLong*rng.range(.70,.92);
+      if(alongX)this.detailBox(m,parent,parent.x,edge+faceSign*.12,capLen,.36,capH,capBase,c,'facade');
+      else this.detailBox(m,parent,edge+faceSign*.12,parent.z,.36,capLen,capH,capBase,c,'facade');
+    }
+    if(scale>.78&&parent.h>20&&faceLen>18&&rng.chance(.76)){
+      const longH=clamp(parent.h*.64,8,parent.h*.78),base=parent.y+parent.h*.14,bayW=clamp(faceLen*.060,.8,2.2),u=rng.range(-faceLen*.24,faceLen*.24);
+      if(alongX)this.detailBox(m,parent,parent.x+u,edge+faceSign*.12,bayW,.38,longH,base,c,'facade');
+      else this.detailBox(m,parent,edge+faceSign*.12,parent.z+u,.38,bayW,longH,base,c,'facade');
+    }
+  }
+addIndustrialDetails(m,parent,rng,scale=1){
+    if(!parent||parent.h<4)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,alongX=parent.w>=parent.d,frontLen=alongX?parent.w:parent.d,count=clamp(Math.floor(frontLen/9.5),2,10),sign=this.frontageSignForAxis(parent.frontage,alongX,rng),doorW=clamp(frontLen/(count*1.95),3.2,6.4),doorH=clamp(parent.h*.52,3.2,6.2),usable=frontLen*.82,base=parent.y+.10;
+    for(let i=0;i<count;i++){
+      const u=count===1?0:(i/(count-1)-.5)*usable;
+      if(alongX){const edge=parent.z+sign*parent.d*.5,pz=edge+sign*.05,x=parent.x+u;this.detailBox(m,parent,x,pz,doorW,.30,doorH,base,accent,'industrial');this.detailBox(m,parent,x,edge+sign*.22,doorW*1.16,.72,.28,base+doorH+.22,c,'industrial');if(parent.h>7&&rng.chance(.88))this.detailBox(m,parent,x,edge+sign*.31,.40,doorW*.96,Math.max(3.2,parent.h*.70),base+.14,c,'industrial')}
+      else{const edge=parent.x+sign*parent.w*.5,px=edge+sign*.05,z=parent.z+u;this.detailBox(m,parent,px,z,.30,doorW,doorH,base,accent,'industrial');this.detailBox(m,parent,edge+sign*.22,z,.72,doorW*1.16,.28,base+doorH+.22,c,'industrial');if(parent.h>7&&rng.chance(.88))this.detailBox(m,parent,edge+sign*.31,z,doorW*.96,.40,Math.max(3.2,parent.h*.70),base+.14,c,'industrial')}
+    }
+    if(frontLen>24){const canopyLen=frontLen*.78,canopyH=.34,canopyY=base+doorH+.60;if(alongX){const edge=parent.z+sign*parent.d*.5;this.detailBox(m,parent,parent.x,edge+sign*.36,canopyLen,.86,canopyH,canopyY,c,'industrial')}else{const edge=parent.x+sign*parent.w*.5;this.detailBox(m,parent,edge+sign*.36,parent.z,.86,canopyLen,canopyH,canopyY,c,'industrial')}}
+    if(frontLen>24&&rng.chance(.98)){
+      const officeLen=clamp(frontLen*rng.range(.22,.34),8,18),officeH=clamp(parent.h*rng.range(.54,.74),4.0,8.4),proj=1.55;
+      if(alongX){const edge=parent.z-sign*parent.d*.5,x=parent.x+(rng.chance(.5)?1:-1)*frontLen*.24;const office=this.detailBox(m,parent,x,edge-sign*.64,officeLen,proj,officeH,parent.y,c,'industrial');if(office){this.detailBox(m,office,x,office.z-sign*.60,officeLen*.66,.18,.62,parent.y+officeH*.55,accent,'industrial');if(rng.chance(.64))this.detailBox(m,office,x+officeLen*.26*(rng.chance(.5)?1:-1),office.z-sign*.70,officeLen*.24,.66,Math.max(2.6,officeH*.58),parent.y,c,'industrial')}}
+      else{const edge=parent.x-sign*parent.w*.5,z=parent.z+(rng.chance(.5)?1:-1)*frontLen*.24;const office=this.detailBox(m,parent,edge-sign*.64,z,proj,officeLen,officeH,parent.y,c,'industrial');if(office){this.detailBox(m,office,office.x-sign*.60,z,.18,officeLen*.66,.62,parent.y+officeH*.55,accent,'industrial');if(rng.chance(.64))this.detailBox(m,office,office.x-sign*.70,z+officeLen*.26*(rng.chance(.5)?1:-1),.66,officeLen*.24,Math.max(2.6,officeH*.58),parent.y,c,'industrial')}}
+    }
+    if(parent.h>5&&rng.chance(.995)){
+      const y=parent.y+parent.h*.68,strip=frontLen*rng.range(.34,.56);
+      if(alongX){const edge=parent.z-sign*parent.d*.5;this.detailBox(m,parent,parent.x+rng.range(-parent.w*.12,parent.w*.12),edge-sign*.06,strip,.18,.62,y,accent,'industrial')}
+      else{const edge=parent.x-sign*parent.w*.5;this.detailBox(m,parent,edge-sign*.06,parent.z+rng.range(-parent.d*.12,parent.d*.12),.18,strip,.62,y,accent,'industrial')}
+    }
+  }
+addCommercialDetails(m,parent,rng,scale=1){
+    if(!parent||parent.h<5)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,alongX=parent.w>=parent.d,frontLen=alongX?parent.w:parent.d,sign=this.frontageSignForAxis(parent.frontage,alongX,rng),count=clamp(Math.round(frontLen/7.0),2,8),usable=frontLen*.82,bayW=clamp(usable/count*.70,2.1,6.4),bayH=clamp(parent.h*.28,2.8,4.6),base=parent.y+.10;
+    for(let i=0;i<count;i++){
+      const u=count===1?0:(i/(count-1)-.5)*usable;
+      if(alongX){
+        const edge=parent.z+sign*parent.d*.5,pz=edge+sign*.05,x=parent.x+u;this.detailBox(m,parent,x,pz,bayW,.20,bayH,base,accent,'window');
+        this.detailBox(m,parent,x,edge+sign*.18,bayW*1.10,.54,.18,base+bayH+.12,c,'facade');
+        if(parent.h>7&&rng.chance(.92))this.detailBox(m,parent,x,edge+sign*.25,.34,bayW*1.02,Math.max(2.8,parent.h*.58),base+.12,c,'facade');
+      }else{
+        const edge=parent.x+sign*parent.w*.5,px=edge+sign*.05,z=parent.z+u;this.detailBox(m,parent,px,z,.20,bayW,bayH,base,accent,'window');
+        this.detailBox(m,parent,edge+sign*.18,z,.54,bayW*1.10,.18,base+bayH+.12,c,'facade');
+        if(parent.h>7&&rng.chance(.92))this.detailBox(m,parent,edge+sign*.25,z,bayW*1.02,.34,Math.max(2.8,parent.h*.58),base+.12,c,'facade');
+      }
+    }
+    if(parent.h>8&&rng.chance(.94)){const y=parent.y+parent.h*.56,strip=frontLen*rng.range(.48,.72);if(alongX){const edge=parent.z-sign*parent.d*.5;this.detailBox(m,parent,parent.x,edge-sign*.06,strip,.18,.56,y,accent,'window')}else{const edge=parent.x-sign*parent.w*.5;this.detailBox(m,parent,edge-sign*.06,parent.z,.18,strip,.56,y,accent,'window')}}
+  }
+addEntranceDetail(m,parent,rng,scale=1){
+    if(!parent||parent.h<5||Math.min(parent.w,parent.d)<9)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,alongX=parent.w>=parent.d,sign=this.frontageSignForAxis(parent.frontage,alongX,rng),frontLen=alongX?parent.w:parent.d,doorW=clamp(frontLen*rng.range(.12,.22),2.2,6.8),doorH=clamp(parent.h*rng.range(.25,.38),2.7,5.6),t=.24,base=parent.y+.07,entryBand=clamp(frontLen*rng.range(.22,.38),5.2,13.0);
+    if(alongX){
+      const x=parent.x+rng.range(-parent.w*.18,parent.w*.18),edge=parent.z+sign*parent.d*.5,pz=edge+sign*.05;
+      this.detailBox(m,parent,x,pz,entryBand,t,doorH*1.04,base,accent,'entrance');
+      this.detailBox(m,parent,x,pz+sign*.055,doorW,t*1.05,doorH,base,c,'entrance');
+      this.detailBox(m,parent,x,edge+sign*.26,entryBand*1.12,.70,.24,base+doorH+.12,c,'entrance');
+      this.detailBox(m,parent,x,edge+sign*.33,entryBand*.84,.34,Math.max(1.0,doorH*.28),base+doorH+.42,c,'entrance');
+      if(scale>.55){this.detailBox(m,parent,x-entryBand*.48,pz,.30,.36,doorH*1.10,base,c,'entrance');this.detailBox(m,parent,x+entryBand*.48,pz,.30,.36,doorH*1.10,base,c,'entrance')}
+      if(scale>.78&&parent.h>10){this.detailBox(m,parent,x-entryBand*.30,edge+sign*.21,.26,.42,Math.max(2.6,parent.h*.42),base+.08,c,'entrance');this.detailBox(m,parent,x+entryBand*.30,edge+sign*.21,.26,.42,Math.max(2.6,parent.h*.42),base+.08,c,'entrance')}
+    }else{
+      const z=parent.z+rng.range(-parent.d*.18,parent.d*.18),edge=parent.x+sign*parent.w*.5,px=edge+sign*.05;
+      this.detailBox(m,parent,px,z,t,entryBand,doorH*1.04,base,accent,'entrance');
+      this.detailBox(m,parent,px+sign*.055,z,t*1.05,doorW,doorH,base,c,'entrance');
+      this.detailBox(m,parent,edge+sign*.26,z,.70,entryBand*1.12,.24,base+doorH+.12,c,'entrance');
+      this.detailBox(m,parent,edge+sign*.33,z,.34,entryBand*.84,Math.max(1.0,doorH*.28),base+doorH+.42,c,'entrance');
+      if(scale>.55){this.detailBox(m,parent,px,z-entryBand*.48,.36,.30,doorH*1.10,base,c,'entrance');this.detailBox(m,parent,px,z+entryBand*.48,.36,.30,doorH*1.10,base,c,'entrance')}
+      if(scale>.78&&parent.h>10){this.detailBox(m,parent,edge+sign*.21,z-entryBand*.30,.42,.26,Math.max(2.6,parent.h*.42),base+.08,c,'entrance');this.detailBox(m,parent,edge+sign*.21,z+entryBand*.30,.42,.26,Math.max(2.6,parent.h*.42),base+.08,c,'entrance')}
+    }
+  }
+addRoofDetails(m,parentOrX,z,w,d,topY,rngArg,zoneArg='mid',districtArg='',secondaryArg=false){
+    let parent,rng,zone,district='',secondary=false;
+    if(typeof parentOrX==='object'){parent=parentOrX;rng=z;zone=w||'mid';district=d||'';secondary=!!topY}else{parent={x:parentOrX,z,w,d,h:Math.max(.01,topY),y:0,top:topY};rng=rngArg;zone=zoneArg;district=districtArg;secondary=secondaryArg}
+    if(!parent||!rng)return;
+    const setting=clamp((this._settings?.buildingDetail??.75)/.75,.12,1.34),bias=this._settings?.cityDetailBias==='cleaner'?.88:this._settings?.cityDetailBias==='dense'?1.12:1,detailChance=clamp(setting*bias,.12,1);if(detailChance<.999&&rng.next()>detailChance)return;
+    const c=COLORS.building,accent=COLORS.buildingAccent||c,footprint=Math.min(parent.w,parent.d),bigger=Math.max(parent.w,parent.d),top=parent.top??(parent.y+parent.h),urban=zone!=='outer'&&zone!=='industrial',commercial=district==='commercial_corridor';
+    if(footprint<7||top<5)return;
+    const polish=BUILDING_POLISH_TUNING,parCfg=polish.parapet,parapetChance=commercial?parCfg.commercialChance:(parCfg.chance[zone]??parCfg.chance.mid);
+    if(footprint>parCfg.minShort&&rng.chance(parapetChance*(secondary?.66:1))){
+      const t=clamp(rng.range(parCfg.thickness[0],parCfg.thickness[1]),.14,.40),ph=rng.range(parCfg.height[0],parCfg.height[1]);
+      this.detailBox(m,parent,parent.x,parent.z+(parent.d-t)*.5,parent.w,t,ph,top,c,'roof');
+      this.detailBox(m,parent,parent.x,parent.z-(parent.d-t)*.5,parent.w,t,ph,top,c,'roof');
+      this.detailBox(m,parent,parent.x+(parent.w-t)*.5,parent.z,t,parent.d,ph,top,c,'roof');
+      this.detailBox(m,parent,parent.x-(parent.w-t)*.5,parent.z,t,parent.d,ph,top,c,'roof');
+    }
+    const roofCfg=polish.roofStructure,roofChance=commercial?roofCfg.commercialChance:(roofCfg.chance[zone]??roofCfg.chance.mid),unitCount=!secondary&&rng.chance(roofChance)?rng.int(roofCfg.count[0],roofCfg.count[1]):0;
+    for(let i=0;i<unitCount;i++){
+      const ratio=rng.range(roofCfg.footprintRatio[0],roofCfg.footprintRatio[1]),uw=clamp(parent.w*ratio,1.5,Math.max(2.0,parent.w*.24)),ud=clamp(parent.d*ratio,1.5,Math.max(2.0,parent.d*.24)),uh=rng.range(roofCfg.height[0],roofCfg.height[1]),ux=parent.x+rng.range(-(parent.w-uw)*.28,(parent.w-uw)*.28),uz=parent.z+rng.range(-(parent.d-ud)*.28,(parent.d-ud)*.28);
+      this.detailBox(m,parent,ux,uz,uw,ud,uh,top,c,'roof');
+    }
+    if(zone==='industrial'&&bigger>30&&!secondary&&rng.chance(.72)){
+      const alongX=parent.w>=parent.d,count=clamp(Math.floor(bigger/22),2,5);
+      for(let i=0;i<count;i++){const t=(i+.5)/count-.5,ux=alongX?parent.x+t*parent.w*.62:parent.x,uz=alongX?parent.z:parent.z+t*parent.d*.62,uw=alongX?clamp(parent.w/count*.36,2.2,5.4):rng.range(2.1,3.8),ud=alongX?rng.range(2.1,3.8):clamp(parent.d/count*.36,2.2,5.4);this.detailBox(m,parent,ux,uz,uw,ud,rng.range(.75,1.55),top,c,'roof')}
+    }
+    // A second, slightly larger roof room is deliberately rare and shallow; it should read as a lift/plant
+    // housing from normal zoom, not as another building storey.
+    if(bigger>18&&!secondary&&unitCount===0&&rng.chance(roofChance*.34)){
+      const rw=clamp(parent.w*rng.range(.12,.20),2.4,parent.w*.25),rd=clamp(parent.d*rng.range(.12,.20),2.4,parent.d*.25),rx=parent.x+rng.range(-Math.max(0,parent.w-rw)*.20,Math.max(0,parent.w-rw)*.20),rz=parent.z+rng.range(-Math.max(0,parent.d-rd)*.20,Math.max(0,parent.d-rd)*.20),rh=rng.range(.70,1.45);
+      this.detailBox(m,parent,rx,rz,rw,rd,rh,top,c,'roof');
+    }
+  }
+}
+
+const categories=['Warehouse','Skyscraper / office building','Apartment block','Terraced housing'];
+const $=id=>document.getElementById(id), type=$('type');categories.forEach((s,i)=>type.add(new Option(s,i)));
+const specs=[['width','Width',18,150,1,42,'m'],['depth','Depth',4,100,1,28,'m'],['floors','Floors',1,55,1,8,''],['floorHeight','Floor height',2.6,8,.1,3.35,'m'],['buildingDetail','Architectural detail',0,1,.01,.75,''],['recessDepth','Recess depth',.02,1,.01,.20,'m']];
+specs.forEach(([id,name,min,max,step,val,unit],i)=>{const wrap=document.createElement('div');wrap.innerHTML='<label for="'+id+'">'+name+'<output id="o_'+id+'"></output></label><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'">';$(i<4?'massing':'detail').append(wrap);$(id).oninput=rebuild});
+const materials={};
+let currentTowerStyle='simple';
+let mesh={v:[],f:[]}, bounds,settings, yaw=-.78,pitch=.62,zoom=1,pan=[0,0],spinning=false,wire=false,dirty=true;
+function rng(seed){let s=2166136261;for(const c of seed)s=Math.imul(s^c.charCodeAt(0),16777619);return()=>{s+=0x6D2B79F5;let t=Math.imul(s^s>>>15,1|s);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296}}
+function read(){const s={type:+type.value,seed:$('seed').value,form:$('form').value,towerStyle:$('towerStyle').value||'auto',terraceRoof:$('terraceRoof').value||'flat',roofRise:+$('roofRise').value||1.8};specs.forEach(([id])=>s[id]=+$(id).value);return s}
+// Residential family: consistent storeys and real repeated window recesses.
+function apartmentArchitecture(m,s,rng){const w=s.width,d=s.depth,fh=s.floorHeight,floors=s.floors,H=floors*fh,c=COLORS.building,depth=s.recessDepth??.20;
+function volume(x,z,ww,dd,hh,y){m.box(x,z,ww,dd,hh,y,c)}
+function storeys(cx,cz,ww,dd,count,base){volume(cx,cz,ww-depth*2,dd-depth*2,count*fh,base);
+for(let side=0;side<4;side++){const front=side<2,sign=side%2?-1:1,length=front?ww:dd,n=Math.max(2,Math.round(length/(front?3.7:4.1))),bay=length/n;
+function wall(a,b,yy,hh,inset=0){if(b-a<.001||hh<.001)return;const t=(a+b)/2,th=depth-inset;if(th<.001)return;volume(front?cx+t:cx+sign*(ww/2-depth+th/2),front?cz+sign*(dd/2-depth+th/2):cz+t,front?b-a:th,front?th:b-a,hh,yy)}
+for(let f=0;f<count;f++)for(let j=0;j<n;j++){const a=-length/2+j*bay,b=a+bay,yy=base+f*fh,isEntry=base===0&&f===0&&side===1&&j===Math.floor(n/2),winW=isEntry?Math.min(2.1,bay*.72):Math.min(1.85,bay*.52),left=(a+b-winW)/2,right=left+winW,bot=isEntry?yy+.02:yy+fh*.30,top=isEntry?yy+Math.min(2.5,fh*.84):yy+fh*.79;
+wall(a,left,yy,fh);wall(right,b,yy,fh);wall(left,right,yy,bot-yy);wall(left,right,top,yy+fh-top);
+// White backing lies 20 cm behind the wall plane; the surrounding wall pieces form its reveals.
+if(front)volume(cx+(left+right)/2,cz+sign*(dd/2-depth-.015),winW,.025,top-bot,bot);else volume(cx+sign*(ww/2-depth-.015),cz+(left+right)/2,.025,winW,top-bot,bot);
+}
+}
+volume(cx,cz,ww,dd,.06,base+count*fh-.06);
+}
+const stepped=s.form==='step'||s.form==='offset';const lower=stepped&&floors>3?floors-2:floors;storeys(0,0,w,d,lower,0);
+if(lower<floors)storeys(s.form==='offset'?w*.035:0,0,w*.90,d*.91,floors-lower,lower*fh);
+const rw=lower<floors?w*.90:w,rd=lower<floors?d*.91:d;
+for(const sign of [-1,1]){volume(0,sign*(rd/2-.09),rw,.18,.32,H);volume(sign*(rw/2-.09),0,.18,rd,.32,H)}
+volume(w*.15,0,Math.min(4,w*.13),Math.min(4,d*.21),.85,H);
+volume(0,-d/2-.45,3.2,.9,.12,Math.min(2.65,fh*.87));
+// Narrow circulation spine, rather than a large commercial podium.
+if(w>28)volume(w*.22,0,.55,d+.18,H-.25,0);
+}
+
+// Office family: low podium, coherent shaft, regular white facade recesses.
+function officeTowerArchitecture(m,s,rng){const w=s.width,d=s.depth,fh=s.floorHeight,F=s.floors,H=F*fh,c=COLORS.building;
+function volume(x,z,ww,dd,hh,y){m.box(x,z,ww,dd,hh,y,c)}
+function shaft(cx,cz,ww,dd,count,base){if(count<1)return;const recess=s.recessDepth??.20;volume(cx,cz,ww-2*recess,dd-2*recess,count*fh,base);
+for(let side=0;side<4;side++){const front=side<2,sign=side%2?-1:1,len=front?ww:dd,bays=Math.max(3,Math.round(len/3.15)),bay=len/bays;
+function panel(a,b,y,height,inset=0){if(b-a<.001||height<.001)return;const th=recess-inset;if(th<.001)return;volume(front?cx+(a+b)/2:cx+sign*(ww/2-recess+th/2),front?cz+sign*(dd/2-recess+th/2):cz+(a+b)/2,front?b-a:th,front?th:b-a,height,y)}
+for(let f=0;f<count;f++)for(let j=0;j<bays;j++){const a=-len/2+j*bay,b=a+bay,y=base+f*fh,l=a+bay*.075,r=b-bay*.075,bot=y+fh*.22,top=y+fh*.84;panel(a,l,y,fh);panel(r,b,y,fh);panel(l,r,y,bot-y);panel(l,r,top,y+fh-top);if(front)volume(cx+(l+r)/2,cz+sign*(dd/2-recess-.01),r-l,.025,top-bot,bot);else volume(cx+sign*(ww/2-recess-.01),cz+(l+r)/2,.025,r-l,top-bot,bot)}
+}
+volume(cx,cz,ww,dd,.06,base+count*fh-.06);
+}
+const podiumFloors=Math.min(2,Math.max(0,F-3)),shaftFloors=F-podiumFloors,podiumH=podiumFloors*fh;
+if(podiumFloors)shaft(0,0,w,d,podiumFloors,0);
+const tw=podiumFloors?w*.78:w,td=podiumFloors?d*.78:d;
+let variant=s.towerStyle||'auto';if(variant==='auto'){const chance=rng.next();variant=chance<.55?'simple':rng.pick(['tiered','offset','tapered','portal','terraces'])}if(shaftFloors<8)variant='simple';currentTowerStyle=variant;
+let crownW=tw,crownD=td,crownX=0,crownZ=0;
+// Transform a complete facade segment, including its recesses, into a taper.
+function taper(count,base,bottomScale,topScale,cx=0,cz=0){const begin=m.p.length;shaft(cx,cz,tw*bottomScale,td*bottomScale,count,base);const height=count*fh;
+for(let i=begin;i<m.p.length;i+=3){const t=(m.p[i+1]-base)/height,k=1+(topScale/bottomScale-1)*t;m.p[i]=cx+(m.p[i]-cx)*k;m.p[i+2]=cz+(m.p[i+2]-cz)*k}
+for(let i=begin;i<m.p.length;i+=9){const a=m.p.slice(i,i+3),b=m.p.slice(i+3,i+6),c=m.p.slice(i+6,i+9),u=b.map((n,j)=>n-a[j]),v=c.map((n,j)=>n-a[j]),n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],len=Math.hypot(...n)||1,sign=n.reduce((sum,n,j)=>sum+n*m.n[i+j],0)<0?-1:1;for(let j=0;j<3;j++)for(let k=0;k<3;k++)m.n[i+j*3+k]=n[k]/len*sign}}
+if(variant==='simple'){const stepped=['step','offset'].includes(s.form),upper=stepped&&shaftFloors>8?Math.max(2,Math.round(shaftFloors*.16)):0;shaft(0,0,tw,td,shaftFloors-upper,podiumH);if(upper){shaft(s.form==='offset'?tw*.025:0,0,tw*.89,td*.89,upper,H-upper*fh);crownW=tw*.89;crownD=td*.89;crownX=s.form==='offset'?tw*.025:0}}
+else if(variant==='tiered'){const levels=[Math.floor(shaftFloors*.58),Math.floor(shaftFloors*.23),Math.floor(shaftFloors*.12)];levels.push(shaftFloors-levels.reduce((a,b)=>a+b,0));let base=podiumH;for(let i=0;i<4;i++){const scale=[1,.80,.59,.36][i];shaft(0,0,tw*scale,td*scale,levels[i],base);base+=levels[i]*fh}crownW=tw*.36;crownD=td*.36;m.frustum(0,0,.48,.08,Math.max(3,H*.08),H+1.4,c,8);volume(0,0,crownW*.50,crownD*.50,1.4,H)}
+else if(variant==='offset'){const levels=[Math.floor(shaftFloors*.42),Math.floor(shaftFloors*.34)];levels.push(shaftFloors-levels[0]-levels[1]);let base=podiumH;for(let i=0;i<3;i++){shaft([0,-tw*.07,tw*.075][i],[0,td*.035,-td*.025][i],tw*[1,.91,.80][i],td*[1,.92,.82][i],levels[i],base);base+=levels[i]*fh}crownW=tw*.80;crownD=td*.82;crownX=tw*.075;crownZ=-td*.025}
+else if(variant==='tapered'){taper(shaftFloors,podiumH,1,.64);crownW=tw*.64;crownD=td*.64;m.frustum(tw*.16,0,.42,.04,Math.max(3,H*.06),H+1.1,c,8)}
+else if(variant==='portal'){const crownFloors=Math.max(2,Math.round(shaftFloors*.13)),lower=shaftFloors-crownFloors;taper(lower,podiumH,1,.82);const cw=tw*.82,cd=td*.82,y=H-crownFloors*fh;shaft(-cw*.40,0,cw*.20,cd,crownFloors-1,y);shaft(cw*.40,0,cw*.20,cd,crownFloors-1,y);shaft(0,0,cw,cd,1,H-fh);crownW=cw;crownD=cd}
+else if(variant==='terraces'){const gaps=shaftFloors>15?3:2,available=shaftFloors-gaps,blocks=gaps+1;let base=podiumH;for(let i=0;i<blocks;i++){const count=Math.floor(available/blocks)+(i<available%blocks?1:0),scale=1-i*.055;shaft(i%2?tw*.018:0,0,tw*scale,td*scale,count,base);base+=count*fh;if(i<gaps){shaft(0,td*.06,tw*.53,td*.57,1,base);volume(0,0,tw*scale,td*scale,.12,base);base+=fh}}crownW=tw*(1-gaps*.055);crownD=td*(1-gaps*.055);crownX=gaps%2?tw*.018:0}
+if(variant!=='portal')for(const sign of [-1,1]){volume(crownX,crownZ+sign*(crownD/2-.08),crownW,.16,.28,H);volume(crownX+sign*(crownW/2-.08),crownZ,.16,crownD,.28,H)}
+if(variant!=='tiered')volume(crownX,crownZ,crownW*.32,crownD*.32,Math.min(1.1,fh*.33),H);
+// A single slim central entrance canopy keeps the base legible.
+volume(0,-d/2-.6,Math.min(5.4,w*.24),1.2,.14,Math.min(3.1,fh*.90));
+}
+
+// Warehouse family: a simple uninterrupted industrial volume.
+function simpleWarehouseArchitecture(m,s){const w=s.width,d=s.depth,H=s.floors*s.floorHeight,c=COLORS.building,recess=s.recessDepth??.20,alongX=w>=d;
+function volume(x,z,ww,dd,hh,y){if(ww>0&&dd>0&&hh>0)m.box(x,z,ww,dd,hh,y,c)}
+// Solid core and four thin wall skins; door openings are actual gaps in the outer skin.
+volume(0,0,w-2*recess,d-2*recess,H,0);
+let loadingBayCount=0;
+for(let side=0;side<4;side++){const front=side<2,sign=side%2?-1:1,length=front?w:d,loadingSide=alongX?1:3,personnelSide=alongX?3:1;
+function skin(left,right,y,height){const span=right-left;if(span<=0||height<=0)return;const t=(left+right)/2;volume(front?t:sign*(w/2-recess/2),front?sign*(d/2-recess/2):t,front?span:recess,front?recess:span,height,y)}
+const openings=[];
+if(side===loadingSide){const n=Math.max(2,Math.min(8,Math.floor(length/12))),usable=length*.78;loadingBayCount=n;for(let i=0;i<n;i++){const pos=(i+.5)*usable/n-usable/2,bayWidth=Math.min(3.6,usable/n*.56);openings.push({left:pos-bayWidth/2,right:pos+bayWidth/2,bottom:.05,top:Math.min(4.2,H*.68),door:false})}}
+if(side===personnelSide){const doorWidth=Math.min(1.2,length*.08),pos=-length*.25;openings.push({left:pos-doorWidth/2,right:pos+doorWidth/2,bottom:.015,top:Math.min(2.3,H*.65),door:true})}
+let cursor=-length/2;for(const q of openings){skin(cursor,q.left,0,H);skin(q.left,q.right,0,q.bottom);skin(q.left,q.right,q.top,H-q.top);cursor=q.right;
+// White door back lies behind the facade; exposed wall edges form sill, head and jambs.
+const mid=(q.left+q.right)/2,span=q.right-q.left;
+volume(front?mid:sign*(w/2-recess-.005),front?sign*(d/2-recess-.005):mid,front?span:.025,front?.025:span,q.top-q.bottom,q.bottom);
+}skin(cursor,length/2,0,H);
+}
+volume(0,0,w,d,.06,H-.06);volume(0,0,w,d,.025,0);
+const t=.12;for(const sign of [-1,1]){volume(0,sign*(d/2-t/2),w,t,.16,H);volume(sign*(w/2-t/2),0,t,d,.16,H)}
+if(s.buildingDetail>.65)volume(w*.16,d*.08,Math.min(5,w*.075),Math.min(3,d*.075),.45,H);
+}
+// Terraced homes share party walls and retain the white recessed facade language.
+function terracedHousingArchitecture(m,s,rng){const homes=Math.max(2,Math.round(s.width/6)),bay=s.width/homes,d=s.depth,fh=s.floorHeight,c=COLORS.building,recess=s.recessDepth??.20;
+for(let home=0;home<homes;home++){const x=-s.width/2+(home+.5)*bay,ww=bay-.035,count=s.floors,H=count*fh;
+m.box(x,0,ww-2*recess,d-2*recess,H,0,c);
+for(let side=0;side<4;side++){const front=side<2,sign=side%2?-1:1,len=front?ww:d;
+function strip(a,b,y,height){if(b<=a||height<=0)return;m.box(front?x+(a+b)/2:x+sign*(ww/2-recess/2),front?sign*(d/2-recess/2):(a+b)/2,front?b-a:recess,front?recess:b-a,height,y,c)}
+// Interior side walls remain plain; only exposed row ends receive windows.
+if(!front&&((sign<0&&home>0)||(sign>0&&home<homes-1))){strip(-len/2,len/2,0,H);continue}
+for(let floor=0;floor<count;floor++){const y=floor*fh,openings=[];if(front){const door=side===1&&floor===0;for(let j=0;j<2;j++){const center=ww*(j? .23:-.23),isDoor=door&&j===0,width=isDoor?Math.min(1.05,ww*.20):Math.min(1.35,ww*.26);openings.push({a:center-width/2,b:center+width/2,bot:isDoor?y+.02:y+fh*.32,top:isDoor?y+Math.min(2.3,fh*.82):y+fh*.78})}}else{const width=1.1;openings.push({a:-width/2,b:width/2,bot:y+fh*.32,top:y+fh*.78})}
+let cursor=-len/2;for(const q of openings){strip(cursor,q.a,y,fh);strip(q.a,q.b,y,q.bot-y);strip(q.a,q.b,q.top,y+fh-q.top);const mid=(q.a+q.b)/2;m.box(front?x+mid:x+sign*(ww/2-recess-.01),front?sign*(d/2-recess-.01):mid,front?q.b-q.a:.025,front?.025:q.b-q.a,q.top-q.bot,q.bot,c);cursor=q.b}strip(cursor,len/2,y,fh)}
+}
+m.box(x,0,ww,d,.08,H-.08,c);
+const variation=rng.range(.12,.30),roof=s.terraceRoof==='auto'?new RNG(s.seed+':roof').pick(['flat','pitched','hipped']):s.terraceRoof||'flat',rise=s.roofRise??1.8;
+function polygon(points,desired){let u=points[1].map((n,i)=>n-points[0][i]),v=points[2].map((n,i)=>n-points[0][i]),normal=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],len=Math.hypot(...normal)||1;if(normal.reduce((sum,n,i)=>sum+n*desired[i],0)<0){points.reverse();normal=normal.map(n=>-n)}normal=normal.map(n=>n/len);for(let i=1;i<points.length-1;i++)m.tri(points[0],points[i],points[i+1],normal,c)}
+if(roof==='flat')m.box(x,0,ww+.015,d+.035,variation,H,c);
+else{const halfW=ww/2+.08,halfD=d/2+.08,A=[x-halfW,H,-halfD],B=[x+halfW,H,-halfD],C=[x+halfW,H,halfD],D=[x-halfW,H,halfD];
+if(roof==='pitched'){const E=[x-halfW,H+rise,0],F=[x+halfW,H+rise,0];polygon([A,B,F,E],[0,1,-1]);polygon([D,E,F,C],[0,1,1]);polygon([A,E,D],[-1,0,0]);polygon([B,C,F],[1,0,0])}
+else{const ridge=Math.max(.25,halfD-halfW),E=[x,H+rise,-ridge],F=[x,H+rise,ridge];polygon([A,E,F,D],[-1,1,0]);polygon([B,C,F,E],[1,1,0]);polygon([A,B,E],[0,1,-1]);polygon([D,F,C],[0,1,1])}}
+
+// Small entry lintel and low rooftop housing keep each home readable without ornament.
+m.box(x-ww*.23,-d/2-.18,Math.min(1.4,ww*.27),.36,.08,Math.min(2.4,fh*.85),c);
+if(home%3===1)m.box(x,0,.40,.45,.65,H+(roof==='flat'?variation:rise)-.03,c);
+}}
+
+function generateMesh(s){for(const k of Object.keys(materials))delete materials[k];mesh={v:[],f:[]};const gen=new CityBuildingGenerator,raw=new MeshBuilder,r=new RNG(s.seed+':'+s.type),cfg={buildingDetail:s.buildingDetail,cityDetailBias:'balanced',shapeVariation:.72};gen._settings=cfg;
+const forms=s.type===1?['rect','step','offset','slab']:['rect','slab','compound','step'];const form=s.type===0?'warehouse':s.form==='auto'?r.pick(forms):s.form;
+if(s.type===3)terracedHousingArchitecture(raw,s,r);else if(s.type===2)apartmentArchitecture(raw,s,r);else if(s.type===1)officeTowerArchitecture(raw,s,r);else simpleWarehouseArchitecture(raw,s);
+for(let i=0;i<raw.p.length;i+=9){const offset=mesh.v.length;for(let k=0;k<3;k++)mesh.v.push(raw.p.slice(i+k*3,i+k*3+3));const color=raw.c.slice(i,i+3),mat='city_'+color.map(n=>Math.round(n*10000)).join('_');materials[mat]=color;mesh.f.push({ids:[offset,offset+1,offset+2],normal:raw.n.slice(i,i+3),mat,part:'city_building'})}
+for(const f of mesh.f){const a=mesh.v[f.ids[0]],b=mesh.v[f.ids[1]],c=mesh.v[f.ids[2]],u=b.map((n,i)=>n-a[i]),v=c.map((n,i)=>n-a[i]),cross=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(cross.reduce((sum,n,i)=>sum+n*f.normal[i],0)<0)f.ids.reverse()}
+let lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];for(const v of mesh.v)for(let i=0;i<3;i++){lo[i]=Math.min(lo[i],v[i]);hi[i]=Math.max(hi[i],v[i])}const shift=[(lo[0]+hi[0])/2,lo[1],(lo[2]+hi[2])/2];for(const v of mesh.v)for(let i=0;i<3;i++)v[i]-=shift[i];bounds={width:hi[0]-lo[0],height:hi[1]-lo[1],depth:hi[2]-lo[2]};return mesh}
+function rebuild(){settings=read();$('towerControls').hidden=settings.type!==1;$('roofControls').hidden=settings.type!==3;$('o_roofRise').textContent=settings.roofRise.toFixed(1)+' m';$('form').disabled=settings.type===0||settings.type===3;specs.forEach(([id,,,step,,,])=>$('o_'+id).textContent=+$(id).value+(specs.find(a=>a[0]===id)[6]?' '+specs.find(a=>a[0]===id)[6]:''));generateMesh(settings);$('title').textContent=categories[settings.type];$('subtitle').textContent=settings.seed+' / '+settings.floors+' FLOORS / '+settings.form.toUpperCase();$('stats').textContent=mesh.v.length.toLocaleString()+' VERTICES · '+mesh.f.length.toLocaleString()+' FACES';dirty=true}
+function apply(s){type.value=s.type;specs.forEach(([id])=>{if(s[id]!==undefined)$(id).value=s[id]});['seed','form','towerStyle','terraceRoof','roofRise'].forEach(id=>{if(s[id]!==undefined)$(id).value=s[id]});rebuild()}
+function seeded(){const i=+type.value,r=new RNG($('seed').value+':defaults:'+i);apply({type:i,seed:$('seed').value,width:Math.round(i===0?r.range(65,110):i===1?r.range(26,42):r.range(38,62)),depth:Math.round(i===0?r.range(38,65):i===3?r.range(14,18):i===2?r.range(16,23):r.range(20,34)),floors:i===0?1:i===3?r.int(2,3):i===1?r.int(16,38):r.int(5,11),floorHeight:i===0?7:i===3?3:3.35,buildingDetail:.75,form:'auto',towerStyle:$('towerStyle').value||'auto'});frame()}
+const canvas=$('view'),gl=canvas.getContext('webgl',{antialias:true,alpha:false});let cw=1,ch=1,dpr=1;
+if(!gl)throw Error('This preview requires a browser with WebGL enabled.');
+function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
+const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,'attribute vec3 position;attribute vec3 color;uniform vec4 camera;uniform vec4 viewport;uniform vec3 target;varying vec3 rgb;void main(){vec3 p=position-target;float a=p.x*cos(camera.x)-p.z*sin(camera.x);float b=p.x*sin(camera.x)+p.z*cos(camera.x);float c=p.y*cos(camera.y)-b*sin(camera.y);float d=p.y*sin(camera.y)+b*cos(camera.y);float w=1.0;gl_Position=vec4(a*camera.z*2.0/viewport.x+viewport.z*2.0/viewport.x*w,c*camera.z*2.0/viewport.y-viewport.w*2.0/viewport.y*w,-d/camera.w,w);rgb=color;}'));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,'precision mediump float;varying vec3 rgb;void main(){gl_FragColor=vec4(rgb,1.0);}'));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));gl.useProgram(program);const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);for(const [name,offset]of [['position',0],['color',12]]){const loc=gl.getAttribLocation(program,name);gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,3,gl.FLOAT,false,24,offset)}const uniforms={};for(const name of ['camera','viewport','target'])uniforms[name]=gl.getUniformLocation(program,name);
+function resize(){dpr=Math.min(devicePixelRatio||1,2);cw=canvas.clientWidth;ch=canvas.clientHeight;canvas.width=cw*dpr;canvas.height=ch*dpr;gl.viewport(0,0,canvas.width,canvas.height);dirty=true}new ResizeObserver(resize).observe(canvas);
+// Native WebGL depth testing keeps every actual facade mesh correctly visible.
+let cachedMesh=null,triangles=[],edges=[],grid=[];
+function renderGL(){const extent=Math.max(bounds.height,bounds.width,bounds.depth),scale=Math.min(cw,ch)*.68/extent*zoom;gl.uniform4f(uniforms.camera,yaw,pitch,scale,extent*4);gl.uniform4f(uniforms.viewport,cw,ch,pan[0],pan[1]);gl.uniform3f(uniforms.target,0,bounds.height*.45,0);gl.clearColor(.91,.93,.94,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+if(cachedMesh!==mesh){cachedMesh=mesh;triangles=[];edges=[];grid=[];for(const f of mesh.f){const a=mesh.v[f.ids[0]],b=mesh.v[f.ids[1]],c=mesh.v[f.ids[2]],u=b.map((n,i)=>n-a[i]),v=c.map((n,i)=>n-a[i]),n=f.normal||[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]],len=Math.hypot(...n)||1,light=.66+.24*Math.max(0,(n[0]*-.52+n[1]*.84+n[2]*-.20)/len)+.15*(n[1]/len*.5+.5),color=materials[f.mat].map(t=>t*light);for(let i=1;i<f.ids.length-1;i++)for(const id of [f.ids[0],f.ids[i],f.ids[i+1]])triangles.push(...mesh.v[id],...color);for(let i=0;i<f.ids.length;i++)for(const id of [f.ids[i],f.ids[(i+1)%f.ids.length]])edges.push(...mesh.v[id],.38,.46,.5)}const span=Math.max(bounds.width,bounds.depth)*1.5;for(let i=-5;i<=5;i++)for(const p of [[i*span/5,-.03,-span],[i*span/5,-.03,span],[-span,-.03,i*span/5],[span,-.03,i*span/5]])grid.push(...p,.84,.88,.9)}
+function upload(data,mode){gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data),gl.DYNAMIC_DRAW);gl.drawArrays(mode,0,data.length/6)}upload(grid,gl.LINES);gl.enable(gl.POLYGON_OFFSET_FILL);gl.polygonOffset(1,1);upload(triangles,gl.TRIANGLES);gl.disable(gl.POLYGON_OFFSET_FILL);if(wire)upload(edges,gl.LINES)}
+function tick(){if(spinning){yaw+=.004;dirty=true}if(dirty){renderGL();dirty=false}requestAnimationFrame(tick)}
+function frame(){zoom=1;pan=[0,0];dirty=true}$('frame').onclick=frame;canvas.ondblclick=frame;canvas.oncontextmenu=e=>e.preventDefault();const pointers=new Map();let drag=null,lastPinch=0;canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2};if(pointers.size===2){const a=[...pointers.values()];lastPinch=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}};canvas.onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()],dist=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);zoom=Math.max(.25,Math.min(5,zoom*dist/Math.max(1,lastPinch)));lastPinch=dist}else if(drag){let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(drag.pan){pan[0]+=dx;pan[1]+=dy}else{yaw+=dx*.008;pitch=Math.max(-.12,Math.min(1.4,pitch+dy*.008))}}drag={...drag,x:e.clientX,y:e.clientY};dirty=true};canvas.onpointerup=canvas.onpointercancel=e=>{pointers.delete(e.pointerId);drag=null};canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.25,Math.min(5,zoom*Math.exp(-e.deltaY*.001)));dirty=true},{passive:false});
+function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3000)}
+function download(name,data,mime){let url=URL.createObjectURL(new Blob([data],{type:mime})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
+function metadata(){return{studio:'Cold Routes Building Studio',version:12,terraceFamily:'repeated-white-residential-homes',warehouseFamily:'simple-shell-recessed-loading-bays-and-door',towerSilhouette:settings.type===1?currentTowerStyle:null,officeFamily:'seeded-office-silhouettes-recessed-facade',apartmentFamily:'residential-slab-recessed-windows',visualStyle:'original-city-generator-building-routines',source:'city_generator_v7_9_waterfront.html',category:categories[settings.type],units:'metres',upAxis:'Y',origin:'ground-level bounding-box center',buildingOnly:true,settings:{...settings},bounds:{...bounds},geometry:{vertices:mesh.v.length,faces:mesh.f.length},materials}}
+function obj(){let lines=['# Cold Routes Building Studio | metres | Y up','mtllib building.mtl','o Cold_Routes_Building'];mesh.v.forEach(v=>lines.push('v '+v.map(x=>x.toFixed(5)).join(' ')));mesh.f.forEach(f=>lines.push('vn '+f.normal.join(' ')));let mat='',part='',normal=0;for(const f of mesh.f){if(part!==f.part){part=f.part;lines.push('g '+part)}if(mat!==f.mat){mat=f.mat;lines.push('usemtl '+mat)}normal++;lines.push('f '+f.ids.map(i=>(i+1)+'//'+normal).join(' '))}return lines.join('\n')+'\n'}
+function mtl(){return Object.entries(materials).map(([name,c])=>'newmtl '+name+'\nKa '+c.map(n=>(n*.25).toFixed(4)).join(' ')+'\nKd '+c.join(' ')+'\nKs 0.08 0.08 0.08\nNs 24\nd 1\nillum 2\n').join('\n')}
+function crc32(bytes){let c=0xffffffff;for(let b of bytes){c^=b;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return(c^0xffffffff)>>>0}
+function zip(files){const enc=new TextEncoder(),parts=[],central=[];let offset=0;function header(size){const b=new Uint8Array(size);return[b,new DataView(b.buffer)]}for(const [name,content]of Object.entries(files)){const nb=enc.encode(name),data=enc.encode(content),crc=crc32(data),[h,v]=header(30+nb.length);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,nb.length,true);h.set(nb,30);parts.push(h,data);const [c,cv]=header(46+nb.length);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nb.length,true);cv.setUint32(42,offset,true);c.set(nb,46);central.push(c);offset+=h.length+data.length}const cs=central.reduce((a,b)=>a+b.length,0),[end,ev]=header(22);ev.setUint32(0,0x06054b50,true);ev.setUint16(8,central.length,true);ev.setUint16(10,central.length,true);ev.setUint32(12,cs,true);ev.setUint32(16,offset,true);return new Blob([...parts,...central,end],{type:'application/zip'})}
+$('export').onclick=()=>{const blob=zip({'building.obj':obj(),'building.mtl':mtl(),'metadata.json':JSON.stringify(metadata(),null,2)});download('Cold_Routes_'+categories[settings.type].replace(/[^a-z0-9]/gi,'_')+'.zip',blob,'application/zip');toast('Building ZIP exported')};$('save').onclick=()=>download('cold_routes_settings.json',JSON.stringify(metadata(),null,2),'application/json');$('load').onclick=()=>$('file').click();$('file').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text()),s=data.settings;if(!s||!Number.isInteger(s.type)||s.type<0||s.type>=4||typeof s.seed!=='string'||s.seed.length>100||!['auto','rect','step','slab','offset','compound'].includes(s.form))throw Error('Invalid settings file');s.recessDepth??=.20;for(const [id,,min,max]of specs)if(!Number.isFinite(s[id])||s[id]<min||s[id]>max)throw Error('Invalid '+id);if(s.towerStyle&&!['auto','simple','tiered','offset','tapered','portal','terraces'].includes(s.towerStyle))throw Error('Invalid tower style');if(s.terraceRoof&&!['flat','pitched','hipped','auto'].includes(s.terraceRoof))throw Error('Invalid housing roof');if(s.roofRise!==undefined&&(!Number.isFinite(s.roofRise)||s.roofRise<.5||s.roofRise>4))throw Error('Invalid roof rise');apply({...s,recessDepth:s.recessDepth??.20,towerStyle:s.towerStyle||'auto',terraceRoof:s.terraceRoof||'flat',roofRise:s.roofRise??1.8});frame();toast('Settings restored')}catch(err){toast(err.message)}e.target.value=''};
+$('generate').onclick=seeded;$('seed').onkeydown=e=>{if(e.key==='Enter')seeded()};$('random').onclick=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);$('seed').value='CR-'+a[0].toString(36)+a[1].toString(36);seeded()};type.onchange=seeded;['form','towerStyle','terraceRoof','roofRise'].forEach(id=>$(id).onchange=rebuild);$('spin').onclick=()=>{spinning=!spinning;$('spin').setAttribute('aria-pressed',spinning);$('spin').textContent=spinning?'Stop orbit':'Auto orbit'};$('wire').onclick=()=>{wire=!wire;$('wire').setAttribute('aria-pressed',wire);dirty=true};
+$('roofRise').oninput=rebuild;seeded();resize();tick();
+</script></body></html>
