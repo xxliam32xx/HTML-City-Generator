@@ -4,7 +4,7 @@
 :root{font-family:Arial,Helvetica,sans-serif;color:#39434a;background:#e9edef;font-size:13px}*{box-sizing:border-box}body{margin:0}header{height:70px;background:#fafbfb;border-bottom:1px solid #d4dade;display:flex;align-items:center;justify-content:space-between;padding:0 26px}h1{font-size:17px;font-weight:500;letter-spacing:4px;margin:0}header small{display:block;letter-spacing:2px;color:#88939a;margin-top:7px;font-size:10px}.tag{font-size:10px;letter-spacing:2px;color:#78868d}main{display:grid;grid-template-columns:315px 1fr;height:calc(100vh - 70px)}aside{background:#f7f9f9;border-right:1px solid #d3dadd;overflow:auto;padding:22px}h2{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#829097;margin:24px 0 15px}h2:first-child{margin-top:0}label{display:block;margin:13px 0 6px;font-size:12px}select,input[type=text]{width:100%;padding:10px;background:white;border:1px solid #ccd4d8;color:#39434a;border-radius:3px}input[type=range]{width:100%;accent-color:#718991}label output{float:right;color:#718991;font-variant-numeric:tabular-nums}button{cursor:pointer;padding:10px 12px;border:1px solid #cbd4d8;border-radius:3px;background:#fff;color:#43545d;font:inherit}button:hover{background:#e8eef0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #597d89;outline-offset:2px}.row{display:flex;gap:8px;margin-top:12px}.row>*{flex:1}.primary{background:#526d78;color:white;width:100%;border-color:#526d78}.primary:hover{background:#405d68}.check{display:flex;align-items:center;gap:7px;font-size:12px}.hint{color:#819097;font-size:11px;line-height:1.6}section{position:relative;min-width:0;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.top{position:absolute;top:24px;left:28px;pointer-events:none}.top b{font-weight:500;font-size:20px}.top p{color:#87959c;font-size:11px;letter-spacing:1px}.tools{position:absolute;right:24px;top:24px;display:flex;gap:6px}.bottom{position:absolute;bottom:23px;left:28px;right:28px;display:flex;justify-content:space-between;color:#7a8b94;font-size:11px;pointer-events:none}#toast{position:absolute;left:50%;bottom:65px;transform:translateX(-50%);background:#526d78;color:white;padding:12px 20px;border-radius:4px;display:none}details summary{cursor:pointer;color:#657b85;margin-top:18px;font-size:11px}details p{font-size:11px;line-height:1.7;color:#778990}@media(max-width:720px){main{grid-template-columns:245px 1fr}aside{padding:14px}.tools{top:90px;right:10px;flex-direction:column}.top{left:15px}.bottom{left:15px;right:15px;display:block}header{padding:0 16px}h1{font-size:14px}.tag{display:none}}@media(max-width:480px){main{display:flex;flex-direction:column;height:auto}section{height:60vh;order:-1}aside{max-height:60vh}header{height:65px}}
 </style></head><body>
 <header><div><h1>COLD ROUTES</h1><small>BUILDING STUDIO / 01</small></div><span class="tag">PROCEDURAL ARCHITECTURE · OFFLINE EDITION</span></header>
-<main><aside><h2>01 / Building</h2><label for="type">Building category</label><select id="type"></select><label for="seed">Generation seed</label><input id="seed" type="text" value="COLD-001" maxlength="100"><div class="row"><button id="generate">Apply seed</button><button id="random">Randomize</button></div><h2>02 / Massing</h2><div id="massing"></div><label for="form">Massing</label><select id="form"><option value="auto">Seeded city style</option><option value="rect">Rectangular</option><option value="step">Stepped</option><option value="slab">Slab</option><option value="offset">Offset volumes</option><option value="compound">Compound block</option></select><div id="roofControls" hidden><label for="terraceRoof">Roof style</label><select id="terraceRoof"><option value="flat">Flat</option><option value="pitched">Pitched / gable</option><option value="hipped">Hipped</option><option value="auto">Seeded mix</option></select><label for="roofRise">Roof rise <output id="o_roofRise"></output></label><input id="roofRise" type="range" min="0.5" max="4" step="0.1" value="1.8"></div><div id="towerControls" hidden><label for="towerStyle">Tower silhouette</label><select id="towerStyle"><option value="auto">Seeded mix · mostly simple</option><option value="simple">Simple tower</option><option value="tiered">Tiered crown & spire</option><option value="offset">Offset volumes</option><option value="tapered">Tapered spire</option><option value="portal">Open crown</option><option value="terraces">Recessed sky terraces</option></select></div><p class="hint">Original city building routines: carved entrances, bevelled edges, sparse white facade relief and restrained roofs. Warehouse uses a simple rectangular shell with minimal roof detail.</p><div id="detail"></div><div id="apartmentWindowControls" hidden><h2>03 / Apartment windows</h2><label for="windowStyle">Window style</label><select id="windowStyle"><option value="auto">Seeded building style</option><option value="tall">Tall narrow</option><option value="wide">Wide horizontal</option><option value="paired">Paired openings</option><option value="square">Square recessed</option><option value="offset">Offset arrangement</option><option value="mixed">Mixed widths</option></select><label for="windowVariation">Window variation <output id="o_windowVariation">35%</output></label><input id="windowVariation" type="range" min="0" max="1" step="0.01" value="0.35"><p class="hint">One coherent window language per apartment building. Variation changes proportions and controlled bay patterns, not the pure-white material.</p></div><h2>04 / Export</h2><button class="primary" id="export">Download building ZIP ↓</button><div class="row"><button id="save">Save settings</button><button id="load">Load settings</button></div><input id="file" type="file" accept=".json,application/json" hidden><p class="hint">OBJ + MTL + metadata JSON<br>Metres · Y up · centered at ground level<br>Building geometry only. No preview ground.</p><details><summary>Studio guide</summary><p>Drag to orbit. Shift-drag or right-drag to pan. Scroll or pinch to zoom. Double-click to frame. The seed creates repeatable parameters; every slider updates the geometry immediately. Settings JSON restores the complete design. ZIP contains uncompressed standard files, with real facade meshes and material assignments. The supplied city generator’s massing, bevels, carved entrances, facade relief and warehouse routines generate this building directly.</p></details><p id="notice" class="hint"></p></aside>
+<main><aside><h2>01 / Building</h2><label for="type">Building category</label><select id="type"></select><label for="seed">Generation seed</label><input id="seed" type="text" value="COLD-001" maxlength="100"><div class="row"><button id="generate">Apply seed</button><button id="random">Randomize</button></div><h2>02 / Massing</h2><div id="massing"></div><label for="form">Massing</label><select id="form"><option value="auto">Seeded city style</option><option value="rect">Rectangular</option><option value="step">Stepped</option><option value="slab">Slab</option><option value="offset">Offset volumes</option><option value="compound">Compound block</option></select><div id="terraceV2Controls" hidden><h2>03 / Terraced housing</h2><label for="terraceArchitecture">Architectural family</label><select id="terraceArchitecture"><option value="auto">Seeded mixed streets</option><option value="traditional">Traditional terraces</option><option value="modern">Modern townhouses</option><option value="transitional">Transitional terraces</option></select><label for="terraceVariation">Neighbour variation <output id="o_terraceVariation">48%</output></label><input id="terraceVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Coherent rows, with controlled differences in heights, front setbacks, window proportions and white roof geometry.</p></div><div id="retailV2Controls" hidden><h2>03 / Retail &amp; commercial</h2><label for="retailArchitecture">Architectural family</label><select id="retailArchitecture"><option value="auto">Seeded traditional &amp; modern mix</option><option value="traditional">Traditional high street</option><option value="modern">Modern commercial</option><option value="transitional">Transitional mixed use</option></select><label for="retailLayout">Retail layout</label><select id="retailLayout"><option value="auto">Seeded singles / rows / corners</option><option value="single">Standalone shop</option><option value="parade">Shop parade / row</option><option value="corner">Corner shop</option></select><label for="retailShopfront">Shopfront design</label><select id="retailShopfront"><option value="auto">Seeded coherent storefronts</option><option value="wide">Wide display windows</option><option value="paired">Paired window bays</option><option value="offset">Offset recessed entrance</option><option value="arcade">Recessed shop arcade</option></select><label for="retailUpper">Upper-floor use</label><select id="retailUpper"><option value="auto">Seeded shop / mixed-use</option><option value="retail">Retail building</option><option value="mixed">Offices / apartments above</option></select><label for="retailVariation">Shopfront variation <output id="o_retailVariation">48%</output></label><input id="retailVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Independent Unity-ready buildings; pure-white recessed storefronts, controlled neighbouring units and coherent upper facades.</p></div><div id="factoryV1Controls" hidden><h2>03 / Factory architecture</h2><label for="factoryArchitecture">Architectural family</label><select id="factoryArchitecture"><option value="auto">Seeded traditional / modern / hybrid</option><option value="traditional">Traditional manufacturing</option><option value="modern">Modern light industrial</option><option value="hybrid">Hybrid processing factory</option></select><label for="factorySize">Factory size</label><select id="factorySize"><option value="auto">Seeded small / medium / large</option><option value="small">Small factory</option><option value="medium">Medium factory</option><option value="large">Large factory</option></select><label for="factoryRoof">Industrial roof</label><select id="factoryRoof"><option value="auto">Seeded roof mix</option><option value="flat">Flat / parapet</option><option value="sawtooth">Sawtooth industrial</option><option value="clerestory">Clerestory / raised monitor</option><option value="pitched">Pitched roof</option></select><label for="factoryLayout">Building composition</label><select id="factoryLayout"><option value="auto">Seeded single / wings / multi-volume</option><option value="single">Single manufacturing hall</option><option value="wing">Production hall + side wing</option><option value="multi">Connected production volumes</option></select><label for="factoryOffice">Office / admin section</label><select id="factoryOffice"><option value="integrated">Integrated (recommended)</option><option value="minimal">Minimal</option><option value="prominent">Prominent attached office</option></select><label for="factoryService">Service/loading details</label><select id="factoryService"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher</option></select><label for="factoryWindows">Industrial windows</label><select id="factoryWindows"><option value="mixed">Mixed coherent windows</option><option value="minimal">Minimal windows</option><option value="varied">More window variation</option></select><p class="hint">Modular standalone factory buildings, recessed openings, geometric white industrial roofs, and Unity-ready export.</p></div><div id="motelV1Controls" hidden><h2>03 / Motel architecture</h2><label for="motelStyle">Motel style</label><select id="motelStyle"><option value="auto">Seeded roadside / contemporary</option><option value="roadside">Classic roadside motel</option><option value="contemporary">Modern budget motel</option></select><label for="motelLayout">Building layout</label><select id="motelLayout"><option value="auto">Seeded straight / L / U</option><option value="straight">Straight bar</option><option value="l">L-shaped motel</option><option value="u">U-shaped courtyard motel</option></select><label for="motelFloors">Guest-room levels</label><select id="motelFloors"><option value="auto">Seeded 1–3 levels</option><option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three storeys</option></select><label for="motelReception">Reception block</label><select id="motelReception"><option value="integrated">Integrated (recommended)</option><option value="prominent">More prominent</option><option value="small">Small entrance office</option></select><label for="motelCorridor">Guest access</label><select id="motelCorridor"><option value="external">External walkways (recommended)</option><option value="minimal">Minimal access gallery</option></select><p class="hint">Standalone white motel architecture, repeated recessed room doorways, external access galleries and small reception. Sized for manual placement in Unity.</p></div><div id="supermarketV1Controls" hidden><h2>03 / Supermarket architecture</h2><label for="marketSize">Store size</label><select id="marketSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small neighbourhood supermarket</option><option value="medium">Medium supermarket</option><option value="large">Large supermarket / hypermarket</option></select><label for="marketStyle">Store architecture</label><select id="marketStyle"><option value="auto">Seeded traditional / modern</option><option value="traditional">Traditional neighbourhood store</option><option value="modern">Modern supermarket</option></select><label for="marketEntrance">Main entrance</label><select id="marketEntrance"><option value="auto">Seeded entrance design</option><option value="recessed">Recessed central entrance</option><option value="vestibule">Projected entrance vestibule</option><option value="corner">Offset entrance</option></select><label for="marketRoof">Roof design</label><select id="marketRoof"><option value="auto">Seeded flat / pitched / clerestory</option><option value="flat">Flat roof with parapet</option><option value="pitched">Low pitched roof</option><option value="clerestory">Clerestory roof monitor</option></select><label for="marketLoading">Rear loading area</label><select id="marketLoading"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal service doors</option><option value="prominent">Prominent receiving/loading</option></select><p class="hint">Standalone pure-white supermarket buildings for manual Unity placement. No integrated car parks, signage or road geometry.</p></div><div id="petrolV1Controls" hidden><h2>03 / Petrol station architecture</h2><label for="petrolStyle">Architectural style</label><select id="petrolStyle"><option value="auto">Seeded modern / roadside</option><option value="modern">Modern forecourt</option><option value="roadside">Traditional roadside</option></select><label for="petrolSize">Station size</label><select id="petrolSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small station</option><option value="medium">Medium station</option><option value="large">Large station</option></select><label for="petrolLayout">Forecourt layout</label><select id="petrolLayout"><option value="auto">Seeded compact / wide / corner</option><option value="compact">Compact</option><option value="wide">Wide</option><option value="corner">Corner / offset kiosk</option></select><label for="petrolCanopy">Canopy architecture</label><select id="petrolCanopy"><option value="auto">Seeded modern / chunky</option><option value="flat">Flat slim canopy</option><option value="chunky">Traditional thicker canopy</option></select><label for="petrolExtras">Extra service facilities</label><select id="petrolExtras"><option value="balanced">Balanced (recommended)</option><option value="minimal">None</option><option value="service">Attached service bay</option><option value="wash">Standalone car wash</option></select><label for="petrolDetail">Forecourt detail</label><select id="petrolDetail"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher detail</option></select><label for="petrolPart">Export / preview component</label><select id="petrolPart"><option value="complete">Complete station (recommended)</option><option value="kiosk">Shop / kiosk only</option><option value="canopy">Canopy only</option><option value="pumps">Pump islands only</option><option value="extra">Service bay / car wash only</option></select><p class="hint">All-white, textureless modular components. Select a component before exporting to save it separately. No roads, signage or car park terrain included.</p></div><div id="roofControls" hidden><label for="terraceRoof">Roof style</label><select id="terraceRoof"><option value="flat">Flat</option><option value="pitched">Pitched / gable</option><option value="hipped">Hipped</option><option value="auto">Seeded mix</option></select><label for="roofRise">Roof rise <output id="o_roofRise"></output></label><input id="roofRise" type="range" min="0.5" max="4" step="0.1" value="1.8"></div><div id="towerControls" hidden><label for="towerStyle">Tower silhouette</label><select id="towerStyle"><option value="auto">Seeded mix · mostly simple</option><option value="simple">Simple tower</option><option value="tiered">Tiered crown & spire</option><option value="offset">Offset volumes</option><option value="tapered">Tapered spire</option><option value="portal">Open crown</option><option value="terraces">Recessed sky terraces</option><optgroup label="New vertical silhouettes"><option value="stepped2">Multi-setback tower</option><option value="tapered2">Gradual tapered tower</option><option value="offset2">Stacked offset tower</option><option value="split">Split twin shafts</option><option value="waisted">Narrow-waist tower</option><option value="chamfered">Chamfered crown tower</option></optgroup></select></div><p class="hint">Building families use entirely white geometry, recessed entrances and facade details. Warehouse V2 and Apartment V2 are preserved.</p><div id="detail"></div><div id="officeControls" hidden><h2>03 / Office architecture</h2><label for="officeArchitecture">Architectural family</label><select id="officeArchitecture"><option value="auto">Seeded mix · modern & traditional</option><option value="modern">Modern commercial</option><option value="traditional">Traditional commercial</option><option value="transitional">Transitional</option></select><label for="officeWindowStyle">Office windows</label><select id="officeWindowStyle"><option value="auto">Seeded coherent facade</option><option value="vertical">Vertical recessed bays</option><option value="horizontal">Horizontal bands</option><option value="paired">Paired recessed windows</option><option value="square">Square grid</option><option value="alternating">Alternating widths</option></select><p class="hint">Six original and six additional vertical silhouettes. Facade patterns remain coherent across each building, with every surface entirely white.</p></div><div id="apartmentWindowControls" hidden><h2>03 / Apartment windows</h2><label for="windowStyle">Window style</label><select id="windowStyle"><option value="auto">Seeded building style</option><option value="tall">Tall narrow</option><option value="wide">Wide horizontal</option><option value="paired">Paired openings</option><option value="square">Square recessed</option><option value="offset">Offset arrangement</option><option value="mixed">Mixed widths</option></select><label for="windowVariation">Window variation <output id="o_windowVariation">35%</output></label><input id="windowVariation" type="range" min="0" max="1" step="0.01" value="0.35"><p class="hint">One coherent window language per apartment building. Variation changes proportions and controlled bay patterns, not the pure-white material.</p></div><h2>04 / Export</h2><button class="primary" id="export">Download building ZIP ↓</button><div class="row"><button id="save">Save settings</button><button id="load">Load settings</button></div><input id="file" type="file" accept=".json,application/json" hidden><p class="hint">OBJ + MTL + metadata JSON<br>Metres · Y up · centered at ground level<br>Building geometry only. No preview ground.</p><details><summary>Studio guide</summary><p>Drag to orbit. Shift-drag or right-drag to pan. Scroll or pinch to zoom. Double-click to frame. The seed creates repeatable parameters; every slider updates the geometry immediately. Settings JSON restores the complete design. ZIP contains uncompressed standard files, with real facade meshes and material assignments. The supplied city generator’s massing, bevels, carved entrances, facade relief and warehouse routines generate this building directly.</p></details><p id="notice" class="hint"></p></aside>
 <section><canvas id="view" aria-label="Interactive 3D building preview"></canvas><div class="top"><b id="title"></b><p id="subtitle"></p></div><div class="tools"><button id="frame">Frame</button><button id="spin" aria-pressed="false">Auto orbit</button><button id="wire" aria-pressed="false">Wireframe</button></div><div class="bottom"><span>DRAG TO ORBIT / SCROLL TO ZOOM</span><span id="stats"></span></div><div id="toast" role="status"></div></section></main>
 <script>
 'use strict';
@@ -730,7 +730,7 @@ addRoofDetails(m,parentOrX,z,w,d,topY,rngArg,zoneArg='mid',districtArg='',second
   }
 }
 
-const categories=['Warehouse','Skyscraper / office building','Apartment block','Terraced housing','Retail building / small shop'];
+const categories=['Warehouse','Skyscraper / office building','Apartment block','Terraced housing','Retail building / small shop','Factory / manufacturing','Motel / roadside accommodation','Supermarket / grocery store','Petrol station / forecourt'];
 const $=id=>document.getElementById(id), type=$('type');categories.forEach((s,i)=>type.add(new Option(s,i)));
 const specs=[['width','Width',18,150,1,42,'m'],['depth','Depth',4,100,1,28,'m'],['floors','Floors',1,55,1,8,''],['floorHeight','Floor height',2.6,8,.1,3.35,'m'],['buildingDetail','Architectural detail',0,1,.01,.75,''],['recessDepth','Recess depth',.02,1,.01,.20,'m']];
 specs.forEach(([id,name,min,max,step,val,unit],i)=>{const wrap=document.createElement('div');wrap.innerHTML='<label for="'+id+'">'+name+'<output id="o_'+id+'"></output></label><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'">';$(i<4?'massing':'detail').append(wrap);$(id).oninput=rebuild});
@@ -738,7 +738,7 @@ const materials={};
 let currentTowerStyle='simple';
 let mesh={v:[],f:[]}, bounds,settings, yaw=-.78,pitch=.62,zoom=1,pan=[0,0],spinning=false,wire=false,dirty=true;
 function rng(seed){let s=2166136261;for(const c of seed)s=Math.imul(s^c.charCodeAt(0),16777619);return()=>{s+=0x6D2B79F5;let t=Math.imul(s^s>>>15,1|s);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296}}
-function read(){const s={type:+type.value,seed:$('seed').value,form:$('form').value,towerStyle:$('towerStyle').value||'auto',terraceRoof:$('terraceRoof').value||'flat',roofRise:+$('roofRise').value||1.8,windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value};specs.forEach(([id])=>s[id]=+$(id).value);return s}
+function read(){const s={type:+type.value,seed:$('seed').value,form:$('form').value,towerStyle:$('towerStyle').value||'auto',terraceRoof:$('terraceRoof').value||'flat',roofRise:+$('roofRise').value||1.8,windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value};specs.forEach(([id])=>s[id]=+$(id).value);return s}
 // Apartment Studio V2 — independent, expandable residential architecture family.
 // Every mesh uses the same pure-white material; recesses are geometric, never dark panels.
 const APARTMENT_STUDIO_V2=Object.freeze({
@@ -860,20 +860,77 @@ function apartmentArchitectureV2(m,s){
   if(detail>.24&&plan!=='courtyard')volume(0,-d*.5-.24,Math.min(3.4,w*.17),.52,.15,Math.min(2.65,fh*.82));
 }
 
+// Office Studio V2 — architecture and facades preserve all original silhouettes plus six vertical-massing families.
+// Vertical variations change the tower as it rises, not the footprint setting.
+const TOWER_STYLES_V3=Object.freeze(['simple','tiered','offset','tapered','portal','terraces','stepped2','tapered2','offset2','split','waisted','chamfered']);
+const OFFICE_STUDIO_V2=Object.freeze({
+ architectures:Object.freeze(['auto','modern','traditional','transitional']),
+ windows:Object.freeze(['auto','vertical','horizontal','paired','square','alternating']),
+ baySizes:Object.freeze({modern:3.8,traditional:3.15,transitional:3.45}),
+ styles:Object.freeze({modern:['horizontal','vertical','alternating'],traditional:['vertical','paired','square'],transitional:['vertical','horizontal','paired','square','alternating']})
+});
 // Office family: low podium, coherent shaft, regular white facade recesses.
 function officeTowerArchitecture(m,s,rng){const w=s.width,d=s.depth,fh=s.floorHeight,F=s.floors,H=F*fh,c=COLORS.building;
 function volume(x,z,ww,dd,hh,y){m.box(x,z,ww,dd,hh,y,c)}
-function shaft(cx,cz,ww,dd,count,base){if(count<1)return;const recess=s.recessDepth??.20;volume(cx,cz,ww-2*recess,dd-2*recess,count*fh,base);
-for(let side=0;side<4;side++){const front=side<2,sign=side%2?-1:1,len=front?ww:dd,bays=Math.max(3,Math.round(len/3.15)),bay=len/bays;
-function panel(a,b,y,height,inset=0){if(b-a<.001||height<.001)return;const th=recess-inset;if(th<.001)return;volume(front?cx+(a+b)/2:cx+sign*(ww/2-recess+th/2),front?cz+sign*(dd/2-recess+th/2):cz+(a+b)/2,front?b-a:th,front?th:b-a,height,y)}
-for(let f=0;f<count;f++)for(let j=0;j<bays;j++){const a=-len/2+j*bay,b=a+bay,y=base+f*fh,l=a+bay*.075,r=b-bay*.075,bot=y+fh*.22,top=y+fh*.84;panel(a,l,y,fh);panel(r,b,y,fh);panel(l,r,y,bot-y);panel(l,r,top,y+fh-top);if(front)volume(cx+(l+r)/2,cz+sign*(dd/2-recess-.01),r-l,.025,top-bot,bot);else volume(cx+sign*(ww/2-recess-.01),cz+(l+r)/2,.025,r-l,top-bot,bot)}
-}
-volume(cx,cz,ww,dd,.06,base+count*fh-.06);
+const familyRng=new RNG(s.seed+':office-family');
+const family=s.officeArchitecture&&s.officeArchitecture!=='auto'?s.officeArchitecture:familyRng.pick(['modern','modern','traditional','transitional']);
+const facade=s.officeWindowStyle&&s.officeWindowStyle!=='auto'?s.officeWindowStyle:familyRng.pick(OFFICE_STUDIO_V2.styles[family]);
+const detailing=clamp(s.buildingDetail??.75,0,1);
+// Facades are deliberately constructed in sections; all window back planes remain white.
+function shaft(cx,cz,ww,dd,count,base){
+ if(count<1||ww<1||dd<1)return;
+ const recess=clamp(s.recessDepth??.20,.06,Math.min(.8,ww*.08,dd*.08));
+ volume(cx,cz,Math.max(.2,ww-2*recess),Math.max(.2,dd-2*recess),count*fh,base);
+ const countBays=(len)=>Math.max(2,Math.min(32,Math.round(len/OFFICE_STUDIO_V2.baySizes[family])));
+ for(let side=0;side<4;side++){
+  const front=side<2,sign=side%2?-1:1,len=front?ww:dd,bays=countBays(len),bay=len/bays;
+  const face=front?(cz+sign*dd/2):(cx+sign*ww/2);
+  function panel(a,b,y,height){
+   if(b-a<.002||height<.002)return;
+   const t=(a+b)/2;
+   volume(front?cx+t:face-sign*recess/2,front?face-sign*recess/2:cz+t,front?b-a:recess,front?recess:b-a,height,y);
+  }
+  function whiteBack(a,b,y,height){
+   if(height<=0||b-a<=0)return;
+   const insetFace=face-sign*(recess+.008);
+   volume(front?cx+(a+b)/2:insetFace,front?insetFace:cz+(a+b)/2,front?b-a:.03,front?.03:b-a,height,y);
+  }
+  for(let f=0;f<count;f++){
+   const y=base+f*fh;
+   for(let j=0;j<bays;j++){
+    const a=-len*.5+j*bay,b=a+bay;
+    const insets=[];
+    const margin=facade==='horizontal'?.09:facade==='square'?.22:facade==='vertical'?.27:.16;
+    let bot=fh*(facade==='horizontal'?.38:facade==='square'?.32:.22),top=fh*(facade==='horizontal'?.72:facade==='square'?.70:.82);
+    if(facade==='alternating'&&j%3===1){bot=fh*.34;top=fh*.74}
+    const available=bay*(1-2*margin);
+    if(facade==='paired'&&bay>=2.5){const gap=bay*.12,half=(available-gap)/2;insets.push([a+bay*margin,a+bay*margin+half],[b-bay*margin-half,b-bay*margin])}
+    else if(facade==='alternating'&&j%3===1){const narrow=available*.64;insets.push([(a+b-narrow)/2,(a+b+narrow)/2])}
+    else insets.push([a+bay*margin,b-bay*margin]);
+    let cursor=a;
+    for(const [left,right] of insets){
+      panel(cursor,left,y,fh);
+      panel(left,right,y,bot);
+      panel(left,right,y+top,fh-top);
+      whiteBack(left,right,y+bot,top-bot);
+      cursor=right;
+    }
+    panel(cursor,b,y,fh);
+   }
+  }
+  // Ground-floor and roof horizontals reinforce coherent scale without added colours.
+  if(detailing>.35&&count>=3&&family==='traditional'){
+   const bandY=base+Math.min(count-1,2)*fh-.16;
+   if(front)volume(cx,face-sign*.02,ww,.14,.20,bandY);
+   else volume(face-sign*.02,cz,.14,dd,.20,bandY);
+  }
+ }
+ volume(cx,cz,ww,dd,.06,base+count*fh-.06);
 }
 const podiumFloors=Math.min(2,Math.max(0,F-3)),shaftFloors=F-podiumFloors,podiumH=podiumFloors*fh;
 if(podiumFloors)shaft(0,0,w,d,podiumFloors,0);
 const tw=podiumFloors?w*.78:w,td=podiumFloors?d*.78:d;
-let variant=s.towerStyle||'auto';if(variant==='auto'){const chance=rng.next();variant=chance<.55?'simple':rng.pick(['tiered','offset','tapered','portal','terraces'])}if(shaftFloors<8)variant='simple';currentTowerStyle=variant;
+let variant=s.towerStyle||'auto';if(variant==='auto'){const chance=rng.next();variant=chance<.33?'simple':rng.pick(TOWER_STYLES_V3.slice(1))}if(shaftFloors<8)variant='simple';currentTowerStyle=variant;
 let crownW=tw,crownD=td,crownX=0,crownZ=0;
 // Transform a complete facade segment, including its recesses, into a taper.
 function taper(count,base,bottomScale,topScale,cx=0,cz=0){const begin=m.p.length;shaft(cx,cz,tw*bottomScale,td*bottomScale,count,base);const height=count*fh;
@@ -884,9 +941,59 @@ else if(variant==='tiered'){const levels=[Math.floor(shaftFloors*.58),Math.floor
 else if(variant==='offset'){const levels=[Math.floor(shaftFloors*.42),Math.floor(shaftFloors*.34)];levels.push(shaftFloors-levels[0]-levels[1]);let base=podiumH;for(let i=0;i<3;i++){shaft([0,-tw*.07,tw*.075][i],[0,td*.035,-td*.025][i],tw*[1,.91,.80][i],td*[1,.92,.82][i],levels[i],base);base+=levels[i]*fh}crownW=tw*.80;crownD=td*.82;crownX=tw*.075;crownZ=-td*.025}
 else if(variant==='tapered'){taper(shaftFloors,podiumH,1,.64);crownW=tw*.64;crownD=td*.64;m.frustum(tw*.16,0,.42,.04,Math.max(3,H*.06),H+1.1,c,8)}
 else if(variant==='portal'){const crownFloors=Math.max(2,Math.round(shaftFloors*.13)),lower=shaftFloors-crownFloors;taper(lower,podiumH,1,.82);const cw=tw*.82,cd=td*.82,y=H-crownFloors*fh;shaft(-cw*.40,0,cw*.20,cd,crownFloors-1,y);shaft(cw*.40,0,cw*.20,cd,crownFloors-1,y);shaft(0,0,cw,cd,1,H-fh);crownW=cw;crownD=cd}
+// NEW: six additional vertically articulated silhouettes (balanced intensity).
+else if(variant==='stepped2'){
+ const ratios=[.30,.25,.21,.15,.09],scales=[1,.91,.80,.70,.61];let base=podiumH,remaining=shaftFloors;
+ for(let i=0;i<ratios.length;i++){const count=i===ratios.length-1?remaining:Math.max(1,Math.min(remaining-(ratios.length-i-1),Math.round(shaftFloors*ratios[i])));shaft(0,0,tw*scales[i],td*scales[i],count,base);base+=count*fh;remaining-=count}
+ crownW=tw*.61;crownD=td*.61;
+}
+else if(variant==='tapered2'){
+ // Softer gradual taper with a distinct near-vertical lower third.
+ const lower=Math.max(2,Math.floor(shaftFloors*.28));shaft(0,0,tw,td,lower,podiumH);
+ taper(shaftFloors-lower,podiumH+lower*fh,1,.73);crownW=tw*.73;crownD=td*.73;
+}
+else if(variant==='offset2'){
+ // Alternating setbacks between vertically stacked shaft segments.
+ const scales=[1,.88,.79,.70],xs=[0,-.065,.035,-.035],zs=[0,.03,-.045,.025];let base=podiumH,remaining=shaftFloors;
+ for(let i=0;i<4;i++){const count=i===3?remaining:Math.max(1,Math.min(remaining-(3-i),Math.floor(shaftFloors*[.32,.28,.24][i])));shaft(xs[i]*tw,zs[i]*td,tw*scales[i],td*scales[i],count,base);base+=count*fh;remaining-=count}
+ crownW=tw*.70;crownD=td*.70;crownX=-tw*.035;crownZ=td*.025;
+}
+else if(variant==='split'){
+ // Two slender shaft masses, anchored to the same original footprint / podium.
+ const lower=Math.max(3,Math.floor(shaftFloors*.32)),upper=shaftFloors-lower;
+ shaft(0,0,tw,td,lower,podiumH);
+ const wingW=tw*.425,gap=tw*.08,cx=(wingW+gap)*.5;
+ shaft(-cx,0,wingW,td*.86,upper,podiumH+lower*fh);
+ shaft(cx,0,wingW,td*.86,Math.max(2,upper-Math.max(2,Math.round(shaftFloors*.15))),podiumH+lower*fh);
+ crownW=wingW;crownD=td*.86;crownX=-cx;
+}
+else if(variant==='waisted'){
+ // Symmetric narrowing and widening in the Y dimension; no change to the ground footprint.
+ const a=Math.max(2,Math.floor(shaftFloors*.32)),b=Math.max(2,Math.floor(shaftFloors*.35)),cCount=shaftFloors-a-b;
+ taper(a,podiumH,1,.79);
+ taper(b,podiumH+a*fh,.79,.85);
+ taper(cCount,podiumH+(a+b)*fh,.85,.95);
+ crownW=tw*.95;crownD=td*.95;
+}
+else if(variant==='chamfered'){
+ // Chamfer just the upper levels by contracting diagonal corner positions.
+ const lower=Math.max(2,Math.floor(shaftFloors*.68)),upper=shaftFloors-lower;
+ shaft(0,0,tw,td,lower,podiumH);
+ const begin=m.p.length;shaft(0,0,tw*.94,td*.94,upper,podiumH+lower*fh);
+ const halfW=tw*.94*.5,halfD=td*.94*.5,cut=.19;
+ for(let i=begin;i<m.p.length;i+=3){const x=m.p[i],z=m.p[i+2],ax=Math.abs(x)/halfW,az=Math.abs(z)/halfD;
+  if(ax>.68&&az>.68){const shrink=Math.min(ax-.68,az-.68)*cut;m.p[i]=x*(1-shrink);m.p[i+2]=z*(1-shrink)}
+ }
+ crownW=tw*.94;crownD=td*.94;
+}
 else if(variant==='terraces'){const gaps=shaftFloors>15?3:2,available=shaftFloors-gaps,blocks=gaps+1;let base=podiumH;for(let i=0;i<blocks;i++){const count=Math.floor(available/blocks)+(i<available%blocks?1:0),scale=1-i*.055;shaft(i%2?tw*.018:0,0,tw*scale,td*scale,count,base);base+=count*fh;if(i<gaps){shaft(0,td*.06,tw*.53,td*.57,1,base);volume(0,0,tw*scale,td*scale,.12,base);base+=fh}}crownW=tw*(1-gaps*.055);crownD=td*(1-gaps*.055);crownX=gaps%2?tw*.018:0}
 if(variant!=='portal')for(const sign of [-1,1]){volume(crownX,crownZ+sign*(crownD/2-.08),crownW,.16,.28,H);volume(crownX+sign*(crownW/2-.08),crownZ,.16,crownD,.28,H)}
 if(variant!=='tiered')volume(crownX,crownZ,crownW*.32,crownD*.32,Math.min(1.1,fh*.33),H);
+// Legible street-facing lobby, expressed as geometric white recess and a shallow canopy.
+const lobbyWidth=Math.min(w*.30,8),lobbyHeight=Math.min(fh*.82,4.0),entryDepth=clamp(s.recessDepth??.2,.10,.65);
+volume(0,-d/2-entryDepth*.18,lobbyWidth,entryDepth*.80,lobbyHeight*.08,.08);
+for(const sg of [-1,1])volume(sg*lobbyWidth*.51,-d/2,.24,.42,lobbyHeight,.02);
+volume(0,-d/2,lobbyWidth*1.14,.45,.24,lobbyHeight+.10);
 // A single slim central entrance canopy keeps the base legible.
 volume(0,-d/2-.6,Math.min(5.4,w*.24),1.2,.14,Math.min(3.1,fh*.90));
 }
@@ -1008,6 +1115,129 @@ function warehouseArchitectureV2(m,s){
 // Keep the original studio API for compatibility with its preview and OBJ exporter.
 function simpleWarehouseArchitecture(m,s){warehouseArchitectureV2(m,s)}
 
+// TERRACED HOUSING V2. Standalone, expandable building family; retail continues to use
+// the original retail-capable terracedHousingArchitecture unchanged.
+const TERRACE_STUDIO_V2=Object.freeze({
+  styles:['auto','traditional','modern','transitional'],
+  variationDefault:.48,
+  minimumBayWidth:4.6,
+  frontSetbackMax:.34,
+  heightPattern:[2,2,3,2,3,2,2,4],
+  roofStyles:['flat','pitched','hipped'],
+  white:[1,1,1]
+});
+function terraceHomeProfileV2(s,i,houses){
+  const rng=new RNG(s.seed+':terrace:v2:home:'+i),row=new RNG(s.seed+':terrace:v2:street');
+  const style=s.terraceArchitecture&&s.terraceArchitecture!=='auto'?s.terraceArchitecture:
+    (row.chance(.55)?'traditional':row.chance(.55)?'transitional':'modern');
+  const amount=clamp(Number.isFinite(+s.terraceVariation)?+s.terraceVariation:TERRACE_STUDIO_V2.variationDefault,0,1);
+  const roofChoice=s.terraceRoof&&s.terraceRoof!=='auto'?s.terraceRoof:
+    (style==='modern'?rng.pick(['flat','flat','pitched']):rng.pick(['pitched','pitched','hipped','flat']));
+  const baseFloors=clamp(Math.round(s.floors),2,4);
+  // When the source floors is 2, allow a rare three-storey townhouse as the row varies.
+  const delta=amount>.2&&rng.chance(amount*.25)?(rng.chance(.65)?1:-1):0;
+  const floors=clamp(baseFloors+delta,2,4);
+  return {rng,style,amount,roof:roofChoice,floors,
+    setback:rng.range(-.10,.10)+rng.range(-.22,.22)*amount,
+    windowStyle:rng.pick(style==='modern'?['wide','paired','tall']:['tall','paired','square']),
+    entrance:i%2===0?'left':'right',
+    bayDepth:clamp(.14+amount*.15,.12,.32),
+    lintel:style==='traditional'||style==='transitional'};
+}
+function terracePolygonV2(m,points,desired,c){
+  const u=points[1].map((v,i)=>v-points[0][i]),v=points[2].map((n,i)=>n-points[0][i]);
+  let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];
+  if(n.reduce((a,x,i)=>a+x*desired[i],0)<0){points=[...points].reverse();n=n.map(x=>-x)}
+  const len=Math.hypot(...n)||1;n=n.map(x=>x/len);
+  for(let j=1;j<points.length-1;j++)m.tri(points[0],points[j],points[j+1],n,c);
+}
+function terraceRoofV2(m,x,z,w,d,H,roof,rise,c,parapet){
+  const x0=x-w/2,x1=x+w/2,z0=z-d/2,z1=z+d/2;
+  if(roof==='flat'){
+    m.box(x,z,w,d,.16,H,c);
+    // Low parapet creates a readable roofline without rooftop clutter.
+    for(const zz of [z0,z1])m.box(x,zz,w,.16,parapet,H,c);
+    for(const xx of [x0,x1])m.box(xx,z,.16,d,parapet,H,c);
+    return;
+  }
+  if(roof==='pitched'){
+    // Shared ridge follows the width of the terrace; gables are visible on exposed ends.
+    const A=[x0,H,z0],B=[x1,H,z0],C=[x1,H,z1],D=[x0,H,z1],E=[x0,H+rise,z],F=[x1,H+rise,z];
+    terracePolygonV2(m,[A,B,F,E],[0,1,-1],c);terracePolygonV2(m,[D,E,F,C],[0,1,1],c);
+    terracePolygonV2(m,[A,E,D],[-1,0,0],c);terracePolygonV2(m,[B,C,F],[1,0,0],c);
+    return;
+  }
+  const ridge=Math.max(.20,d/2-w*.37),E=[x,H+rise,z-ridge],F=[x,H+rise,z+ridge],
+    A=[x0,H,z0],B=[x1,H,z0],C=[x1,H,z1],D=[x0,H,z1];
+  terracePolygonV2(m,[A,E,F,D],[-1,1,0],c);terracePolygonV2(m,[B,C,F,E],[1,1,0],c);
+  terracePolygonV2(m,[A,B,E],[0,1,-1],c);terracePolygonV2(m,[D,F,C],[0,1,1],c);
+}
+function terracedHousingArchitectureV2(m,s){
+  const c=TERRACE_STUDIO_V2.white,width=Math.max(18,s.width),d=Math.max(7,s.depth),fh=Math.max(2.6,s.floorHeight);
+  const count=clamp(Math.round(width/6.5),2,Math.max(2,Math.floor(width/TERRACE_STUDIO_V2.minimumBayWidth)));
+  const bay=width/count,structural=.08,all=[];
+  for(let i=0;i<count;i++){
+    const p=terraceHomeProfileV2(s,i,count),x=-width/2+(i+.5)*bay;
+    const w=bay-structural,H=p.floors*fh,z=p.setback;
+    const front=z-d/2,back=z+d/2,wall=.28,depth=d-wall*2;
+    // Solid shell inset behind window openings. Facade surrounds are built in strips;
+    // the recessed white backing is the shell itself, not a tinted fake window.
+    m.box(x,z,w-wall*2,depth,H,0,c);
+    const windowW=p.windowStyle==='wide'?Math.min(w*.60,2.8):p.windowStyle==='square'?Math.min(w*.34,1.35):Math.min(w*.27,1.20);
+    const left=x-w*.235,right=x+w*.235;
+    for(const face of [-1,1]){
+      const zz=face<0?front+wall*.5:back-wall*.5;
+      for(let f=0;f<p.floors;f++){
+        const y=f*fh,frontFace=face<0,door=frontFace&&f===0;
+        const windows=[];
+        if(door){
+          const doorX=p.entrance==='left'?left:right,otherX=p.entrance==='left'?right:left;
+          windows.push({center:doorX,w:Math.min(1.10,w*.19),lo:.04,hi:Math.min(fh*.85,2.35),kind:'door'});
+          windows.push({center:otherX,w:windowW,lo:fh*.32,hi:fh*.76,kind:'window'});
+        }else if(p.windowStyle==='paired'&&w>=5.5){
+          for(const center of [left,right])windows.push({center:center,w:Math.min(w*.22,1.03),lo:fh*.29,hi:fh*.79,kind:'window'});
+        }else if(p.windowStyle==='wide'){
+          windows.push({center:x,w:Math.min(w*.65,3.1),lo:fh*.38,hi:fh*.76,kind:'window'});
+        }else{
+          for(const center of [left,right])windows.push({center:center,w:windowW,lo:p.windowStyle==='square'?fh*.40:fh*.28,hi:fh*.78,kind:'window'});
+        }
+        windows.sort((a,b)=>a.center-b.center);
+        const facadeZ=face<0?front+wall*.15:back-wall*.15,outerZ=face<0?front:back;
+        const placeStrip=(a,b,low,high)=>{
+          if(b-a<.001||high-low<.001)return;
+          m.box((a+b)/2,(facadeZ+outerZ)/2,b-a,Math.abs(outerZ-facadeZ)+.015,high-low,y+low,c);
+        };
+        let cursor=x-w/2;
+        for(const o of windows){
+          const a=Math.max(x-w/2+.12,o.center-o.w/2),b=Math.min(x+w/2-.12,o.center+o.w/2);
+          if(b<=a)continue;
+          placeStrip(cursor,a,0,fh);placeStrip(a,b,0,o.lo);placeStrip(a,b,o.hi,fh);
+          // Side reveals, sill and lintel all stay white, adding actual depth.
+          const revealZ=(outerZ+facadeZ)/2,revealD=Math.abs(outerZ-facadeZ)+.04;
+          for(const xx of [a,b])m.box(xx,revealZ,.065,revealD,o.hi-o.lo,y+o.lo,c);
+          if(o.kind==='window')m.box((a+b)/2,revealZ,b-a+.10,revealD,.065,y+o.lo,c);
+          if(p.lintel)m.box((a+b)/2,outerZ+(face<0?-.045:.045),b-a+.20,.095,.11,y+o.hi+.03,c);
+          cursor=b;
+        }
+        placeStrip(cursor,x+w/2,0,fh);
+      }
+    }
+    // Exposed party end walls; no unnecessary rows of windows against neighbours.
+    if(i===0||i===count-1){
+      const edgeX=x+(i===0?-w/2:w/2);
+      m.box(edgeX,z,.18,d,H,0,c);
+    }
+    // Integrated plinth and a restrained recessed entrance canopy.
+    m.box(x,front+.13,w,.28,.10,.0,c);
+    const entryX=p.entrance==='left'?left:right;
+    m.box(entryX,front-.09,Math.min(1.55,w*.30),.34,.13,Math.min(fh*.86,2.5),c);
+    if(p.style==='traditional')m.box(x,front+.03,w,.18,.10,fh-.10,c);
+    const rise=Math.min(s.roofRise??1.8,d*.24);
+    terraceRoofV2(m,x,z,w,d,H,p.roof,rise,c,.26);
+    all.push({x,w,style:p.style,floors:p.floors,roof:p.roof});
+  }
+}
+
 // Terraced homes share party walls and retain the white recessed facade language.
 function terracedHousingArchitecture(m,s,rng){const retail=s.type===4,retailVariant=retail?new RNG(s.seed+':retail').pick(['single','parade','corner']):null,homes=retail?(retailVariant==='parade'?Math.max(2,Math.round(s.width/8)):1):Math.max(2,Math.round(s.width/6)),bay=s.width/homes,d=s.depth,fh=s.floorHeight,c=COLORS.building,recess=s.recessDepth??.20;
 for(let home=0;home<homes;home++){const x=-s.width/2+(home+.5)*bay,ww=bay-.035,count=s.floors,H=count*fh;
@@ -1034,15 +1264,593 @@ m.box(x-ww*.23,-d/2-.18,Math.min(1.4,ww*.27),.36,.08,Math.min(2.4,fh*.85),c);
 if(home%3===1)m.box(x,0,.40,.45,.65,H+(roof==='flat'?variation:rise)-.03,c);
 }}
 
+// RETAIL & COMMERCIAL V2 — independent extensible family for single manual placement in Unity.
+// All visible elements, including recess backing, are geometry in [1,1,1].
+const RETAIL_STUDIO_V2=Object.freeze({
+  profiles:Object.freeze(['traditional','modern','transitional']),
+  layouts:Object.freeze(['single','parade','corner']),
+  fronts:Object.freeze(['wide','paired','offset','arcade']),
+  white:Object.freeze([1,1,1]),
+  minUnitWidth:5.5,
+  windowInset:.26,
+  parapetHeight:.28
+});
+function retailProfileV2(s){
+  const r=new RNG(s.seed+':retail-v2-profile'),pick=(value,options)=>value&&value!=='auto'&&options.includes(value)?value:r.pick(options);
+  return {architecture:pick(s.retailArchitecture,RETAIL_STUDIO_V2.profiles),layout:pick(s.retailLayout,RETAIL_STUDIO_V2.layouts),front:pick(s.retailShopfront,RETAIL_STUDIO_V2.fronts),upper:pick(s.retailUpper,['retail','mixed']),variation:Math.max(0,Math.min(1,s.retailVariation??.48)),seed:s.seed};
+}
+function retailOpeningsV2(m,axis,coord,start,end,base,height,openings,inset,c){
+  // A true white recessed reveal: wall strips surround a white backing plane.
+  const depth=Math.max(.12,inset),n=axis==='x'?-1:1;
+  const wall=(a,b,lo,hi,plane=coord)=>{if(b-a<=.001||hi-lo<=.001)return;
+    if(axis==='x')m.box((a+b)/2,plane,b-a,.16,hi-lo,base+lo,c);
+    else m.box(plane,(a+b)/2,.16,b-a,hi-lo,base+lo,c);
+  };
+  openings=openings.filter(o=>o.b>o.a+.10).map(o=>({...o,a:Math.max(start+.10,o.a),b:Math.min(end-.10,o.b),lo:Math.max(0,o.lo),hi:Math.min(height,o.hi)})).filter(o=>o.b>o.a&&o.hi>o.lo).sort((a,b)=>a.a-b.a);
+  let cursor=start;
+  for(const o of openings){
+    if(o.a<cursor+.05)continue;
+    wall(cursor,o.a,0,height);wall(o.a,o.b,0,o.lo);wall(o.a,o.b,o.hi,height);
+    // Recess backing is entirely white, offset inside the wall rather than tinted glass.
+    wall(o.a,o.b,o.lo,o.hi,coord+(axis==='x'?depth:-depth));
+    if(axis==='x'){
+      for(const xx of [o.a,o.b])m.box(xx,coord+depth*.5,.065,depth+.15,o.hi-o.lo,base+o.lo,c);
+      if(o.kind!=='door')m.box((o.a+o.b)/2,coord+depth*.5,o.b-o.a+.08,depth+.12,.065,base+o.lo,c);
+    }else{
+      for(const zz of [o.a,o.b])m.box(coord-depth*.5,zz,depth+.15,.065,o.hi-o.lo,base+o.lo,c);
+      if(o.kind!=='door')m.box(coord-depth*.5,(o.a+o.b)/2,depth+.12,o.b-o.a+.08,.065,base+o.lo,c);
+    }
+    cursor=o.b;
+  }
+  wall(cursor,end,0,height);
+}
+function retailShopfrontV2(m,unit,profile,s,r){
+  const c=RETAIL_STUDIO_V2.white,fw=unit.w,fh=s.floorHeight,from=unit.x-fw/2,to=unit.x+fw/2;
+  const inset=Math.min(.56,Math.max(.18,s.recessDepth??.20)+.12),z=-s.depth/2;
+  const style=profile.front==='auto'?r.pick(RETAIL_STUDIO_V2.fronts):profile.front;
+  const variant=profile.variation,doorW=Math.min(1.3,fw*.19),doorX=unit.x+fw*(style==='offset'?.23:-.27);
+  const openings=[{a:doorX-doorW/2,b:doorX+doorW/2,lo:.045,hi:Math.min(fh*.83,2.75),kind:'door'}];
+  if(style==='paired'&&fw>6.5){
+    const wid=Math.min(1.75,fw*.215);
+    for(const center of [unit.x-fw*.05,unit.x+fw*.27])openings.push({a:center-wid/2,b:center+wid/2,lo:.40,hi:fh*.79,kind:'window'});
+  }else{
+    const winStart=style==='offset'?unit.x-fw*.40:unit.x-fw*.06;
+    const winEnd=style==='offset'?unit.x+fw*.06:unit.x+fw*.42;
+    openings.push({a:winStart,b:winEnd,lo:.32,hi:fh*(style==='arcade'?.73:.82),kind:'window'});
+  }
+  retailOpeningsV2(m,'x',z,from,to,0,fh,openings,inset,c);
+  // Sign band is a clean white architectural band, not text or a coloured sign.
+  m.box(unit.x,z-.06,fw*.93,.19,.14,fh*.89,c);
+  if(profile.architecture!=='modern')m.box(unit.x,z-.08,fw*.96,.23,.12,fh-.16,c);
+  if(style==='arcade'){
+    m.box(unit.x,z+.32,fw*.88,.65,.14,fh*.83,c);
+    for(const xx of [from+.23,to-.23])m.box(xx,z+.19,.18,.53,Math.min(2.65,fh*.76),.08,c);
+  }
+  if(variant>.25&&r.chance(variant*.65))m.box(unit.x,z-.12,fw*.82,.32,.09,.08,c);
+}
+function retailUpperFacadesV2(m,unit,profile,s,r){
+  const c=RETAIL_STUDIO_V2.white,fh=s.floorHeight,depth=s.depth,top=unit.floors*fh;
+  for(let f=1;f<unit.floors;f++){
+    const y=f*fh,wide=profile.architecture==='modern',traditional=profile.architecture==='traditional';
+    const baseWinW=Math.min(unit.w*(wide?.54:.32),wide?3.5:2.3),lo=wide?.34:.29,hi=wide?.73:.80;
+    for(const face of [-1,1]){
+      const z=face*depth/2;
+      const positions=unit.w<8?[unit.x]:[unit.x-unit.w*.235,unit.x+unit.w*.235];
+      const windows=positions.map((x,i)=>({a:x-baseWinW*(i===1&&profile.variation>.55?1.04:1)/2,b:x+baseWinW*(i===1&&profile.variation>.55?1.04:1)/2,lo:fh*lo,hi:fh*hi,kind:'window'}));
+      // Back wall uses recessed backing toward the interior as well.
+      retailOpeningsV2(m,'x',z,unit.x-unit.w/2,unit.x+unit.w/2,y,fh,windows,face<0?.28:-.28,c);
+      if(traditional)m.box(unit.x,z+face*.06,unit.w*.94,.14,.10,y+fh-.12,c);
+    }
+    // Exposed end walls have smaller white recesses; shared walls are plain.
+    for(const side of [-1,1])if((side<0&&unit.index===0)||(side>0&&unit.index===unit.count-1)){
+      const xx=unit.x+side*unit.w/2;
+      const w=Math.min(1.25,depth*.18);
+      retailOpeningsV2(m,'z',xx,-depth/2,depth/2,y,fh,[{a:-w/2,b:w/2,lo:fh*.35,hi:fh*.73,kind:'window'}],side>0?.24:-.24,c);
+    }
+  }
+  m.box(unit.x,0,unit.w+.04,depth+.04,.18,top,c);
+  if(profile.architecture!=='traditional'){
+    // Low flat parapet, restrained plant room for the occasional larger mixed-use building.
+    const p=.17,h=RETAIL_STUDIO_V2.parapetHeight;
+    for(const zz of [-depth/2,depth/2])m.box(unit.x,zz,unit.w,p,h,top,c);
+    for(const xx of [unit.x-unit.w/2,unit.x+unit.w/2])m.box(xx,0,p,depth,h,top,c);
+    if(unit.floors>=3&&r.chance(.28))m.box(unit.x,depth*.16,Math.min(2.8,unit.w*.25),Math.min(2.7,depth*.28),.72,top,c);
+  }else m.box(unit.x,0,unit.w,depth,.24,top,c);
+}
+function retailCommercialArchitectureV2(m,s){
+  const p=retailProfileV2(s),r=new RNG(s.seed+':retail-v2-geometry'),c=RETAIL_STUDIO_V2.white,fh=s.floorHeight;
+  const count=p.layout==='parade'?Math.max(2,Math.min(8,Math.floor(s.width/RETAIL_STUDIO_V2.minUnitWidth))):1;
+  const bay=s.width/count,depth=s.depth,baseFloors=Math.max(1,Math.min(4,s.floors));
+  for(let i=0;i<count;i++){
+    const x=-s.width/2+(i+.5)*bay,w=Math.max(2,bay-.05);
+    const floors=Math.max(1,Math.min(p.upper==='retail'?2:4,baseFloors+(count>1&&p.variation>.35&&r.chance(p.variation*.27)?r.pick([-1,1]):0)));
+    const unit={x,w,index:i,count,floors};
+    // Inset core makes sure all recessed openings have actual white geometry behind them.
+    m.box(x,0,w-.40,depth-.48,floors*fh,0,c);
+    retailShopfrontV2(m,unit,p,s,r);
+    retailUpperFacadesV2(m,unit,p,s,r);
+    // Ground level side & rear facades. No windows against adjacent shop units.
+    retailOpeningsV2(m,'x',depth/2,x-w/2,x+w/2,0,fh,[{a:x-w*.18,b:x+w*.18,lo:fh*.36,hi:fh*.72,kind:'window'}],-.25,c);
+    for(const side of [-1,1])if((side<0&&i===0)||(side>0&&i===count-1)){
+      const xx=x+side*w/2;
+      retailOpeningsV2(m,'z',xx,-depth/2,depth/2,0,fh,[],side>.0?.25:-.25,c);
+    }
+    // Coherent commercial ground floor plinth; no coloured signs, text or glazing.
+    m.box(x,0,w,depth,.09,0,c);
+  }
+  // Corner variant includes a side-facing entrance/display rather than just a labelled corner.
+  if(p.layout==='corner'){
+    const x=s.width/2,z=-s.depth*.10;
+    const door={a:z-.75,b:z+.55,lo:.04,hi:Math.min(fh*.79,2.65),kind:'door'};
+    const display={a:s.depth*.11,b:s.depth*.38,lo:.38,hi:fh*.75,kind:'window'};
+    retailOpeningsV2(m,'z',x,-s.depth/2,s.depth/2,0,fh,[door,display],-.28,c);
+  }
+}
+
+
+// FACTORY STUDIO V1 — independent, expandable category; never routes through warehouses.
+// All white detailing uses actual mesh geometry; no dark material overlays.
+const FACTORY_STUDIO_V1=Object.freeze({
+  architectures:['traditional','modern','hybrid'],sizes:['small','medium','large'],
+  roofs:['flat','sawtooth','clerestory','pitched'],layouts:['single','wing','multi'],
+  offices:['minimal','integrated','prominent'],services:['minimal','balanced','higher'],
+  windows:['minimal','mixed','varied'],white:[1,1,1]
+});
+function factoryProfileV1(s){
+  const r=new RNG(s.seed+':factory-v1-profile');
+  const pick=(v,opts)=>opts.includes(v)?v:r.pick(opts);
+  return {architecture:pick(s.factoryArchitecture,FACTORY_STUDIO_V1.architectures),size:pick(s.factorySize,FACTORY_STUDIO_V1.sizes),roof:pick(s.factoryRoof,FACTORY_STUDIO_V1.roofs),layout:pick(s.factoryLayout,FACTORY_STUDIO_V1.layouts),office:pick(s.factoryOffice,FACTORY_STUDIO_V1.offices),service:pick(s.factoryService,FACTORY_STUDIO_V1.services),windows:pick(s.factoryWindows,FACTORY_STUDIO_V1.windows)};
+}
+function factoryRoofV1(m,hall,p,r,c){
+  const {x,z,w,d,h}=hall,top=h;
+  if(p.roof==='flat'){
+    const t=.25,ph=.42;
+    for(const side of [-1,1]){m.box(x,z+side*(d-t)/2,w,t,ph,top,c);m.box(x+side*(w-t)/2,z,t,d,ph,top,c)}
+    return;
+  }
+  const pitch=p.roof==='pitched'?1.9:1.45;
+  // Raised ribs of solid geometric roofs remain lightweight for OBJ export.
+  const bands=p.roof==='sawtooth'?Math.max(2,Math.min(6,Math.round(w/11))):1;
+  const bw=w/bands;
+  for(let i=0;i<bands;i++){
+    const mid=x-w/2+(i+.5)*bw,left=mid-bw/2,right=mid+bw/2;
+    const crown=p.roof==='clerestory'?top+1.1:top+pitch;
+    const tip=p.roof==='sawtooth'?left+bw*.78:mid;
+    const polygon=(a,b,cc,n)=>m.tri(a,b,cc,n,c);
+    const backL=[left,top,z+d/2],backR=[right,top,z+d/2],frontL=[left,top,z-d/2],frontR=[right,top,z-d/2],backT=[tip,crown,z+d/2],frontT=[tip,crown,z-d/2];
+    polygon(frontL,frontT,backT,[-.25,1,0]);polygon(frontL,backT,backL,[-.25,1,0]);
+    polygon(frontT,frontR,backR,[.25,1,0]);polygon(frontT,backR,backT,[.25,1,0]);
+    polygon(frontL,frontR,frontT,[0,0,-1]);polygon(backL,backT,backR,[0,0,1]);
+    if(p.roof==='clerestory')m.box(mid,z,bw*.45,d*.88,1.05,top,c);
+  }
+}
+function factoryRecessWallV1(m,axis,plane,center,length,base,height,openings,inset,c){
+  // Splits wall surface around each opening, with a recessed white back panel.
+  const wall=(a,b,lo,hi)=>{
+    if(b-a<.005||hi-lo<.005)return;
+    if(axis==='x')m.box(center+(a+b)/2,plane,b-a,.12,hi-lo,(lo+hi)/2-(hi-lo)/2,c);
+    else m.box(plane,center+(a+b)/2,.12,b-a,hi-lo,lo,c);
+  };
+  const valid=openings.filter(o=>o.b>o.a&&o.hi>o.lo).sort((a,b)=>a.a-b.a);
+  let cursor=-length/2;
+  for(const o of valid){if(o.a<cursor-.001)continue;
+    wall(cursor,o.a,base,base+height);wall(o.a,o.b,base,o.lo);wall(o.a,o.b,o.hi,base+height);
+    const back=axis==='x'?plane+inset:plane-inset;
+    if(axis==='x')m.box(center+(o.a+o.b)/2,back,o.b-o.a,.08,o.hi-o.lo,o.lo,c);
+    else m.box(back,center+(o.a+o.b)/2,.08,o.b-o.a,o.hi-o.lo,o.lo,c);
+    cursor=o.b;
+  }
+  wall(cursor,length/2,base,base+height);
+}
+function factoryIndustrialHallV1(m,hall,p,r,c,detail,primary=true){
+  const {x,z,w,d,h}=hall;
+  // Main volume avoids opaque overlays over openings: front and side walls are constructed as strips.
+  m.box(x,z,w,d,.18,0,c);m.box(x,z,w,d,.18,h-.18,c);
+  const front=-d/2+z,back=d/2+z,doorCount=primary?(p.service==='higher'?3:p.service==='minimal'?1:2):1;
+  const openings=[];
+  for(let i=0;i<doorCount;i++){
+    const local=-w*.38+(i+.5)*w*.68/doorCount;
+    const width=Math.min(4.3,w/(doorCount+2)*.78),doorH=Math.min(h*.72,4.5);
+    openings.push({a:local-width/2,b:local+width/2,lo:.10,hi:doorH});
+    // Loading door header and stepped threshold are made from pure white geometry.
+    m.box(x+local,front-.22,width+.30,.36,.21,doorH,c);
+    if(detail>.55)m.box(x+local,front-.48,width+.65,.72,.16,0,c);
+  }
+  if(p.windows!=='minimal'){
+    const high=Math.min(h-.55,h*.82),low=Math.max(2.6,h*.61);
+    if(high>low+.2)openings.push({a:w*.30,b:w*.45,lo:low,hi:high});
+  }
+  factoryRecessWallV1(m,'x',front,x,w,.18,h-.36,openings,.30,c);
+  const backWindows=[];
+  if(p.windows!=='minimal')for(let i=0;i<Math.min(8,Math.max(2,Math.floor(w/7)));i++){
+    const cx=-w*.43+(i+.5)*w*.86/Math.min(8,Math.max(2,Math.floor(w/7)));const ww=Math.min(1.5,w*.08);
+    backWindows.push({a:cx-ww/2,b:cx+ww/2,lo:h*.52,hi:h*.79});
+  }
+  factoryRecessWallV1(m,'x',back,x,w,.18,h-.36,backWindows,-.24,c);
+  for(const side of [-1,1]){
+    const sx=x+side*w/2,open=[];
+    if(p.windows==='varied'||(p.windows==='mixed'&&r.chance(.7))){const n=Math.min(6,Math.max(2,Math.floor(d/7)));for(let i=0;i<n;i++){
+      const zz=-d*.39+(i+.5)*d*.78/n;open.push({a:zz-.66,b:zz+.66,lo:h*.56,hi:h*.78});
+    }}
+    factoryRecessWallV1(m,'z',sx,z,d,.18,h-.36,open,side>0?.27:-.27,c);
+  }
+  factoryRoofV1(m,hall,p,r,c);
+}
+function factoryArchitectureV1(m,s){
+  const r=new RNG(s.seed+':factory-v1-geometry'),p=factoryProfileV1(s),c=FACTORY_STUDIO_V1.white;
+  const w=s.width,d=s.depth,detail=s.buildingDetail??.75,h=Math.max(5,Math.min(13,s.floors*s.floorHeight));
+  // Main frontage retained within the requested rectangular asset bounds.
+  const officeWidth=p.office==='prominent'?Math.min(w*.25,13):p.office==='minimal'?Math.min(w*.12,6):Math.min(w*.19,9);
+  const productionW=Math.max(8,w-officeWidth-.30),hallX=-w/2+productionW/2;
+  const hall={x:hallX,z:0,w:productionW,d:d*.94,h};
+  factoryIndustrialHallV1(m,hall,p,r,c,detail,true);
+  // Attached admin has a distinct lower frontage, recessed white windows and entry.
+  if(officeWidth>1.6){
+    const ow=officeWidth-.18,ox=w/2-ow/2,od=d*.54,oz=-d*.20,oh=p.office==='prominent'?Math.min(h+2.1,10):Math.max(3.7,Math.min(h*.70,6.8));
+    m.box(ox,oz,ow,od,oh,0,c);
+    const front=oz-od/2-.075;
+    const cols=ow>7?2:1;
+    for(let i=0;i<cols;i++){
+      const xx=ox+(i-(cols-1)/2)*ow*.42;
+      const door=i===0,winW=Math.min(ow*.23,1.6),top=Math.min(oh*.72,3.15);
+      // Rather than tinted rectangles, white recessed panels create shadow depth.
+      m.box(xx,front+.18,winW,.08,door?Math.min(top,2.5):1.35,door?.12:Math.min(oh*.49,2.0),c);
+      m.box(xx,front-.10,winW+.17,.16,.13,top+.10,c);
+    }
+    m.box(ox,oz,ow,od,.23,oh,c);
+    if(p.office==='prominent'&&oh>5){m.box(ox,front-.10,ow*.70,.22,.20,oh*.56,c)}
+  }
+  if(p.layout!=='single'){
+    const sideW=Math.max(5,Math.min(w*.30,15)),sideD=Math.min(d*.28,16),sx=hallX-productionW*.16;
+    // Connected lower auxiliary structures modify the factory silhouette.
+    if(p.layout==='wing')m.box(sx,d*.36,sideW,sideD,Math.max(3.8,h*.64),0,c);
+    else{
+      m.box(sx,d*.35,sideW,sideD,Math.max(3.8,h*.65),0,c);
+      m.box(hallX-productionW*.23,-d*.34,sideW*.78,sideD*.75,Math.max(3.8,h*.53),0,c);
+    }
+  }
+  if(detail>.25){
+    const count=p.service==='higher'?5:p.service==='minimal'?1:p.size==='large'?4:p.size==='small'?2:3;
+    for(let i=0;i<count;i++){
+      const px=hallX+(i-(count-1)/2)*productionW*.57/Math.max(1,count-1),pz=d*.17;
+      m.box(px,pz,Math.min(2.3,productionW*.12),Math.min(2.6,d*.13),r.range(.65,1.3),h,c);
+    }
+  }
+}
+
+
+// MOTEL STUDIO V1. Standalone roadside accommodation, separate from apartments.
+// A local-coordinate wing system lets straight/L/U layouts use the same room module.
+const MOTEL_STUDIO_V1=Object.freeze({
+ styles:['roadside','contemporary'],layouts:['straight','l','u'],floors:[1,2,3],
+ reception:['small','integrated','prominent'],corridors:['external','minimal'],white:[1,1,1]
+});
+function motelProfileV1(s){
+ const r=new RNG(s.seed+':motel:v1:profile');
+ const choose=(value,options)=>options.includes(value)?value:r.pick(options);
+ return {style:choose(s.motelStyle,MOTEL_STUDIO_V1.styles),layout:choose(s.motelLayout,MOTEL_STUDIO_V1.layouts),
+  floors:choose(+s.motelFloors,MOTEL_STUDIO_V1.floors),reception:choose(s.motelReception,MOTEL_STUDIO_V1.reception),
+  corridor:choose(s.motelCorridor,MOTEL_STUDIO_V1.corridors)};
+}
+function motelWingV1(m,wing,p,r,c){
+ const {x,z,len,dep,axis='x',front=-1}=wing,fh=3.05,H=p.floors*fh;
+ // u follows the room row. v runs from the front (negative) to the back (positive).
+ const point=(u,v)=>axis==='x'?[x+u,z+v]:[x-front*v,z+u];
+ const box=(u,v,w,d,h,y)=>{const q=point(u,v);m.box(q[0],q[1],axis==='x'?w:d,axis==='x'?d:w,h,y,c)};
+ const rooms=Math.max(3,Math.floor((len-.7)/5.1)),bay=len/rooms;
+ // Close both terminal cross-sections. Without these full-depth caps, the
+ // recessed room modules reveal the hollow wing ends in L/U/straight plans.
+ // The same wing-local coordinates work for both X and Z aligned wings.
+ const endWallThickness=.24;
+ box(-len/2+endWallThickness/2,0,endWallThickness,dep,H,0);
+ box( len/2-endWallThickness/2,0,endWallThickness,dep,H,0);
+ // Floors and ceiling are independent slabs; room walls form actual recesses.
+ for(let floor=0;floor<p.floors;floor++){
+   const base=floor*fh;
+   box(0,0,len,dep,.20,base);
+   box(0,dep/2-.14,len,.28,fh-.18,base+.18);
+   for(let i=0;i<rooms;i++){
+    const u=-len/2+(i+.5)*bay;
+    if(i>0)box(u-bay/2,-.06,.19,dep,fh-.18,base+.18);
+    // Front wall divided around a recessed white door and shallow white window.
+    const doorU=u-bay*.23,doorW=Math.min(.95,bay*.22),winU=u+bay*.20,winW=Math.min(1.55,bay*.32);
+    const v=-dep/2+.13;
+    const breaks=[{a:u-bay/2,b:doorU-doorW/2},{a:doorU+doorW/2,b:winU-winW/2},{a:winU+winW/2,b:u+bay/2}];
+    for(const seg of breaks)if(seg.b>seg.a+.04)box((seg.a+seg.b)/2,v,seg.b-seg.a,.26,fh-.23,base+.18);
+    box(doorU,v,doorW,.26,fh-2.58,base+2.48); // lintel over the entry
+    box(doorU,v+.26,doorW,.10,2.15,base+.18); // inward recessed door backing
+    box(winU,v,winW,.26,.75,base+.18);
+    box(winU,v,winW,.26,fh-2.20,base+2.14);
+    box(winU,v+.26,winW,.10,1.12,base+1.00); // recessed window backing
+    if(p.style==='roadside'&&r.chance(.45))box(u,-dep/2-.06,bay*.70,.14,.12,base+2.65);
+   }
+   // Exterior covered gallery, with supporting posts and restraint-height rails.
+   const depth=p.corridor==='minimal'?.95:1.40;
+   box(0,-dep/2-depth*.48,len,depth,.18,base+.04);
+   if(floor>0){
+    for(let i=0;i<=rooms;i++){
+      const u=-len/2+i*bay;
+      box(u,-dep/2-depth+.12,.10,.10,1.0,base+.22);
+    }
+    box(0,-dep/2-depth+.12,len,.09,.12,base+1.08);
+   }
+ }
+ box(0,0,len,dep,.27,H);
+ if(p.style==='contemporary'){
+  box(0,-dep/2+.05,len,.22,.43,H+.24);
+  box(0,dep/2-.05,len,.22,.43,H+.24);
+ }else{
+  box(0,0,len*.68,dep*.42,.24,H+.27);
+ }
+ const walk=p.corridor==='minimal'?.95:1.40;
+ for(let i=0;i<=rooms;i++){
+  const u=-len/2+i*bay;
+  box(u,-dep/2-walk+.12,.13,.13,H-.25,.12);
+ }
+}
+function motelArchitectureV1(m,s){
+ const p=motelProfileV1(s),r=new RNG(s.seed+':motel:v1:geometry'),c=MOTEL_STUDIO_V1.white;
+ const width=Math.max(19,s.width),depth=Math.max(17,s.depth);
+ const wingD=Math.min(10.4,Math.max(7.6,depth*.29));
+ const backZ=depth/2-wingD/2;
+ const mainLen=Math.max(19,width-2);
+ motelWingV1(m,{x:0,z:backZ,len:mainLen,dep:wingD,axis:'x'},p,r,c);
+ // Side wings are oriented towards the central open parking/courtyard space.
+ const sideLen=Math.max(14,depth-wingD-3.2),sideZ=backZ-wingD/2-sideLen/2;
+ if(p.layout==='l'||p.layout==='u'){
+  const leftX=-width/2+wingD/2;
+  motelWingV1(m,{x:leftX,z:sideZ,len:sideLen,dep:wingD,axis:'z',front:1},p,r,c);
+ }
+ if(p.layout==='u'){
+  const rightX=width/2-wingD/2;
+  motelWingV1(m,{x:rightX,z:sideZ,len:sideLen,dep:wingD,axis:'z',front:-1},p,r,c);
+ }
+ // A compact entrance / office that reads as reception without labels or colour.
+ // Attach to rear of primary bar so it does not block the external room galleries.
+ const rw=p.reception==='prominent'?Math.min(13,width*.32):p.reception==='small'?7:9.5;
+ const rd=p.reception==='prominent'?6.4:4.5,receptionZ=backZ+wingD/2+rd*.38;
+ m.box(0,receptionZ,rw,rd,3.4,0,c);
+ m.box(0,receptionZ+rd/2+.09,1.55,.14,2.45,.10,c);
+ // Thin portal canopy and a recessed entrance panel at reception exterior.
+ m.box(0,receptionZ+rd/2+.75,rw*.70,1.45,.17,2.90,c);
+ for(const side of [-1,1])m.box(side*rw*.34,receptionZ+rd/2+.72,.18,.18,2.78,.12,c);
+ m.box(0,receptionZ,rw+.30,rd+.24,.30,3.40,c);
+}
+
+
+// SUPERMARKET STUDIO V1 - dedicated retail anchor category. Modular independently of shopfront V2.
+// All surfaces, recessed glazing/doors, roofing and loading doors are pure white.
+const SUPERMARKET_STUDIO_V1=Object.freeze({
+ sizes:['small','medium','large'],styles:['traditional','modern'],
+ entrances:['recessed','vestibule','corner'],roofs:['flat','pitched','clerestory'],
+ loading:['minimal','balanced','prominent'],white:[1,1,1]
+});
+function supermarketProfileV1(s){
+ const r=new RNG(s.seed+':supermarket:v1:profile');
+ const pick=(v,opts)=>opts.includes(v)?v:r.pick(opts);
+ return {size:pick(s.marketSize,SUPERMARKET_STUDIO_V1.sizes),style:pick(s.marketStyle,SUPERMARKET_STUDIO_V1.styles),
+ entrance:pick(s.marketEntrance,SUPERMARKET_STUDIO_V1.entrances),roof:pick(s.marketRoof,SUPERMARKET_STUDIO_V1.roofs),
+ loading:pick(s.marketLoading,SUPERMARKET_STUDIO_V1.loading)};
+}
+function supermarketArchitectureV1(m,s){
+ const p=supermarketProfileV1(s),r=new RNG(s.seed+':supermarket:v1:geometry'),c=SUPERMARKET_STUDIO_V1.white;
+ const limits={small:[16,32,13,27,4.6],medium:[33,65,25,53,6.4],large:[66,140,44,95,8.4]}[p.size];
+ const w=clamp(s.width,limits[0],limits[1]),d=clamp(s.depth,limits[2],limits[3]);
+ const h=Math.max(limits[4],Math.min(limits[4]+1.8,s.floorHeight));
+ const t=.34,front=-d/2,rear=d/2,side=-w/2;
+ const box=(x,z,bw,bd,bh,y)=>m.box(x,z,bw,bd,bh,y,c);
+ // Enclosed volume: four continuous walls, floor and ceiling. Front has a genuine
+ // doorway opening, including jambs, a recessed backing and full-height lintel.
+ box(0,0,w,d,.24,0);
+ box(0,rear-t/2,w,t,h,.18);
+ for(const x of [-w/2+t/2,w/2-t/2])box(x,0,t,d,h,.18);
+ const doorWidth=clamp(w*.145,2.5,5.8),doorX=p.entrance==='corner'?w*.26:0;
+ const glassW=p.size==='small'?w*.22:w*.19;
+ const faceBreaks=[-w/2,doorX-doorWidth/2,doorX+doorWidth/2,w/2];
+ box((faceBreaks[0]+faceBreaks[1])/2,front+t/2,faceBreaks[1]-faceBreaks[0],t,h,.18);
+ box((faceBreaks[2]+faceBreaks[3])/2,front+t/2,faceBreaks[3]-faceBreaks[2],t,h,.18);
+ box(doorX,front+t/2,doorWidth,t,h-3.35,3.53);
+ // Recessed entrance backing is white and deliberately behind jambs.
+ box(doorX,front+.77,doorWidth-.22,.16,2.9,.22);
+ // Entrance portal/canopy silhouette that reads without signs or colour.
+ const aw=Math.min(w*.44,doorWidth+7.0);
+ box(doorX,front-.88,aw,1.90,.26,3.38);
+ for(const dx of [-1,1])box(doorX+dx*(aw/2-.16),front-.95,.22,.22,3.16,.24);
+ if(p.entrance==='vestibule'){
+   box(doorX,front-1.10,doorWidth+1.20,2.25,.24,0);
+   box(doorX,front-2.22,doorWidth+1.22,.25,2.85,.22);
+   box(doorX,front-1.10,doorWidth+1.20,2.25,.24,3.08);
+ }
+ // Glazing reads as real shallow setbacks with white mullions. Geometry only.
+ const facadeAreas=[[(-w/2+doorX-doorWidth/2)/2,doorX-doorWidth/2+w/2],[(doorX+doorWidth/2+w/2)/2,w/2-doorX-doorWidth/2]];
+ for(const [center,span] of facadeAreas){
+  if(span<3.6)continue;
+  const insetW=Math.min(glassW,span*.72),z=front+.10;
+  box(center,z,insetW,.12,.62,.18);
+  box(center,z,insetW,.12,.64,2.98);
+  for(const dx of [-1,1])box(center+dx*insetW/2,z,.17,.12,2.10,.78);
+  box(center,front+.35,insetW-.18,.12,2.04,.80);
+  if(p.style==='modern'&&insetW>3.0)box(center,front+.06,.13,.15,2.02,.80);
+ }
+ // Parapet and roof use separate modules so later roof families can be added safely.
+ box(0,0,w,d,.30,h+.18);
+ if(p.roof==='flat'){
+  for(const zz of [front+.18,rear-.18])box(0,zz,w,.28,.52,h+.42);
+  for(const xx of [side+.18,-side-.18])box(xx,0,.28,d,.52,h+.42);
+ }else if(p.roof==='pitched'){
+  // Shallow stepped roof bands: no unsupported open plane or missing end caps.
+  const steps=5;
+  for(let j=0;j<steps;j++){
+    const frac=(steps-j)/steps;
+    box(0,0,w-.75*j,d*.99*frac,.16,h+.35+j*.22);
+  }
+ }else{
+  const monitorW=w*.58,monitorD=Math.min(d*.22,13);
+  box(0,-d*.08,monitorW,monitorD,1.25,h+.42);
+  box(0,-d*.08,monitorW+.35,monitorD+.35,.20,h+1.72);
+  for(let n=0;n<Math.max(3,Math.floor(monitorW/6));n++){
+    const x=-monitorW/2+(n+.5)*(monitorW/Math.max(3,Math.floor(monitorW/6)));
+    box(x,-d*.08-monitorD/2-.08,monitorW/Math.max(3,Math.floor(monitorW/6))*.68,.14,.74,h+.65);
+  }
+ }
+ // Loading occurs on the rear facade; no car parks or attached roads.
+ const bays=p.loading==='minimal'?1:p.size==='large'&&p.loading==='prominent'?3:p.size==='small'?1:2;
+ const spacing=Math.min(9,w/(bays+1));
+ for(let i=0;i<bays;i++){
+  const x=(i-(bays-1)/2)*spacing;
+  const bw=Math.min(p.size==='small'?3.2:4.6,spacing*.72),bh=Math.min(h-.9,3.85);
+  // A white recessed receiving shutter, protected by a restrained frame and canopy.
+  box(x,rear+.07,bw,.16,bh,.32);
+  for(const dx of [-1,1])box(x+dx*(bw/2+.10),rear+.20,.18,.37,bh+.27,.25);
+  box(x,rear+.20,bw+.35,.40,.23,bh+.35);
+  if(p.loading==='prominent')box(x,rear+.62,bw+1.05,.85,.19,bh+.60);
+ }
+ // Small upper service blocks only on larger stores, away from front sightline.
+ if(p.size!=='small'){
+  const count=p.size==='large'?3:2;
+  for(let i=0;i<count;i++){
+    const x=(i-(count-1)/2)*(w*.16);
+    box(x,d*.16,Math.min(6,w*.09),Math.min(5,d*.11),.70,h+.46);
+  }
+ }
+}
+
+
+// PETROL STATION STUDIO V1 - separate, expandable modular architecture.
+// All surfaces remain [1,1,1]. Individual assembly components can be exported.
+const PETROL_STUDIO_V1=Object.freeze({
+ styles:['modern','roadside'],sizes:['small','medium','large'],
+ layouts:['compact','wide','corner'],canopies:['flat','chunky'],
+ extras:['minimal','balanced','service','wash'],details:['minimal','balanced','higher'],
+ parts:['complete','kiosk','canopy','pumps','extra'],white:[1,1,1]
+});
+function petrolProfileV1(s){
+ const r=new RNG(s.seed+':petrol:v1:profile');
+ const pick=(name,values)=>values.includes(name)?name:r.pick(values);
+ const size=pick(s.petrolSize,PETROL_STUDIO_V1.sizes);
+ const extras=s.petrolExtras==='balanced'?r.pick(['minimal','minimal','service','wash']):pick(s.petrolExtras,PETROL_STUDIO_V1.extras.filter(v=>v!=='balanced'));
+ return {size,style:pick(s.petrolStyle,PETROL_STUDIO_V1.styles),layout:pick(s.petrolLayout,PETROL_STUDIO_V1.layouts),
+ canopy:pick(s.petrolCanopy,PETROL_STUDIO_V1.canopies),extras,detail:pick(s.petrolDetail,PETROL_STUDIO_V1.details),
+ part:PETROL_STUDIO_V1.parts.includes(s.petrolPart)?s.petrolPart:'complete'};
+}
+function petrolArchitectureV1(m,s){
+ const p=petrolProfileV1(s),r=new RNG(s.seed+':petrol:v1:geometry'),white=PETROL_STUDIO_V1.white;
+ const size={small:{w:23,d:22,rows:1,cols:2},medium:{w:36,d:28,rows:2,cols:3},large:{w:51,d:37,rows:2,cols:4}}[p.size];
+ const w=Math.max(size.w,Math.min(size.w*1.28,s.width||size.w)),d=Math.max(size.d,Math.min(size.d*1.25,s.depth||size.d));
+ const box=(x,z,bw,bd,bh,y)=>m.box(x,z,bw,bd,bh,y,white);
+ const show=(part)=>p.part==='complete'||p.part===part;
+ // Canopy is in front of the shop, pump rows visible from the road-facing side (-Z).
+ const roofW=w*(p.layout==='compact'?.65:p.layout==='wide'?.87:.73);
+ const roofD=d*(p.layout==='compact'?.40:p.layout==='wide'?.44:.49);
+ const roofX=p.layout==='corner'?-w*.12:0;
+ const roofZ=-d*.19;
+ const canopyHeight=p.style==='modern'?5.35:4.80;
+ const canopyThick=p.canopy==='flat'?.35:.75;
+ const rows=size.rows,cols=size.cols;
+ if(show('canopy')){
+  // Slab, attached fascia and geometrically supported columns; closed boxes at edges.
+  box(roofX,roofZ,roofW,roofD,canopyThick,canopyHeight);
+  if(p.canopy==='chunky'){
+   box(roofX,roofZ-roofD/2+.17,roofW,.34,.48,canopyHeight-.38);
+   box(roofX,roofZ+roofD/2-.17,roofW,.34,.48,canopyHeight-.38);
+   for(const dx of [-1,1])box(roofX+dx*(roofW/2-.17),roofZ,.34,roofD,.48,canopyHeight-.38);
+  }
+  const supportsX=[roofX-roofW*.38,roofX+roofW*.38];
+  for(const sx of supportsX){
+   for(const sz of [roofZ-roofD*.36,roofZ+roofD*.36]){
+    const col=p.canopy==='flat'?.34:.52;
+    box(sx,sz,col,col,canopyHeight,0);
+    if(p.detail!=='minimal')box(sx,sz,.83,.83,.24,0);
+   }
+  }
+  if(p.detail==='higher')for(let k=0;k<cols;k++){
+   const x=roofX+((k+.5)/cols-.5)*roofW*.78;
+   box(x,roofZ,.075,roofD*.86,.09,canopyHeight-.10);
+  }
+ }
+ if(show('pumps')){
+  // Each pump is a recognisable, closed white cabinet with two nozzle shapes.
+  const xRange=roofW*.64,zRange=roofD*.45;
+  for(let row=0;row<rows;row++)for(let col=0;col<cols;col++){
+   const x=roofX+(col-(cols-1)/2)*(xRange/Math.max(1,cols-1));
+   const z=roofZ+(row-(rows-1)/2)*(zRange/Math.max(1,rows-1));
+   const islandW=Math.min(3.2,roofW/cols*.63);
+   box(x,z,islandW,1.35,.20,0);
+   box(x,z,1.06,.67,1.95,.22);
+   box(x,z-.35,.76,.13,.52,1.32);
+   box(x,z+.35,.76,.13,.52,1.32);
+   for(const side of [-1,1]){
+    box(x+side*.63,z,.23,.30,1.15,.62);
+    if(p.detail!=='minimal')box(x+side*.58,z-.23,.14,.14,.45,.79);
+   }
+   if(p.detail==='higher'){
+    box(x,z,1.28,.84,.17,2.14);
+    for(const side of [-1,1])box(x+side*(islandW/2-.15),z, .16,1.1,.43,.20);
+   }
+  }
+ }
+ // The kiosk is a distinct customer-facing building BEHIND the pumps, with a deep
+ // shopfront/door recess, a roof and parapet; the back and both ends are solid.
+ const kw=Math.min(w*.70,p.size==='small'?12:p.size==='medium'?20:27),kd=Math.min(d*.27,10);
+ const kx=p.layout==='corner'?w*.20:p.layout==='wide'?-w*.12:0;
+ const kz=d*.5-kd*.5-.35;
+ const kh=p.style==='modern'?4.25:3.75;
+ if(show('kiosk')){
+  const front=kz-kd/2,t=.27,doorW=2.15,doorH=2.72,doorX=kx+kw*.18;
+  // White walls enclosing the store; front wall broken around central door.
+  box(kx,kz+kd/2-t/2,kw,t,kh,0);
+  for(const side of [-1,1])box(kx+side*(kw/2-t/2),kz,t,kd,kh,0);
+  const left=kx-kw/2+t,right=kx+kw/2-t;
+  box((left+doorX-doorW/2)/2,front+t/2,doorX-doorW/2-left,t,kh,0);
+  box((right+doorX+doorW/2)/2,front+t/2,right-doorX-doorW/2,t,kh,0);
+  box(doorX,front+t/2,doorW,t,kh-doorH,doorH);
+  box(doorX,front+.55,doorW-.12,.11,doorH-.12,.08);
+  // Front display bays framed by solid geometry and backed by recessed white panels.
+  for(const x of [kx-kw*.25,kx+kw*.34]){
+   if(Math.abs(x-doorX)<2)continue;
+   const winW=Math.min(3.5,kw*.22);
+   box(x,front-.06,winW,.13,.30,.45);
+   box(x,front-.06,winW,.13,.33,2.85);
+   for(const side of [-1,1])box(x+side*winW/2,front-.06,.18,.13,2.10,.72);
+   box(x,front+.36,winW-.17,.11,2.08,.75);
+  }
+  box(kx,kz,kw,kd,.25,kh);
+  for(const z of [kz-kd/2+.16,kz+kd/2-.16])box(kx,z,kw,.25,.48,kh+.20);
+  for(const x of [kx-kw/2+.16,kx+kw/2-.16])box(x,kz,.25,kd,.48,kh+.20);
+  box(doorX,front-.48,doorW+1.60,1.20,.22,3.10);
+  if(p.detail==='higher'){
+   for(const x of [kx-kw*.33,kx+kw*.33])box(x,kz+kd*.18,1.4,1.3,.50,kh+.48);
+  }
+ }
+ // Optional service/wash buildings are separate meshes with a readable drive-through
+ // opening but complete side, end and roof volumes (no visible hollow end walls).
+ if(show('extra')&&p.extras!=='minimal'){
+  const ew=p.extras==='wash'?7.4:8.5,ed=p.extras==='wash'?12.0:8.5,eh=4.1;
+  const ex=-w/2+ew/2-.5,ez=d*.5-ed/2;
+  if(p.extras==='service'){
+   box(ex,ez,ew,ed,eh,0);
+   box(ex,ez-ed/2-.11,ew*.62,.20,eh*.68,.35);
+   box(ex,ez,ew,ed,.22,eh);
+   for(const dx of [-1,1])box(ex+dx*ew*.34,ez-ed/2-.18,.22,.4,eh*.70,.30);
+  }else{
+   // Two continuous sidewalls and overhead lintels provide a covered drive-through.
+   for(const dx of [-1,1])box(ex+dx*(ew/2-.17),ez,.34,ed,eh,0);
+   for(const zz of [ez-ed/2+.19,ez+ed/2-.19])box(ex,zz,ew,.38,.80,eh-.80);
+   box(ex,ez,ew,ed,.28,eh);
+   if(p.detail!=='minimal')for(const dx of [-1,1])box(ex+dx*(ew/2-.49),ez,.20,ed*.72,1.50,.25);
+  }
+ }
+}
+
 function generateMesh(s){for(const k of Object.keys(materials))delete materials[k];mesh={v:[],f:[]};const gen=new CityBuildingGenerator,raw=new MeshBuilder,r=new RNG(s.seed+':'+s.type),cfg={buildingDetail:s.buildingDetail,cityDetailBias:'balanced',shapeVariation:.72};gen._settings=cfg;
 const forms=s.type===1?['rect','step','offset','slab']:['rect','slab','compound','step'];const form=s.type===0?'warehouse':s.form==='auto'?r.pick(forms):s.form;
-if(s.type===3||s.type===4)terracedHousingArchitecture(raw,s,r);else if(s.type===2)apartmentArchitectureV2(raw,s);else if(s.type===1)officeTowerArchitecture(raw,s,r);else simpleWarehouseArchitecture(raw,s);
+if(s.type===8)petrolArchitectureV1(raw,s);else if(s.type===7)supermarketArchitectureV1(raw,s);else if(s.type===6)motelArchitectureV1(raw,s);else if(s.type===5)factoryArchitectureV1(raw,s);else if(s.type===3)terracedHousingArchitectureV2(raw,s);else if(s.type===4)retailCommercialArchitectureV2(raw,s);else if(s.type===2)apartmentArchitectureV2(raw,s);else if(s.type===1)officeTowerArchitecture(raw,s,r);else simpleWarehouseArchitecture(raw,s);
 for(let i=0;i<raw.p.length;i+=9){const offset=mesh.v.length;for(let k=0;k<3;k++)mesh.v.push(raw.p.slice(i+k*3,i+k*3+3));const color=raw.c.slice(i,i+3),mat='city_'+color.map(n=>Math.round(n*10000)).join('_');materials[mat]=color;mesh.f.push({ids:[offset,offset+1,offset+2],normal:raw.n.slice(i,i+3),mat,part:'city_building'})}
 for(const f of mesh.f){const a=mesh.v[f.ids[0]],b=mesh.v[f.ids[1]],c=mesh.v[f.ids[2]],u=b.map((n,i)=>n-a[i]),v=c.map((n,i)=>n-a[i]),cross=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(cross.reduce((sum,n,i)=>sum+n*f.normal[i],0)<0)f.ids.reverse()}
 let lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];for(const v of mesh.v)for(let i=0;i<3;i++){lo[i]=Math.min(lo[i],v[i]);hi[i]=Math.max(hi[i],v[i])}const shift=[(lo[0]+hi[0])/2,lo[1],(lo[2]+hi[2])/2];for(const v of mesh.v)for(let i=0;i<3;i++)v[i]-=shift[i];bounds={width:hi[0]-lo[0],height:hi[1]-lo[1],depth:hi[2]-lo[2]};return mesh}
-function rebuild(){settings=read();$('towerControls').hidden=settings.type!==1;$('apartmentWindowControls').hidden=settings.type!==2;$('o_windowVariation').textContent=Math.round(settings.windowVariation*100)+'%';$('roofControls').hidden=settings.type!==3&&settings.type!==4;$('o_roofRise').textContent=settings.roofRise.toFixed(1)+' m';$('form').disabled=settings.type===0||settings.type===3||settings.type===4;specs.forEach(([id,,,step,,,])=>$('o_'+id).textContent=+$(id).value+(specs.find(a=>a[0]===id)[6]?' '+specs.find(a=>a[0]===id)[6]:''));generateMesh(settings);$('title').textContent=categories[settings.type];$('subtitle').textContent=settings.seed+' / '+settings.floors+' FLOORS / '+settings.form.toUpperCase();$('stats').textContent=mesh.v.length.toLocaleString()+' VERTICES · '+mesh.f.length.toLocaleString()+' FACES';dirty=true}
-function apply(s){type.value=s.type;specs.forEach(([id])=>{if(s[id]!==undefined)$(id).value=s[id]});['seed','form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation'].forEach(id=>{if(s[id]!==undefined)$(id).value=s[id]});rebuild()}
-function seeded(){const i=+type.value,r=new RNG($('seed').value+':defaults:'+i);apply({type:i,seed:$('seed').value,width:Math.round(i===0?r.range(65,110):i===1?r.range(26,42):i===4?r.range(18,32):r.range(38,62)),depth:Math.round(i===0?r.range(38,65):i===4?r.range(8,14):i===3?r.range(14,18):i===2?r.range(16,28):r.range(20,34)),floors:i===0?1:i===4?r.int(1,2):i===3?r.int(2,3):i===1?r.int(16,38):i===2?(r.chance(.12)?r.int(7,9):r.int(2,6)):r.int(5,11),floorHeight:i===0?7:i===4?3.8:i===3?3:3.35,buildingDetail:.75,form:'auto',towerStyle:$('towerStyle').value||'auto',windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value});frame()}
+function rebuild(){settings=read();$('towerControls').hidden=settings.type!==1;$('officeControls').hidden=settings.type!==1;$('apartmentWindowControls').hidden=settings.type!==2;$('o_windowVariation').textContent=Math.round(settings.windowVariation*100)+'%';$('retailV2Controls').hidden=settings.type!==4;$('o_retailVariation').textContent=Math.round(settings.retailVariation*100)+'%';$('terraceV2Controls').hidden=settings.type!==3;$('o_terraceVariation').textContent=Math.round(settings.terraceVariation*100)+'%';$('factoryV1Controls').hidden=settings.type!==5;$('motelV1Controls').hidden=settings.type!==6;$('supermarketV1Controls').hidden=settings.type!==7;$('petrolV1Controls').hidden=settings.type!==8;$('roofControls').hidden=settings.type!==3;$('o_roofRise').textContent=settings.roofRise.toFixed(1)+' m';$('form').disabled=settings.type===0||settings.type===3||settings.type===4||settings.type===5||settings.type===6||settings.type===7||settings.type===8;specs.forEach(([id,,,step,,,])=>$('o_'+id).textContent=+$(id).value+(specs.find(a=>a[0]===id)[6]?' '+specs.find(a=>a[0]===id)[6]:''));generateMesh(settings);$('title').textContent=categories[settings.type];$('subtitle').textContent=settings.seed+' / '+settings.floors+' FLOORS / '+settings.form.toUpperCase();$('stats').textContent=mesh.v.length.toLocaleString()+' VERTICES · '+mesh.f.length.toLocaleString()+' FACES';dirty=true}
+function apply(s){type.value=s.type;specs.forEach(([id])=>{if(s[id]!==undefined)$(id).value=s[id]});['seed','form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation','officeArchitecture','officeWindowStyle','terraceArchitecture','terraceVariation','retailArchitecture','retailLayout','retailShopfront','retailUpper','retailVariation','factoryArchitecture','factorySize','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelFloors','motelReception','motelCorridor','marketSize','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolSize','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart'].forEach(id=>{if(s[id]!==undefined)$(id).value=s[id]});rebuild()}
+function seeded(){const i=+type.value,r=new RNG($('seed').value+':defaults:'+i);apply({type:i,seed:$('seed').value,width:Math.round(i===8?($('petrolSize').value==='small'?r.range(23,28):$('petrolSize').value==='medium'?r.range(36,44):$('petrolSize').value==='large'?r.range(51,61):r.range(26,58)):i===0?r.range(65,110):i===1?r.range(26,42):i===4?r.range(9,38):i===7?($('marketSize').value==='small'?r.range(17,29):$('marketSize').value==='medium'?r.range(36,62):$('marketSize').value==='large'?r.range(70,130):r.range(20,119)):i===6?r.range(29,78):i===5?($('factorySize').value==='small'?r.range(24,39):$('factorySize').value==='large'?r.range(72,105):$('factorySize').value==='medium'?r.range(42,71):r.range(28,95)):r.range(38,62)),depth:Math.round(i===8?($('petrolSize').value==='small'?r.range(22,26):$('petrolSize').value==='medium'?r.range(28,35):$('petrolSize').value==='large'?r.range(37,44):r.range(24,42)):i===0?r.range(38,65):i===4?r.range(8,14):i===7?($('marketSize').value==='small'?r.range(15,26):$('marketSize').value==='medium'?r.range(27,51):$('marketSize').value==='large'?r.range(47,89):r.range(19,78)):i===6?r.range(25,53):i===5?($('factorySize').value==='small'?r.range(20,30):$('factorySize').value==='large'?r.range(44,67):$('factorySize').value==='medium'?r.range(29,47):r.range(23,65)):i===3?r.range(14,18):i===2?r.range(16,28):r.range(20,34)),floors:i===8?1:i===7?1:i===6?($('motelFloors').value==='auto'?r.int(1,3):+$('motelFloors').value):i===5?1:i===0?1:i===4?r.int(1,4):i===3?r.int(2,3):i===1?r.int(16,38):i===2?(r.chance(.12)?r.int(7,9):r.int(2,6)):r.int(5,11),floorHeight:i===8?5.3:i===7?($('marketSize').value==='small'?5.3:$('marketSize').value==='large'?9.4:7.1):i===6?3.05:i===5?r.range(6.5,11):i===0?7:i===4?3.8:i===3?3:3.35,buildingDetail:.75,form:'auto',towerStyle:$('towerStyle').value||'auto',windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value,terraceRoof:i===3?'auto':$('terraceRoof').value});frame()}
 const canvas=$('view'),gl=canvas.getContext('webgl',{antialias:true,alpha:false});let cw=1,ch=1,dpr=1;
 if(!gl)throw Error('This preview requires a browser with WebGL enabled.');
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
@@ -1057,12 +1865,12 @@ function tick(){if(spinning){yaw+=.004;dirty=true}if(dirty){renderGL();dirty=fal
 function frame(){zoom=1;pan=[0,0];dirty=true}$('frame').onclick=frame;canvas.ondblclick=frame;canvas.oncontextmenu=e=>e.preventDefault();const pointers=new Map();let drag=null,lastPinch=0;canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2};if(pointers.size===2){const a=[...pointers.values()];lastPinch=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}};canvas.onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()],dist=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);zoom=Math.max(.25,Math.min(5,zoom*dist/Math.max(1,lastPinch)));lastPinch=dist}else if(drag){let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(drag.pan){pan[0]+=dx;pan[1]+=dy}else{yaw+=dx*.008;pitch=Math.max(-.12,Math.min(1.4,pitch+dy*.008))}}drag={...drag,x:e.clientX,y:e.clientY};dirty=true};canvas.onpointerup=canvas.onpointercancel=e=>{pointers.delete(e.pointerId);drag=null};canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.25,Math.min(5,zoom*Math.exp(-e.deltaY*.001)));dirty=true},{passive:false});
 function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3000)}
 function download(name,data,mime){let url=URL.createObjectURL(new Blob([data],{type:mime})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
-function metadata(){return{studio:'Cold Routes Building Studio',version:15,retailFamily:'seeded-single-parade-corner-shop',terraceFamily:'repeated-white-residential-homes',warehouseFamily:'v2-modular-seeded-industrial-architecture-pure-white',towerSilhouette:settings.type===1?currentTowerStyle:null,officeFamily:'seeded-office-silhouettes-recessed-facade',apartmentFamily:'v2-window-variation-six-building-coherent-styles-pure-white',visualStyle:'original-city-generator-building-routines',source:'city_generator_v7_9_waterfront.html',category:categories[settings.type],units:'metres',upAxis:'Y',origin:'ground-level bounding-box center',buildingOnly:true,settings:{...settings},bounds:{...bounds},geometry:{vertices:mesh.v.length,faces:mesh.f.length},materials}}
+function metadata(){return{studio:'Cold Routes Building Studio',version:22,petrolFamily:'v1-hybrid-component-white-forecourt',supermarketFamily:'v1-independent-small-medium-large-all-white',motelFamily:'v1-roadside-external-gallery-straight-l-u-solid-endwalls-white',factoryFamily:'v1-modular-white-manufacturing-geometry',retailFamily:'v2-white-recessed-shopfronts-single-parade-corner-mixed-use',terraceFamily:'v2-mixed-residential-row-recessed-white-facades',warehouseFamily:'v2-modular-seeded-industrial-architecture-pure-white',towerSilhouette:settings.type===1?currentTowerStyle:null,officeFamily:'v2-six-preserved-silhouettes-five-recessed-facades-white',apartmentFamily:'v2-window-variation-six-building-coherent-styles-pure-white',visualStyle:'original-city-generator-building-routines',source:'city_generator_v7_9_waterfront.html',category:categories[settings.type],units:'metres',upAxis:'Y',origin:'ground-level bounding-box center',buildingOnly:true,settings:{...settings},bounds:{...bounds},geometry:{vertices:mesh.v.length,faces:mesh.f.length},materials}}
 function obj(){let lines=['# Cold Routes Building Studio | metres | Y up','mtllib building.mtl','o Cold_Routes_Building'];mesh.v.forEach(v=>lines.push('v '+v.map(x=>x.toFixed(5)).join(' ')));mesh.f.forEach(f=>lines.push('vn '+f.normal.join(' ')));let mat='',part='',normal=0;for(const f of mesh.f){if(part!==f.part){part=f.part;lines.push('g '+part)}if(mat!==f.mat){mat=f.mat;lines.push('usemtl '+mat)}normal++;lines.push('f '+f.ids.map(i=>(i+1)+'//'+normal).join(' '))}return lines.join('\n')+'\n'}
 function mtl(){return Object.entries(materials).map(([name,c])=>'newmtl '+name+'\nKa '+c.map(n=>(n*.25).toFixed(4)).join(' ')+'\nKd '+c.join(' ')+'\nKs 0.08 0.08 0.08\nNs 24\nd 1\nillum 2\n').join('\n')}
 function crc32(bytes){let c=0xffffffff;for(let b of bytes){c^=b;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return(c^0xffffffff)>>>0}
 function zip(files){const enc=new TextEncoder(),parts=[],central=[];let offset=0;function header(size){const b=new Uint8Array(size);return[b,new DataView(b.buffer)]}for(const [name,content]of Object.entries(files)){const nb=enc.encode(name),data=enc.encode(content),crc=crc32(data),[h,v]=header(30+nb.length);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,nb.length,true);h.set(nb,30);parts.push(h,data);const [c,cv]=header(46+nb.length);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nb.length,true);cv.setUint32(42,offset,true);c.set(nb,46);central.push(c);offset+=h.length+data.length}const cs=central.reduce((a,b)=>a+b.length,0),[end,ev]=header(22);ev.setUint32(0,0x06054b50,true);ev.setUint16(8,central.length,true);ev.setUint16(10,central.length,true);ev.setUint32(12,cs,true);ev.setUint32(16,offset,true);return new Blob([...parts,...central,end],{type:'application/zip'})}
-$('export').onclick=()=>{const blob=zip({'building.obj':obj(),'building.mtl':mtl(),'metadata.json':JSON.stringify(metadata(),null,2)});download('Cold_Routes_'+categories[settings.type].replace(/[^a-z0-9]/gi,'_')+'.zip',blob,'application/zip');toast('Building ZIP exported')};$('save').onclick=()=>download('cold_routes_settings.json',JSON.stringify(metadata(),null,2),'application/json');$('load').onclick=()=>$('file').click();$('file').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text()),s=data.settings;if(!s||!Number.isInteger(s.type)||s.type<0||s.type>=5||typeof s.seed!=='string'||s.seed.length>100||!['auto','rect','step','slab','offset','compound'].includes(s.form))throw Error('Invalid settings file');s.recessDepth??=.20;s.windowStyle??='auto';s.windowVariation??=.35;if(!['auto',...APARTMENT_STUDIO_V2.windowStyles].includes(s.windowStyle))throw Error('Invalid window style');if(!Number.isFinite(s.windowVariation)||s.windowVariation<0||s.windowVariation>1)throw Error('Invalid window variation');for(const [id,,min,max]of specs)if(!Number.isFinite(s[id])||s[id]<min||s[id]>max)throw Error('Invalid '+id);if(s.towerStyle&&!['auto','simple','tiered','offset','tapered','portal','terraces'].includes(s.towerStyle))throw Error('Invalid tower style');if(s.terraceRoof&&!['flat','pitched','hipped','auto'].includes(s.terraceRoof))throw Error('Invalid housing roof');if(s.roofRise!==undefined&&(!Number.isFinite(s.roofRise)||s.roofRise<.5||s.roofRise>4))throw Error('Invalid roof rise');apply({...s,recessDepth:s.recessDepth??.20,towerStyle:s.towerStyle||'auto',terraceRoof:s.terraceRoof||'flat',roofRise:s.roofRise??1.8});frame();toast('Settings restored')}catch(err){toast(err.message)}e.target.value=''};
-$('generate').onclick=seeded;$('seed').onkeydown=e=>{if(e.key==='Enter')seeded()};$('random').onclick=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);$('seed').value='CR-'+a[0].toString(36)+a[1].toString(36);seeded()};type.onchange=seeded;['form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation'].forEach(id=>$(id).onchange=rebuild);$('spin').onclick=()=>{spinning=!spinning;$('spin').setAttribute('aria-pressed',spinning);$('spin').textContent=spinning?'Stop orbit':'Auto orbit'};$('wire').onclick=()=>{wire=!wire;$('wire').setAttribute('aria-pressed',wire);dirty=true};
-$('roofRise').oninput=rebuild;$('windowVariation').oninput=rebuild;seeded();resize();tick();
+$('export').onclick=()=>{const blob=zip({'building.obj':obj(),'building.mtl':mtl(),'metadata.json':JSON.stringify(metadata(),null,2)});download('Cold_Routes_'+categories[settings.type].replace(/[^a-z0-9]/gi,'_')+'.zip',blob,'application/zip');toast('Building ZIP exported')};$('save').onclick=()=>download('cold_routes_settings.json',JSON.stringify(metadata(),null,2),'application/json');$('load').onclick=()=>$('file').click();$('file').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text()),s=data.settings;if(!s||!Number.isInteger(s.type)||s.type<0||s.type>=categories.length||typeof s.seed!=='string'||s.seed.length>100||!['auto','rect','step','slab','offset','compound'].includes(s.form))throw Error('Invalid settings file');for(const [id,options] of Object.entries({factoryArchitecture:['auto',...FACTORY_STUDIO_V1.architectures],factorySize:['auto',...FACTORY_STUDIO_V1.sizes],factoryRoof:['auto',...FACTORY_STUDIO_V1.roofs],factoryLayout:['auto',...FACTORY_STUDIO_V1.layouts],factoryOffice:FACTORY_STUDIO_V1.offices,factoryService:FACTORY_STUDIO_V1.services,factoryWindows:FACTORY_STUDIO_V1.windows,motelStyle:['auto',...MOTEL_STUDIO_V1.styles],motelLayout:['auto',...MOTEL_STUDIO_V1.layouts],motelFloors:['auto','1','2','3'],motelReception:MOTEL_STUDIO_V1.reception,motelCorridor:MOTEL_STUDIO_V1.corridors,marketSize:['auto',...SUPERMARKET_STUDIO_V1.sizes],marketStyle:['auto',...SUPERMARKET_STUDIO_V1.styles],marketEntrance:['auto',...SUPERMARKET_STUDIO_V1.entrances],marketRoof:['auto',...SUPERMARKET_STUDIO_V1.roofs],marketLoading:SUPERMARKET_STUDIO_V1.loading,petrolStyle:['auto',...PETROL_STUDIO_V1.styles],petrolSize:['auto',...PETROL_STUDIO_V1.sizes],petrolLayout:['auto',...PETROL_STUDIO_V1.layouts],petrolCanopy:['auto',...PETROL_STUDIO_V1.canopies],petrolExtras:PETROL_STUDIO_V1.extras,petrolDetail:PETROL_STUDIO_V1.details,petrolPart:PETROL_STUDIO_V1.parts})){s[id]??=(id==='factoryOffice'?'integrated':id==='factoryService'?'balanced':id==='factoryWindows'?'mixed':id==='motelReception'?'integrated':id==='motelCorridor'?'external':id==='marketLoading'?'balanced':id==='petrolExtras'||id==='petrolDetail'?'balanced':id==='petrolPart'?'complete':'auto');if(!options.includes(s[id]))throw Error('Invalid '+id)}s.recessDepth??=.20;s.windowStyle??='auto';s.windowVariation??=.35;if(!['auto',...APARTMENT_STUDIO_V2.windowStyles].includes(s.windowStyle))throw Error('Invalid window style');if(!Number.isFinite(s.windowVariation)||s.windowVariation<0||s.windowVariation>1)throw Error('Invalid window variation');for(const [id,,min,max]of specs)if(!Number.isFinite(s[id])||s[id]<min||s[id]>max)throw Error('Invalid '+id);s.terraceArchitecture??='auto';s.terraceVariation??=.48;if(!TERRACE_STUDIO_V2.styles.includes(s.terraceArchitecture)||!Number.isFinite(s.terraceVariation)||s.terraceVariation<0||s.terraceVariation>1)throw Error('Invalid terrace V2 settings');s.officeArchitecture??='auto';s.officeWindowStyle??='auto';if(!OFFICE_STUDIO_V2.architectures.includes(s.officeArchitecture)||!OFFICE_STUDIO_V2.windows.includes(s.officeWindowStyle))throw Error('Invalid office settings');if(s.towerStyle&&!['auto',...TOWER_STYLES_V3].includes(s.towerStyle))throw Error('Invalid tower style');if(s.terraceRoof&&!['flat','pitched','hipped','auto'].includes(s.terraceRoof))throw Error('Invalid housing roof');if(s.roofRise!==undefined&&(!Number.isFinite(s.roofRise)||s.roofRise<.5||s.roofRise>4))throw Error('Invalid roof rise');apply({...s,recessDepth:s.recessDepth??.20,towerStyle:s.towerStyle||'auto',terraceRoof:s.terraceRoof||'flat',roofRise:s.roofRise??1.8});frame();toast('Settings restored')}catch(err){toast(err.message)}e.target.value=''};
+$('generate').onclick=seeded;$('seed').onkeydown=e=>{if(e.key==='Enter')seeded()};$('random').onclick=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);$('seed').value='CR-'+a[0].toString(36)+a[1].toString(36);seeded()};type.onchange=seeded;['form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation','officeArchitecture','officeWindowStyle','terraceArchitecture','terraceVariation'].forEach(id=>$(id).onchange=rebuild);$('spin').onclick=()=>{spinning=!spinning;$('spin').setAttribute('aria-pressed',spinning);$('spin').textContent=spinning?'Stop orbit':'Auto orbit'};$('wire').onclick=()=>{wire=!wire;$('wire').setAttribute('aria-pressed',wire);dirty=true};
+for(const id of ['factoryArchitecture','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelReception','motelCorridor','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart'])$(id).onchange=rebuild;$('factorySize').onchange=seeded;$('motelFloors').onchange=seeded;$('marketSize').onchange=seeded;$('petrolSize').onchange=seeded;$('roofRise').oninput=rebuild;$('windowVariation').oninput=rebuild;seeded();resize();tick();
 </script></body></html>
