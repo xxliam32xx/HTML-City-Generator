@@ -4,7 +4,7 @@
 :root{font-family:Arial,Helvetica,sans-serif;color:#39434a;background:#e9edef;font-size:13px}*{box-sizing:border-box}body{margin:0}header{height:70px;background:#fafbfb;border-bottom:1px solid #d4dade;display:flex;align-items:center;justify-content:space-between;padding:0 26px}h1{font-size:17px;font-weight:500;letter-spacing:4px;margin:0}header small{display:block;letter-spacing:2px;color:#88939a;margin-top:7px;font-size:10px}.tag{font-size:10px;letter-spacing:2px;color:#78868d}main{display:grid;grid-template-columns:315px 1fr;height:calc(100vh - 70px)}aside{background:#f7f9f9;border-right:1px solid #d3dadd;overflow:auto;padding:22px}h2{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#829097;margin:24px 0 15px}h2:first-child{margin-top:0}label{display:block;margin:13px 0 6px;font-size:12px}select,input[type=text]{width:100%;padding:10px;background:white;border:1px solid #ccd4d8;color:#39434a;border-radius:3px}input[type=range]{width:100%;accent-color:#718991}label output{float:right;color:#718991;font-variant-numeric:tabular-nums}button{cursor:pointer;padding:10px 12px;border:1px solid #cbd4d8;border-radius:3px;background:#fff;color:#43545d;font:inherit}button:hover{background:#e8eef0}button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #597d89;outline-offset:2px}.row{display:flex;gap:8px;margin-top:12px}.row>*{flex:1}.primary{background:#526d78;color:white;width:100%;border-color:#526d78}.primary:hover{background:#405d68}.check{display:flex;align-items:center;gap:7px;font-size:12px}.hint{color:#819097;font-size:11px;line-height:1.6}section{position:relative;min-width:0;overflow:hidden}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.top{position:absolute;top:24px;left:28px;pointer-events:none}.top b{font-weight:500;font-size:20px}.top p{color:#87959c;font-size:11px;letter-spacing:1px}.tools{position:absolute;right:24px;top:24px;display:flex;gap:6px}.bottom{position:absolute;bottom:23px;left:28px;right:28px;display:flex;justify-content:space-between;color:#7a8b94;font-size:11px;pointer-events:none}#toast{position:absolute;left:50%;bottom:65px;transform:translateX(-50%);background:#526d78;color:white;padding:12px 20px;border-radius:4px;display:none}details summary{cursor:pointer;color:#657b85;margin-top:18px;font-size:11px}details p{font-size:11px;line-height:1.7;color:#778990}@media(max-width:720px){main{grid-template-columns:245px 1fr}aside{padding:14px}.tools{top:90px;right:10px;flex-direction:column}.top{left:15px}.bottom{left:15px;right:15px;display:block}header{padding:0 16px}h1{font-size:14px}.tag{display:none}}@media(max-width:480px){main{display:flex;flex-direction:column;height:auto}section{height:60vh;order:-1}aside{max-height:60vh}header{height:65px}}
 </style></head><body>
 <header><div><h1>COLD ROUTES</h1><small>BUILDING STUDIO / 01</small></div><span class="tag">PROCEDURAL ARCHITECTURE · OFFLINE EDITION</span></header>
-<main><aside><h2>01 / Building</h2><label for="type">Building category</label><select id="type"></select><label for="seed">Generation seed</label><input id="seed" type="text" value="COLD-001" maxlength="100"><div class="row"><button id="generate">Apply seed</button><button id="random">Randomize</button></div><h2>02 / Massing</h2><div id="massing"></div><label for="form">Massing</label><select id="form"><option value="auto">Seeded city style</option><option value="rect">Rectangular</option><option value="step">Stepped</option><option value="slab">Slab</option><option value="offset">Offset volumes</option><option value="compound">Compound block</option></select><div id="terraceV2Controls" hidden><h2>03 / Terraced housing</h2><label for="terraceArchitecture">Architectural family</label><select id="terraceArchitecture"><option value="auto">Seeded mixed streets</option><option value="traditional">Traditional terraces</option><option value="modern">Modern townhouses</option><option value="transitional">Transitional terraces</option></select><label for="terraceVariation">Neighbour variation <output id="o_terraceVariation">48%</output></label><input id="terraceVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Coherent rows, with controlled differences in heights, front setbacks, window proportions and white roof geometry.</p></div><div id="retailV2Controls" hidden><h2>03 / Retail &amp; commercial</h2><label for="retailArchitecture">Architectural family</label><select id="retailArchitecture"><option value="auto">Seeded traditional &amp; modern mix</option><option value="traditional">Traditional high street</option><option value="modern">Modern commercial</option><option value="transitional">Transitional mixed use</option></select><label for="retailLayout">Retail layout</label><select id="retailLayout"><option value="auto">Seeded singles / rows / corners</option><option value="single">Standalone shop</option><option value="parade">Shop parade / row</option><option value="corner">Corner shop</option></select><label for="retailShopfront">Shopfront design</label><select id="retailShopfront"><option value="auto">Seeded coherent storefronts</option><option value="wide">Wide display windows</option><option value="paired">Paired window bays</option><option value="offset">Offset recessed entrance</option><option value="arcade">Recessed shop arcade</option></select><label for="retailUpper">Upper-floor use</label><select id="retailUpper"><option value="auto">Seeded shop / mixed-use</option><option value="retail">Retail building</option><option value="mixed">Offices / apartments above</option></select><label for="retailVariation">Shopfront variation <output id="o_retailVariation">48%</output></label><input id="retailVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Independent Unity-ready buildings; pure-white recessed storefronts, controlled neighbouring units and coherent upper facades.</p></div><div id="factoryV1Controls" hidden><h2>03 / Factory architecture</h2><label for="factoryArchitecture">Architectural family</label><select id="factoryArchitecture"><option value="auto">Seeded traditional / modern / hybrid</option><option value="traditional">Traditional manufacturing</option><option value="modern">Modern light industrial</option><option value="hybrid">Hybrid processing factory</option></select><label for="factorySize">Factory size</label><select id="factorySize"><option value="auto">Seeded small / medium / large</option><option value="small">Small factory</option><option value="medium">Medium factory</option><option value="large">Large factory</option></select><label for="factoryRoof">Industrial roof</label><select id="factoryRoof"><option value="auto">Seeded roof mix</option><option value="flat">Flat / parapet</option><option value="sawtooth">Sawtooth industrial</option><option value="clerestory">Clerestory / raised monitor</option><option value="pitched">Pitched roof</option></select><label for="factoryLayout">Building composition</label><select id="factoryLayout"><option value="auto">Seeded single / wings / multi-volume</option><option value="single">Single manufacturing hall</option><option value="wing">Production hall + side wing</option><option value="multi">Connected production volumes</option></select><label for="factoryOffice">Office / admin section</label><select id="factoryOffice"><option value="integrated">Integrated (recommended)</option><option value="minimal">Minimal</option><option value="prominent">Prominent attached office</option></select><label for="factoryService">Service/loading details</label><select id="factoryService"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher</option></select><label for="factoryWindows">Industrial windows</label><select id="factoryWindows"><option value="mixed">Mixed coherent windows</option><option value="minimal">Minimal windows</option><option value="varied">More window variation</option></select><p class="hint">Modular standalone factory buildings, recessed openings, geometric white industrial roofs, and Unity-ready export.</p></div><div id="motelV1Controls" hidden><h2>03 / Motel architecture</h2><label for="motelStyle">Motel style</label><select id="motelStyle"><option value="auto">Seeded roadside / contemporary</option><option value="roadside">Classic roadside motel</option><option value="contemporary">Modern budget motel</option></select><label for="motelLayout">Building layout</label><select id="motelLayout"><option value="auto">Seeded straight / L / U</option><option value="straight">Straight bar</option><option value="l">L-shaped motel</option><option value="u">U-shaped courtyard motel</option></select><label for="motelFloors">Guest-room levels</label><select id="motelFloors"><option value="auto">Seeded 1–3 levels</option><option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three storeys</option></select><label for="motelReception">Reception block</label><select id="motelReception"><option value="integrated">Integrated (recommended)</option><option value="prominent">More prominent</option><option value="small">Small entrance office</option></select><label for="motelCorridor">Guest access</label><select id="motelCorridor"><option value="external">External walkways (recommended)</option><option value="minimal">Minimal access gallery</option></select><p class="hint">Standalone white motel architecture, repeated recessed room doorways, external access galleries and small reception. Sized for manual placement in Unity.</p></div><div id="supermarketV1Controls" hidden><h2>03 / Supermarket architecture</h2><label for="marketSize">Store size</label><select id="marketSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small neighbourhood supermarket</option><option value="medium">Medium supermarket</option><option value="large">Large supermarket / hypermarket</option></select><label for="marketStyle">Store architecture</label><select id="marketStyle"><option value="auto">Seeded traditional / modern</option><option value="traditional">Traditional neighbourhood store</option><option value="modern">Modern supermarket</option></select><label for="marketEntrance">Main entrance</label><select id="marketEntrance"><option value="auto">Seeded entrance design</option><option value="recessed">Recessed central entrance</option><option value="vestibule">Projected entrance vestibule</option><option value="corner">Offset entrance</option></select><label for="marketRoof">Roof design</label><select id="marketRoof"><option value="auto">Seeded flat / pitched / clerestory</option><option value="flat">Flat roof with parapet</option><option value="pitched">Low pitched roof</option><option value="clerestory">Clerestory roof monitor</option></select><label for="marketLoading">Rear loading area</label><select id="marketLoading"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal service doors</option><option value="prominent">Prominent receiving/loading</option></select><p class="hint">Standalone pure-white supermarket buildings for manual Unity placement. No integrated car parks, signage or road geometry.</p></div><div id="petrolV1Controls" hidden><h2>03 / Petrol station architecture</h2><label for="petrolStyle">Architectural style</label><select id="petrolStyle"><option value="auto">Seeded modern / roadside</option><option value="modern">Modern forecourt</option><option value="roadside">Traditional roadside</option></select><label for="petrolSize">Station size</label><select id="petrolSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small station</option><option value="medium">Medium station</option><option value="large">Large station</option></select><label for="petrolLayout">Forecourt layout</label><select id="petrolLayout"><option value="auto">Seeded compact / wide / corner</option><option value="compact">Compact</option><option value="wide">Wide</option><option value="corner">Corner / offset kiosk</option></select><label for="petrolCanopy">Canopy architecture</label><select id="petrolCanopy"><option value="auto">Seeded modern / chunky</option><option value="flat">Flat slim canopy</option><option value="chunky">Traditional thicker canopy</option></select><label for="petrolExtras">Extra service facilities</label><select id="petrolExtras"><option value="balanced">Balanced (recommended)</option><option value="minimal">None</option><option value="service">Attached service bay</option><option value="wash">Standalone car wash</option></select><label for="petrolDetail">Forecourt detail</label><select id="petrolDetail"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher detail</option></select><label for="petrolPart">Export / preview component</label><select id="petrolPart"><option value="complete">Complete station (recommended)</option><option value="kiosk">Shop / kiosk only</option><option value="canopy">Canopy only</option><option value="pumps">Pump islands only</option><option value="extra">Service bay / car wash only</option></select><p class="hint">All-white, textureless modular components. Select a component before exporting to save it separately. No roads, signage or car park terrain included.</p></div><div id="roofControls" hidden><label for="terraceRoof">Roof style</label><select id="terraceRoof"><option value="flat">Flat</option><option value="pitched">Pitched / gable</option><option value="hipped">Hipped</option><option value="auto">Seeded mix</option></select><label for="roofRise">Roof rise <output id="o_roofRise"></output></label><input id="roofRise" type="range" min="0.5" max="4" step="0.1" value="1.8"></div><div id="towerControls" hidden><label for="towerStyle">Tower silhouette</label><select id="towerStyle"><option value="auto">Seeded mix · mostly simple</option><option value="simple">Simple tower</option><option value="tiered">Tiered crown & spire</option><option value="offset">Offset volumes</option><option value="tapered">Tapered spire</option><option value="portal">Open crown</option><option value="terraces">Recessed sky terraces</option><optgroup label="New vertical silhouettes"><option value="stepped2">Multi-setback tower</option><option value="tapered2">Gradual tapered tower</option><option value="offset2">Stacked offset tower</option><option value="split">Split twin shafts</option><option value="waisted">Narrow-waist tower</option><option value="chamfered">Chamfered crown tower</option></optgroup></select></div><p class="hint">Building families use entirely white geometry, recessed entrances and facade details. Warehouse V2 and Apartment V2 are preserved.</p><div id="detail"></div><div id="officeControls" hidden><h2>03 / Office architecture</h2><label for="officeArchitecture">Architectural family</label><select id="officeArchitecture"><option value="auto">Seeded mix · modern & traditional</option><option value="modern">Modern commercial</option><option value="traditional">Traditional commercial</option><option value="transitional">Transitional</option></select><label for="officeWindowStyle">Office windows</label><select id="officeWindowStyle"><option value="auto">Seeded coherent facade</option><option value="vertical">Vertical recessed bays</option><option value="horizontal">Horizontal bands</option><option value="paired">Paired recessed windows</option><option value="square">Square grid</option><option value="alternating">Alternating widths</option></select><p class="hint">Six original and six additional vertical silhouettes. Facade patterns remain coherent across each building, with every surface entirely white.</p></div><div id="apartmentWindowControls" hidden><h2>03 / Apartment windows</h2><label for="windowStyle">Window style</label><select id="windowStyle"><option value="auto">Seeded building style</option><option value="tall">Tall narrow</option><option value="wide">Wide horizontal</option><option value="paired">Paired openings</option><option value="square">Square recessed</option><option value="offset">Offset arrangement</option><option value="mixed">Mixed widths</option></select><label for="windowVariation">Window variation <output id="o_windowVariation">35%</output></label><input id="windowVariation" type="range" min="0" max="1" step="0.01" value="0.35"><p class="hint">One coherent window language per apartment building. Variation changes proportions and controlled bay patterns, not the pure-white material.</p></div><h2>04 / Export</h2><button class="primary" id="export">Download building ZIP ↓</button><div class="row"><button id="save">Save settings</button><button id="load">Load settings</button></div><input id="file" type="file" accept=".json,application/json" hidden><p class="hint">OBJ + MTL + metadata JSON<br>Metres · Y up · centered at ground level<br>Building geometry only. No preview ground.</p><details><summary>Studio guide</summary><p>Drag to orbit. Shift-drag or right-drag to pan. Scroll or pinch to zoom. Double-click to frame. The seed creates repeatable parameters; every slider updates the geometry immediately. Settings JSON restores the complete design. ZIP contains uncompressed standard files, with real facade meshes and material assignments. The supplied city generator’s massing, bevels, carved entrances, facade relief and warehouse routines generate this building directly.</p></details><p id="notice" class="hint"></p></aside>
+<main><aside><h2>01 / Building</h2><label for="type">Building category</label><select id="type"></select><label for="seed">Generation seed</label><input id="seed" type="text" value="COLD-001" maxlength="100"><div class="row"><button id="generate">Apply seed</button><button id="random">Randomize</button></div><h2>02 / Massing</h2><div id="massing"></div><label for="form">Massing</label><select id="form"><option value="auto">Seeded city style</option><option value="rect">Rectangular</option><option value="step">Stepped</option><option value="slab">Slab</option><option value="offset">Offset volumes</option><option value="compound">Compound block</option></select><div id="terraceV2Controls" hidden><h2>03 / Terraced housing</h2><label for="terraceArchitecture">Architectural family</label><select id="terraceArchitecture"><option value="auto">Seeded mixed streets</option><option value="traditional">Traditional terraces</option><option value="modern">Modern townhouses</option><option value="transitional">Transitional terraces</option></select><label for="terraceVariation">Neighbour variation <output id="o_terraceVariation">48%</output></label><input id="terraceVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Coherent rows, with controlled differences in heights, front setbacks, window proportions and white roof geometry.</p></div><div id="retailV2Controls" hidden><h2>03 / Retail &amp; commercial</h2><label for="retailArchitecture">Architectural family</label><select id="retailArchitecture"><option value="auto">Seeded traditional &amp; modern mix</option><option value="traditional">Traditional high street</option><option value="modern">Modern commercial</option><option value="transitional">Transitional mixed use</option></select><label for="retailLayout">Retail layout</label><select id="retailLayout"><option value="auto">Seeded singles / rows / corners</option><option value="single">Standalone shop</option><option value="parade">Shop parade / row</option><option value="corner">Corner shop</option></select><label for="retailShopfront">Shopfront design</label><select id="retailShopfront"><option value="auto">Seeded coherent storefronts</option><option value="wide">Wide display windows</option><option value="paired">Paired window bays</option><option value="offset">Offset recessed entrance</option><option value="arcade">Recessed shop arcade</option></select><label for="retailUpper">Upper-floor use</label><select id="retailUpper"><option value="auto">Seeded shop / mixed-use</option><option value="retail">Retail building</option><option value="mixed">Offices / apartments above</option></select><label for="retailVariation">Shopfront variation <output id="o_retailVariation">48%</output></label><input id="retailVariation" type="range" min="0" max="1" step="0.01" value="0.48"><p class="hint">Independent Unity-ready buildings; pure-white recessed storefronts, controlled neighbouring units and coherent upper facades.</p></div><div id="factoryV1Controls" hidden><h2>03 / Factory architecture</h2><label for="factoryArchitecture">Architectural family</label><select id="factoryArchitecture"><option value="auto">Seeded traditional / modern / hybrid</option><option value="traditional">Traditional manufacturing</option><option value="modern">Modern light industrial</option><option value="hybrid">Hybrid processing factory</option></select><label for="factorySize">Factory size</label><select id="factorySize"><option value="auto">Seeded small / medium / large</option><option value="small">Small factory</option><option value="medium">Medium factory</option><option value="large">Large factory</option></select><label for="factoryRoof">Industrial roof</label><select id="factoryRoof"><option value="auto">Seeded roof mix</option><option value="flat">Flat / parapet</option><option value="sawtooth">Sawtooth industrial</option><option value="clerestory">Clerestory / raised monitor</option><option value="pitched">Pitched roof</option></select><label for="factoryLayout">Building composition</label><select id="factoryLayout"><option value="auto">Seeded single / wings / multi-volume</option><option value="single">Single manufacturing hall</option><option value="wing">Production hall + side wing</option><option value="multi">Connected production volumes</option></select><label for="factoryOffice">Office / admin section</label><select id="factoryOffice"><option value="integrated">Integrated (recommended)</option><option value="minimal">Minimal</option><option value="prominent">Prominent attached office</option></select><label for="factoryService">Service/loading details</label><select id="factoryService"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher</option></select><label for="factoryWindows">Industrial windows</label><select id="factoryWindows"><option value="mixed">Mixed coherent windows</option><option value="minimal">Minimal windows</option><option value="varied">More window variation</option></select><p class="hint">Modular standalone factory buildings, recessed openings, geometric white industrial roofs, and Unity-ready export.</p></div><div id="motelV1Controls" hidden><h2>03 / Motel architecture</h2><label for="motelStyle">Motel style</label><select id="motelStyle"><option value="auto">Seeded roadside / contemporary</option><option value="roadside">Classic roadside motel</option><option value="contemporary">Modern budget motel</option></select><label for="motelLayout">Building layout</label><select id="motelLayout"><option value="auto">Seeded straight / L / U</option><option value="straight">Straight bar</option><option value="l">L-shaped motel</option><option value="u">U-shaped courtyard motel</option></select><label for="motelFloors">Guest-room levels</label><select id="motelFloors"><option value="auto">Seeded 1–3 levels</option><option value="1">Single storey</option><option value="2">Two storeys</option><option value="3">Three storeys</option></select><label for="motelReception">Reception block</label><select id="motelReception"><option value="integrated">Integrated (recommended)</option><option value="prominent">More prominent</option><option value="small">Small entrance office</option></select><label for="motelCorridor">Guest access</label><select id="motelCorridor"><option value="external">External walkways (recommended)</option><option value="minimal">Minimal access gallery</option></select><p class="hint">Standalone white motel architecture, repeated recessed room doorways, external access galleries and small reception. Sized for manual placement in Unity.</p></div><div id="supermarketV1Controls" hidden><h2>03 / Supermarket architecture</h2><label for="marketSize">Store size</label><select id="marketSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small neighbourhood supermarket</option><option value="medium">Medium supermarket</option><option value="large">Large supermarket / hypermarket</option></select><label for="marketStyle">Store architecture</label><select id="marketStyle"><option value="auto">Seeded traditional / modern</option><option value="traditional">Traditional neighbourhood store</option><option value="modern">Modern supermarket</option></select><label for="marketEntrance">Main entrance</label><select id="marketEntrance"><option value="auto">Seeded entrance design</option><option value="recessed">Recessed central entrance</option><option value="vestibule">Projected entrance vestibule</option><option value="corner">Offset entrance</option></select><label for="marketRoof">Roof design</label><select id="marketRoof"><option value="auto">Seeded flat / pitched / clerestory</option><option value="flat">Flat roof with parapet</option><option value="pitched">Low pitched roof</option><option value="clerestory">Clerestory roof monitor</option></select><label for="marketLoading">Rear loading area</label><select id="marketLoading"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal service doors</option><option value="prominent">Prominent receiving/loading</option></select><p class="hint">Standalone pure-white supermarket buildings for manual Unity placement. No integrated car parks, signage or road geometry.</p></div><div id="petrolV1Controls" hidden><h2>03 / Petrol station architecture</h2><label for="petrolStyle">Architectural style</label><select id="petrolStyle"><option value="auto">Seeded modern / roadside</option><option value="modern">Modern forecourt</option><option value="roadside">Traditional roadside</option></select><label for="petrolSize">Station size</label><select id="petrolSize"><option value="auto">Seeded small / medium / large</option><option value="small">Small station</option><option value="medium">Medium station</option><option value="large">Large station</option></select><label for="petrolLayout">Forecourt layout</label><select id="petrolLayout"><option value="auto">Seeded compact / wide / corner</option><option value="compact">Compact</option><option value="wide">Wide</option><option value="corner">Corner / offset kiosk</option></select><label for="petrolCanopy">Canopy architecture</label><select id="petrolCanopy"><option value="auto">Seeded modern / chunky</option><option value="flat">Flat slim canopy</option><option value="chunky">Traditional thicker canopy</option></select><label for="petrolExtras">Extra service facilities</label><select id="petrolExtras"><option value="balanced">Balanced (recommended)</option><option value="minimal">None</option><option value="service">Attached service bay</option><option value="wash">Standalone car wash</option></select><label for="petrolDetail">Forecourt detail</label><select id="petrolDetail"><option value="balanced">Balanced (recommended)</option><option value="minimal">Minimal</option><option value="higher">Higher detail</option></select><label for="petrolPart">Export / preview component</label><select id="petrolPart"><option value="complete">Complete station (recommended)</option><option value="kiosk">Shop / kiosk only</option><option value="canopy">Canopy only</option><option value="pumps">Pump islands only</option><option value="extra">Service bay / car wash only</option></select><p class="hint">All-white, textureless modular components. Select a component before exporting to save it separately. No roads, signage or car park terrain included.</p></div><div id="universityV1Controls" hidden><h2>03 / University architecture</h2><label for="uniType">Academic building type</label><select id="uniType"><option value="auto">Seeded teaching / lecture / library / research</option><option value="teaching">Teaching / classrooms</option><option value="lecture">Lecture theatre building</option><option value="library">University library</option><option value="research">Research / laboratories</option></select><label for="uniStyle">Architectural family</label><select id="uniStyle"><option value="auto">Seeded traditional / modern / transitional</option><option value="traditional">Traditional academic</option><option value="modern">Modern academic</option><option value="transitional">Transitional campus</option></select><label for="uniPlan">Building composition</label><select id="uniPlan"><option value="auto">Seeded wings / L / U / atrium</option><option value="wings">Central block with teaching wings</option><option value="l">L-shaped academic building</option><option value="u">Courtyard / U-shaped building</option><option value="atrium">Atrium-centered block</option></select><label for="uniEntrance">Main entrance</label><select id="uniEntrance"><option value="auto">Seeded academic entrances</option><option value="portico">Recessed academic portico</option><option value="atrium">Double-height entrance atrium</option><option value="canopy">Modern entrance canopy</option></select><label for="uniVariation">Architectural variation <output id="o_uniVariation">45%</output></label><input id="uniVariation" type="range" min="0" max="1" step="0.01" value="0.45"><p class="hint">Low-rise standalone teaching, lecture, library and research buildings. White recessed windows, distinct lecture volumes and courtyard wings. No campus grounds or landscaping.</p></div><div id="roofControls" hidden><label for="terraceRoof">Roof style</label><select id="terraceRoof"><option value="flat">Flat</option><option value="pitched">Pitched / gable</option><option value="hipped">Hipped</option><option value="auto">Seeded mix</option></select><label for="roofRise">Roof rise <output id="o_roofRise"></output></label><input id="roofRise" type="range" min="0.5" max="4" step="0.1" value="1.8"></div><div id="towerControls" hidden><label for="towerStyle">Tower silhouette</label><select id="towerStyle"><option value="auto">Seeded mix · mostly simple</option><option value="simple">Simple tower</option><option value="tiered">Tiered crown & spire</option><option value="offset">Offset volumes</option><option value="tapered">Tapered spire</option><option value="portal">Open crown</option><option value="terraces">Recessed sky terraces</option><optgroup label="New vertical silhouettes"><option value="stepped2">Multi-setback tower</option><option value="tapered2">Gradual tapered tower</option><option value="offset2">Stacked offset tower</option><option value="split">Split twin shafts</option><option value="waisted">Narrow-waist tower</option><option value="chamfered">Chamfered crown tower</option></optgroup></select></div><p class="hint">Building families use entirely white geometry, recessed entrances and facade details. Warehouse V2 and Apartment V2 are preserved.</p><div id="detail"></div><div id="officeControls" hidden><h2>03 / Office architecture</h2><label for="officeArchitecture">Architectural family</label><select id="officeArchitecture"><option value="auto">Seeded mix · modern & traditional</option><option value="modern">Modern commercial</option><option value="traditional">Traditional commercial</option><option value="transitional">Transitional</option></select><label for="officeWindowStyle">Office windows</label><select id="officeWindowStyle"><option value="auto">Seeded coherent facade</option><option value="vertical">Vertical recessed bays</option><option value="horizontal">Horizontal bands</option><option value="paired">Paired recessed windows</option><option value="square">Square grid</option><option value="alternating">Alternating widths</option></select><p class="hint">Six original and six additional vertical silhouettes. Facade patterns remain coherent across each building, with every surface entirely white.</p></div><div id="apartmentWindowControls" hidden><h2>03 / Apartment windows</h2><label for="windowStyle">Window style</label><select id="windowStyle"><option value="auto">Seeded building style</option><option value="tall">Tall narrow</option><option value="wide">Wide horizontal</option><option value="paired">Paired openings</option><option value="square">Square recessed</option><option value="offset">Offset arrangement</option><option value="mixed">Mixed widths</option></select><label for="windowVariation">Window variation <output id="o_windowVariation">35%</output></label><input id="windowVariation" type="range" min="0" max="1" step="0.01" value="0.35"><p class="hint">One coherent window language per apartment building. Variation changes proportions and controlled bay patterns, not the pure-white material.</p></div><h2>04 / Export</h2><button class="primary" id="export">Download building ZIP ↓</button><div class="row"><button id="save">Save settings</button><button id="load">Load settings</button></div><input id="file" type="file" accept=".json,application/json" hidden><p class="hint">OBJ + MTL + metadata JSON<br>Metres · Y up · centered at ground level<br>Building geometry only. No preview ground.</p><details><summary>Studio guide</summary><p>Drag to orbit. Shift-drag or right-drag to pan. Scroll or pinch to zoom. Double-click to frame. The seed creates repeatable parameters; every slider updates the geometry immediately. Settings JSON restores the complete design. ZIP contains uncompressed standard files, with real facade meshes and material assignments. The supplied city generator’s massing, bevels, carved entrances, facade relief and warehouse routines generate this building directly.</p></details><p id="notice" class="hint"></p></aside>
 <section><canvas id="view" aria-label="Interactive 3D building preview"></canvas><div class="top"><b id="title"></b><p id="subtitle"></p></div><div class="tools"><button id="frame">Frame</button><button id="spin" aria-pressed="false">Auto orbit</button><button id="wire" aria-pressed="false">Wireframe</button></div><div class="bottom"><span>DRAG TO ORBIT / SCROLL TO ZOOM</span><span id="stats"></span></div><div id="toast" role="status"></div></section></main>
 <script>
 'use strict';
@@ -730,7 +730,7 @@ addRoofDetails(m,parentOrX,z,w,d,topY,rngArg,zoneArg='mid',districtArg='',second
   }
 }
 
-const categories=['Warehouse','Skyscraper / office building','Apartment block','Terraced housing','Retail building / small shop','Factory / manufacturing','Motel / roadside accommodation','Supermarket / grocery store','Petrol station / forecourt'];
+const categories=['Warehouse','Skyscraper / office building','Apartment block','Terraced housing','Retail building / small shop','Factory / manufacturing','Motel / roadside accommodation','Supermarket / grocery store','Petrol station / forecourt','University / academic building'];
 const $=id=>document.getElementById(id), type=$('type');categories.forEach((s,i)=>type.add(new Option(s,i)));
 const specs=[['width','Width',18,150,1,42,'m'],['depth','Depth',4,100,1,28,'m'],['floors','Floors',1,55,1,8,''],['floorHeight','Floor height',2.6,8,.1,3.35,'m'],['buildingDetail','Architectural detail',0,1,.01,.75,''],['recessDepth','Recess depth',.02,1,.01,.20,'m']];
 specs.forEach(([id,name,min,max,step,val,unit],i)=>{const wrap=document.createElement('div');wrap.innerHTML='<label for="'+id+'">'+name+'<output id="o_'+id+'"></output></label><input id="'+id+'" type="range" min="'+min+'" max="'+max+'" step="'+step+'" value="'+val+'">';$(i<4?'massing':'detail').append(wrap);$(id).oninput=rebuild});
@@ -738,7 +738,7 @@ const materials={};
 let currentTowerStyle='simple';
 let mesh={v:[],f:[]}, bounds,settings, yaw=-.78,pitch=.62,zoom=1,pan=[0,0],spinning=false,wire=false,dirty=true;
 function rng(seed){let s=2166136261;for(const c of seed)s=Math.imul(s^c.charCodeAt(0),16777619);return()=>{s+=0x6D2B79F5;let t=Math.imul(s^s>>>15,1|s);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296}}
-function read(){const s={type:+type.value,seed:$('seed').value,form:$('form').value,towerStyle:$('towerStyle').value||'auto',terraceRoof:$('terraceRoof').value||'flat',roofRise:+$('roofRise').value||1.8,windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value};specs.forEach(([id])=>s[id]=+$(id).value);return s}
+function read(){const s={type:+type.value,seed:$('seed').value,form:$('form').value,towerStyle:$('towerStyle').value||'auto',terraceRoof:$('terraceRoof').value||'flat',roofRise:+$('roofRise').value||1.8,windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value,uniType:$('uniType').value,uniStyle:$('uniStyle').value,uniPlan:$('uniPlan').value,uniEntrance:$('uniEntrance').value,uniVariation:+$('uniVariation').value};specs.forEach(([id])=>s[id]=+$(id).value);return s}
 // Apartment Studio V2 — independent, expandable residential architecture family.
 // Every mesh uses the same pure-white material; recesses are geometric, never dark panels.
 const APARTMENT_STUDIO_V2=Object.freeze({
@@ -1842,15 +1842,451 @@ function petrolArchitectureV1(m,s){
  }
 }
 
+
+// UNIVERSITY STUDIO V1 — independently expandable low-rise academic architecture.
+// Every surface and every recessed window backing is genuinely white geometry.
+const UNIVERSITY_STUDIO_V1=Object.freeze({
+ types:Object.freeze(['teaching','lecture','library','research']),
+ styles:Object.freeze(['traditional','modern','transitional']),
+ plans:Object.freeze(['wings','l','u','atrium']),
+ entrances:Object.freeze(['portico','atrium','canopy']),
+ white:Object.freeze([1,1,1]),
+ facadePitch:Object.freeze({traditional:3.0,modern:3.6,transitional:3.3}),
+ defaultVariation:.45
+});
+function universityProfileV1(s){
+ const r=new RNG(s.seed+':university-v1:profile'),choose=(value,allowed)=>allowed.includes(value)?value:r.pick(allowed);
+ return {r,type:choose(s.uniType,UNIVERSITY_STUDIO_V1.types),style:choose(s.uniStyle,UNIVERSITY_STUDIO_V1.styles),plan:choose(s.uniPlan,UNIVERSITY_STUDIO_V1.plans),entrance:choose(s.uniEntrance,UNIVERSITY_STUDIO_V1.entrances),variation:clamp(Number.isFinite(+s.uniVariation)?+s.uniVariation:.45,0,1)};
+}
+function universityArchitectureV1(m,s){
+ const p=universityProfileV1(s),r=p.r,c=UNIVERSITY_STUDIO_V1.white,w=Math.max(18,s.width),d=Math.max(12,s.depth),fh=clamp(s.floorHeight,2.6,5.5),floors=clamp(Math.round(s.floors),1,5),detail=clamp(s.buildingDetail??.75,0,1),inset=clamp(s.recessDepth??.20,.12,.76);
+ const box=(x,z,ww,dd,hh,y=0)=>{if(ww>.025&&dd>.025&&hh>.025)m.box(x,z,ww,dd,hh,y,c)};
+ // Connected academic masses have their own facades and roof heights, rather than decorative slabs.
+ const blocks=[];
+ const main={x:0,z:0,w:w*.72,d:d*.72,f:floors};
+ if(p.plan==='wings'){
+  blocks.push({x:0,z:d*.17,w:w*.62,d:d*.65,f:floors});
+  blocks.push({x:-w*.36,z:-d*.19,w:w*.28,d:d*.57,f:Math.max(1,floors-1)});
+  blocks.push({x:w*.36,z:-d*.19,w:w*.28,d:d*.57,f:Math.max(1,floors-(r.chance(.5)?1:0))});
+ }else if(p.plan==='l'){
+  blocks.push({x:-w*.15,z:d*.24,w:w*.70,d:d*.52,f:floors});
+  blocks.push({x:w*.24,z:-d*.12,w:w*.38,d:d*.76,f:Math.max(1,floors-1)});
+ }else if(p.plan==='u'){
+  blocks.push({x:0,z:d*.32,w,d:d*.34,f:floors});
+  blocks.push({x:-w*.37,z:-d*.11,w:w*.26,d:d*.58,f:Math.max(1,floors-1)});
+  blocks.push({x:w*.37,z:-d*.11,w:w*.26,d:d*.58,f:Math.max(1,floors-1)});
+ }else{
+  blocks.push(main);
+  blocks.push({x:0,z:-d*.25,w:w*.35,d:d*.28,f:Math.max(1,floors-1)});
+ }
+ function facade(b,side){
+  const alongX=side<2,sign=side%2===0?-1:1,len=alongX?b.w:b.d,deep=alongX?b.d:b.w,edge=deep*.5;
+  const n=clamp(Math.round(len/UNIVERSITY_STUDIO_V1.facadePitch[p.style]),2,28),pitch=len/n,t=Math.min(inset,deep*.11,pitch*.16),height=b.f*fh;
+  const front=alongX&&sign<0;
+  const put=(u,v,l,th,h,y)=>box(alongX?b.x+u:b.x+sign*v,alongX?b.z+sign*v:b.z+u,alongX?l:th,alongX?th:l,h,y);
+  for(let f=0;f<b.f;f++)for(let j=0;j<n;j++){
+   const y=f*fh,u=-len*.5+(j+.5)*pitch;
+   const activeDoor=front&&b===blocks[0]&&f===0&&j===Math.floor(n/2);
+   const isLibrary=p.type==='library',isLab=p.type==='research',isLecture=p.type==='lecture';
+   let width=pitch*(isLibrary?.67:isLab?.55:p.style==='traditional'?.38:.54);
+   if(isLecture&&f===0)width*=.74;
+   const noise=new RNG(s.seed+':uni-window:'+side+':'+j).range(-1,1)*p.variation;
+   width=clamp(width*(1+.13*noise),.55,pitch*.82);
+   const low=activeDoor?.03:fh*(isLibrary?.16:isLab?.32:isLecture?.39:.28);
+   const top=activeDoor?Math.min(fh*.87,3.0):fh*(isLibrary?.85:isLab?.71:isLecture?.75:.77);
+   const left=-width*.5,right=width*.5;
+   const skin=edge-t*.5;
+   if(left>-pitch*.5)put(u+(-pitch*.5+left)/2,skin,left+pitch*.5,t,fh,y);
+   if(right<pitch*.5)put(u+(right+pitch*.5)/2,skin,pitch*.5-right,t,fh,y);
+   if(low>.01)put(u,skin,width,t,low,y);
+   if(top<fh-.01)put(u,skin,width,t,fh-top,y+top);
+   put(u,edge-t-.014,width,.029,top-low,y+low); // pure white backing
+   if(detail>.48&&p.style==='traditional'&&!activeDoor){put(u,edge+.035,width+.15,.09,.12,y+top+.045)}
+   if(detail>.55&&p.type==='library'&&j%2===0&&!activeDoor)put(u,edge+.04,.085,.10,top-low,y+low);
+  }
+  // Full-height corner posts seal otherwise exposed facade edges.
+  for(const u of [-len*.5+.07,len*.5-.07])put(u,edge-t*.5,.14,t,height,0);
+ }
+ for(const b of blocks){
+  const H=b.f*fh,t=Math.min(inset,Math.min(b.w,b.d)*.075);
+  box(b.x,b.z,b.w-t*2,b.d-t*2,H);
+  for(let side=0;side<4;side++)facade(b,side);
+  box(b.x,b.z,b.w,b.d,.14,H-.14);
+  if(p.style==='traditional'||p.style==='transitional'){
+   box(b.x,b.z-b.d*.5+.10,b.w,.20,.35,H);
+   box(b.x,b.z+b.d*.5-.10,b.w,.20,.35,H);
+   for(const sx of [-1,1])box(b.x+sx*(b.w*.5-.10),b.z,.20,b.d,.35,H);
+  }else{
+   for(const sz of [-1,1])box(b.x,b.z+sz*(b.d*.5-.10),b.w,.20,.24,H);
+  }
+ }
+ // Function-specific massing makes the category recognisable without signs or colour.
+ if(p.type==='lecture'){
+  const ww=w*.49,dd=d*.36,H=fh*(floors>2?1.65:1.40);
+  box(0,-d*.30,ww,dd,H);
+  box(0,-d*.30,ww*.90,dd*.88,.28,H);
+  for(const x of [-ww*.33,ww*.33])box(x,-d*.30-dd*.5-.08,.24,.25,H*.82,.10);
+ }else if(p.type==='library'){
+  const atriumW=w*.39,atriumD=d*.32,atriumH=Math.min(floors*fh,fh*2.15);
+  box(0,-d*.36,atriumW,atriumD,atriumH);
+  for(const x of [-atriumW*.27,0,atriumW*.27])box(x,-d*.36-atriumD*.5-.08,.15,.22,atriumH*.72,atriumH*.14);
+  box(0,-d*.36,atriumW*.90,atriumD*.78,.25,atriumH);
+ }else if(p.type==='research'){
+  // Roof monitor rhythm, plus a clearly secondary lab-services block.
+  const b=blocks[0],H=b.f*fh;
+  for(let i=0;i<3;i++)box(b.x+(i-1)*b.w*.23,b.z+b.d*.15,b.w*.13,b.d*.20,.66,H);
+  box(w*.32,d*.30,w*.18,d*.20,fh*.65);
+ }else{
+  // Teaching wing: modest double-height central entry and covered passage.
+  box(0,-d*.38,w*.22,d*.21,fh*1.20);
+ }
+ // Academic entrance expressed as a true separate architectural volume (no text or glass).
+ const entryZ=-d*.48,entryW=Math.min(w*.25,10),eh=Math.min(fh*1.14,5.8);
+ if(p.entrance==='portico'){
+  box(0,entryZ+.38,entryW,1.3,eh*.92);
+  for(const x of [-entryW*.39,-entryW*.13,entryW*.13,entryW*.39])box(x,entryZ-.48,.23,.23,eh*.78);
+  box(0,entryZ-.46,entryW*1.06,1.45,.37,eh*.78);
+ }else if(p.entrance==='atrium'){
+  box(0,entryZ+.28,entryW,1.45,eh);
+  for(const x of [-entryW*.44,entryW*.44])box(x,entryZ-.43,.34,1.1,eh);
+  box(0,entryZ-.44,entryW*.95,1.15,.27,eh);
+ }else{
+  box(0,entryZ+.25,entryW*.67,.85,eh*.72);
+  box(0,entryZ-.40,entryW*1.20,1.35,.19,eh*.72);
+ }
+ // UNIVERSITY V2: restrained landmarks, drawn from the supplied traditional and modern references.
+ // The seed chooses ordinary/landmark status independently of facade iteration.
+ universityLandmarkDetailsV2(m,s,p,blocks,box);
+ // Low, clear roof highlights instead of random rooftop clutter.
+ if(detail>.62&&p.variation>.26){const b=blocks[0];box(b.x+b.w*.20,b.z+b.d*.14,Math.min(3.2,b.w*.15),Math.min(3.6,b.d*.20),.58,b.f*fh)}
+}
+
+
+// UNIVERSITY V2 — additive, extendable architectural grammar. Never alters other families.
+const UNIVERSITY_LANDMARK_V2=Object.freeze({
+ white:Object.freeze([1,1,1]), landmarkChance:.36,
+ features:Object.freeze(['clock','portico','gables','modern-atrium','arched-entry']),
+ roofTypes:Object.freeze(['pitched','clock-crown','stepped']),
+ archSegments:9
+});
+function universityLandmarkProfileV2(s,p){
+ const r=new RNG(s.seed+':university-v2-landmark');
+ const traditional=p.style==='traditional'||p.style==='transitional';
+ const landmark=r.chance(UNIVERSITY_LANDMARK_V2.landmarkChance+(p.type==='library'?.13:0));
+ const type=traditional?r.pick(['clock','portico','gables','arched-entry']):r.pick(['modern-atrium','modern-atrium','clock','portico']);
+ return {r,landmark,type,traditional};
+}
+function universityLandmarkDetailsV2(m,s,p,blocks,box){
+ const q=universityLandmarkProfileV2(s,p),r=q.r,c=UNIVERSITY_LANDMARK_V2.white;
+ const w=Math.max(18,s.width),d=Math.max(12,s.depth),fh=clamp(s.floorHeight,2.6,5.5),baseH=blocks[0].f*fh;
+ const detail=clamp(s.buildingDetail??.75,0,1),z=-d*.49;
+ // Every university gets modest architectural hierarchy, only a subset receives a landmark tower.
+ const span=Math.min(w*.55,27);
+ if(q.traditional){
+   // Deep projecting academic cornice and a clear elevated central entrance bay.
+   box(0,z+.48,span,1.05,.28,Math.min(baseH*.89,fh*1.55));
+   box(0,z+.52,span*.82,.72,.24,Math.min(baseH*.95,fh*1.75));
+ }else{
+   // An all-white structural atrium grid. The recesses, not black glass, define the facade.
+   const aw=Math.min(w*.34,15),az=z-.65,ah=Math.min(baseH,fh*2.15);
+   box(0,az+.31,aw,.46,.16,ah-.16);
+   for(let i=-2;i<=2;i++)box(i*aw*.19,az,.16,.28,ah-.15,.06);
+   for(let j=1;j<=2;j++)box(0,az,aw,.28,.14,j*ah/3);
+   box(0,az-1.15,aw*1.18,1.75,.17,ah*.89);
+ }
+ if(!q.landmark)return;
+ const arch=(cx,front,width,y,height,thick)=>{
+   // Segmented stone arch outline with actual open centre. Geometry is all white.
+   const rad=width*.5,cy=y+height-rad;
+   for(const sign of [-1,1])box(cx+sign*(rad+.15),front,.30,thick,Math.max(.15,cy-y),y);
+   for(let i=0;i<UNIVERSITY_LANDMARK_V2.archSegments;i++){
+     const a=Math.PI*i/UNIVERSITY_LANDMARK_V2.archSegments,b=Math.PI*(i+1)/UNIVERSITY_LANDMARK_V2.archSegments;
+     const aX=cx+rad*Math.cos(a),aY=cy+rad*Math.sin(a),bX=cx+rad*Math.cos(b),bY=cy+rad*Math.sin(b);
+     m.prismSegment(aX,aY,front,bX,bY,front,.34,thick,c);
+   }
+ };
+ const portico=()=>{
+   const pw=Math.min(w*.46,22),front=z-1.10,ph=Math.min(baseH*.82,fh*1.42);
+   // Four columns supporting a layered pediment/entablature, not a solid wall.
+   for(let i=0;i<4;i++){
+     const x=(i-1.5)*pw*.265;
+     box(x,front,.42,.50,ph-.48,.28);
+     box(x,front,.72,.68,.21,.17);
+     box(x,front,.73,.68,.24,ph-.31);
+   }
+   box(0,front,pw,1.32,.46,ph);
+   box(0,front,pw*.92,1.07,.22,ph+.47);
+   if(detail>.38){
+     const y=ph+.70;
+     // Pediment triangular surface facing forward; separate white mesh from the columns.
+     m.tri([-pw*.43,y,front-.54],[pw*.43,y,front-.54],[0,y+Math.min(2.0,pw*.15),front-.54],[0,0,-1],c);
+   }
+ };
+ const tower=(clock)=>{
+   // Landmark silhouette rises above the academic block; modest attached tower footprint.
+   const tw=clamp(w*.135,4.2,8.4),td=clamp(d*.25,4.4,8.8),tx=q.type==='clock'&&r.chance(.35)?-w*.35:0;
+   const tz=q.type==='clock'?z+.85:d*.12;
+   const ht=baseH+fh*r.range(1.3,2.2);
+   box(tx,tz,tw,td,ht,0);
+   box(tx,tz,tw+1.0,td+1.0,.48,ht-.20);
+   for(const sign of [-1,1]){
+     box(tx+sign*(tw*.5-.16),tz-td*.5-.14,.32,.30,ht*.59,ht*.20);
+   }
+   if(clock){
+     // Recessed square clock niche; dial and hands are white, distinguished by depth/shadow.
+     const size=Math.min(tw*.60,3.5),yy=ht-size*.90,face=tz-td*.5-.22;
+     box(tx,face,size+.40,.18,size+.40,yy-.20);
+     box(tx,face-.10,size,.055,size,yy);
+     m.prismSegment(tx,yy+size*.48,face-.16,tx,yy+size*.77,face-.16,.105,.13,c);
+     m.prismSegment(tx,yy+size*.48,face-.16,tx+size*.20,yy+size*.40,face-.16,.105,.13,c);
+     for(let i=0;i<12;i++){
+       const a=i*Math.PI/6,xx=tx+Math.sin(a)*size*.41,yMark=yy+size*.5+Math.cos(a)*size*.41;
+       box(xx,face-.13,.075,.07,.11,yMark);
+     }
+   }
+   // Pitched crown (four white triangular roof planes), replacing arbitrary rooftop clutter.
+   const y=ht+.28,peak=[tx,y+Math.min(tw,td)*.62,tz],corners=[
+     [tx-tw*.57,y,tz-td*.57],[tx+tw*.57,y,tz-td*.57],
+     [tx+tw*.57,y,tz+td*.57],[tx-tw*.57,y,tz+td*.57]
+   ];
+   for(let i=0;i<4;i++){
+     const a=corners[i],b=corners[(i+1)%4],nx=i===1?1:i===3?-1:0,nz=i===0?-1:i===2?1:0;
+     m.tri(a,b,peak,[nx,.6,nz],c);
+   }
+   if(detail>.58)box(tx,tz,.20,.20,Math.min(1.4,tw*.21),peak[1]);
+ };
+ if(q.type==='modern-atrium'){
+   // A two-height projected reading hall with narrow white fins / deep bays.
+   const aw=Math.min(w*.51,24),ad=Math.min(d*.25,8),hh=Math.min(baseH,fh*2.0),front=z-1.7;
+   box(0,front+.36,aw,ad*.38,hh);
+   for(let i=-3;i<=3;i++)box(i*aw/7,front-ad*.20,.23,ad*.44,hh-.28,.12);
+   box(0,front-ad*.20,aw+.6,ad*.65,.32,hh);
+ }else if(q.type==='portico'){portico();}
+ else if(q.type==='arched-entry'){
+   portico();
+   for(let i=-1;i<=1;i++)arch(i*span*.25,z-1.95,Math.min(2.5,span*.18),.05,fh*.85,.38);
+ }else if(q.type==='gables'){
+   portico();
+   const ww=Math.min(w*.26,13),y=baseH,zf=z+.45;
+   box(0,zf,ww,Math.min(d*.20,6),.42,y);
+   m.tri([-ww*.5,y+.35,zf-2.0],[ww*.5,y+.35,zf-2.0],[0,y+Math.min(3,ww*.26),zf-2.0],[0,0,-1],c);
+ }else tower(true);
+}
+
+// UNIVERSITY V3 — self-contained academic building grammar. Other categories are untouched.
+const UNIVERSITY_STUDIO_V3=Object.freeze({white:Object.freeze([1,1,1]),families:Object.freeze(['traditional','modern','transitional']),kinds:Object.freeze(['teaching','lecture','library','research']),plans:Object.freeze(['wings','l','u','atrium']),landmarkProbability:.38});
+function universityArchitectureV3(m,s){
+ const base=universityProfileV1(s),r=new RNG(s.seed+':university-v3'),c=UNIVERSITY_STUDIO_V3.white;
+ const w=Math.max(22,s.width),d=Math.max(16,s.depth),fh=clamp(s.floorHeight,2.6,5.5),floorCount=clamp(Math.round(s.floors),1,4),detail=clamp(s.buildingDetail??.75,0,1),recess=clamp(s.recessDepth??.2,.14,.64);
+ const style=(s.uniStyle&&s.uniStyle!=='auto')?s.uniStyle:r.pick(UNIVERSITY_STUDIO_V3.families),kind=base.type,plan=base.plan;
+ const landmark=r.chance(UNIVERSITY_STUDIO_V3.landmarkProbability+(kind==='library'?.20:0));
+ const box=(x,z,bw,bd,h,y=0)=>{if(bw>.02&&bd>.02&&h>.02)m.box(x,z,bw,bd,h,y,c)};
+ const poly=(pts,desired)=>{let u=pts[1].map((a,i)=>a-pts[0][i]),v=pts[2].map((a,i)=>a-pts[0][i]);let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(n.reduce((a,b,i)=>a+b*desired[i],0)<0){pts=[...pts].reverse();n=n.map(a=>-a)}const L=Math.hypot(...n)||1;n=n.map(a=>a/L);for(let i=1;i<pts.length-1;i++)m.tri(pts[0],pts[i],pts[i+1],n,c)};
+ // Solid walls, with recessed white back surfaces and deep perimeter reveals.
+ function wallElevation(b,side,entranceAxis=false){
+  const alongX=side<2,sign=side%2===0?-1:1,span=alongX?b.w:b.d,deep=alongX?b.d:b.w,face=deep*.5,depth=Math.min(recess,deep*.085),floors=b.f, pitchTarget=style==='traditional'?3.4:style==='modern'?4.5:3.9;
+  const bays=clamp(Math.round(span/pitchTarget),2,24),pitch=span/bays;
+  const piece=(u,v,len,th,h,y)=>box(alongX?b.x+u:b.x+sign*v,alongX?b.z+sign*v:b.z+u,alongX?len:th,alongX?th:len,h,y);
+  for(let f=0;f<floors;f++)for(let j=0;j<bays;j++){
+   const y=f*fh,u=-span/2+(j+.5)*pitch,center=j===Math.floor(bays/2),entry=entranceAxis&&alongX&&sign<0&&f===0&&center;
+   let ww=clamp(pitch*(style==='traditional'?.36:style==='modern'?.67:.49),.65,pitch*.79);
+   const sill=entry?.06:fh*(kind==='library'?.18:style==='modern'?.29:.26),top=entry?Math.min(fh*.92,3.8):fh*(style==='traditional'?.84:style==='modern'?.76:.80);
+   if(entranceAxis&&alongX&&sign<0&&f===0&&!center&&style==='traditional')ww*=.85;
+   const skin=face-depth*.5,half=pitch/2,left=-ww/2,right=ww/2;
+   piece(u+(-half+left)/2,skin,left+half,depth,fh,y);
+   piece(u+(right+half)/2,skin,half-right,depth,fh,y);
+   piece(u,skin,ww,depth,sill,y);
+   piece(u,skin,ww,depth,fh-top,y+top);
+   piece(u,face-depth-.022,ww,.045,top-sill,y+sill);
+   if(style==='traditional'&&detail>.25){piece(u,face+.045,ww+.24,.105,.12,y+top+.08);piece(u,face+.03,ww+.20,.09,.10,y+sill-.12)}
+  }
+  // Solid vertical perimeter piers ensure all elevations close neatly.
+  for(const u of [-span/2+.12,span/2-.12])piece(u,face-depth/2,.24,depth,b.f*fh,0);
+ }
+ function roof(b){const H=b.f*fh,flat=style==='modern'||(style==='transitional'&&kind==='research');
+  box(b.x,b.z,b.w,b.d,.14,H-.14);
+  if(flat){for(const zz of [b.z-b.d/2+.12,b.z+b.d/2-.12])box(b.x,zz,b.w,.24,.42,H);
+   for(const xx of [b.x-b.w/2+.12,b.x+b.w/2-.12])box(xx,b.z,.24,b.d,.42,H);return;}
+  const rise=clamp(b.d*.12,.85,2.85),xa=b.x-b.w/2,xb=b.x+b.w/2,za=b.z-b.d/2,zb=b.z+b.d/2;
+  poly([[xa,H,za],[xb,H,za],[xb,H+rise,b.z],[xa,H+rise,b.z]],[0,1,-1]);
+  poly([[xa,H,zb],[xa,H+rise,b.z],[xb,H+rise,b.z],[xb,H,zb]],[0,1,1]);
+  poly([[xa,H,za],[xa,H+rise,b.z],[xa,H,zb]],[-1,0,0]);poly([[xb,H,za],[xb,H,zb],[xb,H+rise,b.z]],[1,0,0]);
+  if(detail>.42)box(b.x,b.z,b.w+.25,.20,.14,H+rise-.10);
+ }
+ function mass(b,front=false){if(b.w<3||b.d<3)return;const H=b.f*fh,t=Math.min(recess,Math.min(b.w,b.d)*.07);
+  box(b.x,b.z,b.w-2*t,b.d-2*t,H);for(let k=0;k<4;k++)wallElevation(b,k,front);roof(b);
+  if(style==='traditional'&&detail>.36){box(b.x,b.z-b.d/2-.04,b.w,.12,.23,fh-.14);box(b.x,b.z-b.d/2-.04,b.w,.12,.25,H-.30)}
+ }
+ // Main academic composition: a single coherent axial frontage, with subordinate wings.
+ const blocks=[];
+ if(style==='traditional'){
+  const mainD=d*.42,mainZ=d*.5-mainD*.5;
+  blocks.push({x:0,z:mainZ,w:w*.94,d:mainD,f:floorCount,front:true});
+  if(plan==='u'||plan==='wings'||plan==='atrium'){
+   const wingW=w*.225,wingD=d*.50,wingZ=-d*.22;
+   blocks.push({x:-w*.35,z:wingZ,w:wingW,d:wingD,f:Math.max(1,floorCount-1)});
+   blocks.push({x:w*.35,z:wingZ,w:wingW,d:wingD,f:Math.max(1,floorCount-1)});
+  }else blocks.push({x:-w*.31,z:-d*.20,w:w*.29,d:d*.56,f:Math.max(1,floorCount-1)});
+ }else if(style==='modern'){
+  blocks.push({x:-w*.16,z:d*.17,w:w*.67,d:d*.59,f:floorCount,front:true});
+  blocks.push({x:w*.33,z:-d*.12,w:w*.29,d:d*.70,f:Math.max(1,floorCount-(floorCount>2?1:0))});
+  if(plan==='u'||plan==='wings')blocks.push({x:-w*.35,z:-d*.25,w:w*.23,d:d*.34,f:Math.max(1,floorCount-1)});
+ }else{
+  blocks.push({x:0,z:d*.17,w:w*.82,d:d*.56,f:floorCount,front:true});
+  blocks.push({x:-w*.28,z:-d*.22,w:w*.28,d:d*.40,f:Math.max(1,floorCount-1)});
+  if(plan!=='l')blocks.push({x:w*.28,z:-d*.22,w:w*.28,d:d*.40,f:Math.max(1,floorCount-1)});
+ }
+ for(const b of blocks)mass(b,b.front&&style!=='modern');
+ // Strong central civic axis. Entrances are integrated against the primary facade, not floating boxes.
+ const primary=blocks[0],faceZ=primary.z-primary.d/2,H=primary.f*fh;
+ const entryW=clamp(w*(landmark?.27:.19),5.4,15),entryH=clamp(fh*(landmark?1.65:1.12),3.1,Math.max(3.4,H*.88));
+ if(style==='traditional'){
+  // Projecting central entrance pavilion, framed by the main academic elevation.
+  const pavilionD=clamp(d*.115,2.1,5.0),pz=faceZ-pavilionD*.35;
+  box(0,pz,entryW,pavilionD,entryH);
+  const porticoDepth=clamp(d*.075,1.8,3.1),frontZ=pz-pavilionD/2-porticoDepth*.34;
+  const colCount=landmark?6:4,colH=Math.min(entryH*.78,fh*1.25),colBase=0;
+  for(let i=0;i<colCount;i++){
+   const x=(-.5+i/(colCount-1))*entryW*.87;
+   box(x,frontZ,.31,.34,colH,colBase);
+   box(x,frontZ,.59,.60,.18,colH-.10);
+  }
+  box(0,frontZ,entryW*1.09,porticoDepth,.38,colH+.06);
+  box(0,frontZ,entryW*.68,.12,.18,colH+.43);
+  // Clear white stepped portal with structural wall edges.
+  const doorW=Math.min(entryW*.28,2.55);
+  for(const side of [-1,1])box(side*doorW*.56,frontZ-porticoDepth*.32,.18,.24,Math.min(colH*.76,3.0),.03);
+  box(0,frontZ-porticoDepth*.32,doorW*1.2,.25,.22,Math.min(colH*.76,3.0));
+  if(landmark&&w>=31){
+   // Clock/entrance tower rises from the same central pavilion, centred on the academic axis.
+   const towerW=clamp(entryW*.68,4.6,8.8),towerD=clamp(pavilionD*1.15,3.5,6.8),towerBase=entryH*.85,towerH=clamp(H*.62+fh*1.5,5.0,12.0);
+   box(0,pz,towerW,towerD,towerH,towerBase);
+   for(const side of [-1,1]){
+    const z=pz+side*(towerD/2+.06);box(0,z,towerW*.54,.16,towerW*.52,towerBase+towerH*.45);
+    box(0,z+side*.11,towerW*.30,.08,towerW*.30,towerBase+towerH*.55);
+   }
+   box(0,pz,towerW*1.20,towerD*1.16,.36,towerBase+towerH);
+   const cap=towerBase+towerH+.36,rise=towerW*.26;
+   const xa=-towerW*.62,xb=towerW*.62,za=pz-towerD*.60,zb=pz+towerD*.60;
+   poly([[xa,cap,za],[xb,cap,za],[xb,cap+rise,pz],[xa,cap+rise,pz]],[0,1,-1]);
+   poly([[xa,cap,zb],[xa,cap+rise,pz],[xb,cap+rise,pz],[xb,cap,zb]],[0,1,1]);
+   poly([[xa,cap,za],[xa,cap+rise,pz],[xa,cap,zb]],[-1,0,0]);poly([[xb,cap,za],[xb,cap,zb],[xb,cap+rise,pz]],[1,0,0]);
+  }
+ }else{
+  // Double-height recessed curtain-wall atrium, within a framed main frontage.
+  const atriumW=clamp(w*(landmark?.40:.30),6,19),atriumH=Math.min(H,fh*(landmark?2.0:1.45)),projection=clamp(d*.07,1.2,3.0);
+  const z=faceZ-projection*.43;
+  box(0,z,atriumW,projection,atriumH);
+  for(let i=-2;i<=2;i++)box(i*atriumW*.17,z-projection*.51,.13,.16,atriumH*.87,.07);
+  for(const y of [atriumH*.35,atriumH*.69])box(0,z-projection*.51,atriumW*.89,.18,.13,y);
+  box(0,z-projection*.58,atriumW*1.13,projection*.63,.26,atriumH);
+  for(const side of [-1,1])box(side*atriumW*.53,z-projection*.23,.25,projection*.88,atriumH);
+  if(kind==='lecture')box(w*.25,faceZ+d*.035,w*.26,d*.23,fh*1.12);
+  if(kind==='library'&&landmark)box(-w*.30,faceZ+d*.04,w*.16,d*.28,fh*.82);
+ }
+ // Architectural use is expressed in the proportions, never coloured signage or added clutter.
+ if(kind==='research'&&detail>.6){const b=blocks[0];for(let i=-1;i<=1;i++)box(b.x+i*b.w*.19,b.z+b.d*.15,b.w*.105,b.d*.15,.46,H+.12)}
+}
+
+
+// UNIVERSITY V4: one deliberately composed traditional academic building.
+// Single architectural axis, shallow main roof, integrated entrance and solid white recessed bays.
+const UNIVERSITY_STUDIO_V4=Object.freeze({white:Object.freeze([1,1,1]),minimumFloors:2,maximumFloors:3,windowPitch:4.25,roofRiseMax:1.25});
+function universityArchitectureV4(m,s){
+ const c=UNIVERSITY_STUDIO_V4.white,r=new RNG(s.seed+':university-v4');
+ const w=Math.max(26,s.width),d=Math.max(18,s.depth),floors=clamp(Math.round(s.floors),2,3);
+ const fh=clamp(s.floorHeight,3.2,4.5),H=floors*fh,detail=clamp(s.buildingDetail??.75,0,1);
+ const inset=clamp(s.recessDepth??.2,.18,.58);
+ const box=(x,z,ww,dd,h,y=0)=>{if(ww>.02&&dd>.02&&h>.02)m.box(x,z,ww,dd,h,y,c)};
+ const front=-d*.5,back=d*.5;
+ // A substantial rectangular academic hall: end pavilions are part of the frontage, not floating wings.
+ const centerW=w*.56,sideW=(w-centerW)/2,pavilionD=d*.89,pavilionFront=front-.30;
+ const blocks=[
+  {x:0,z:0,w:centerW,d:d*.80,f:floors,feature:'main'},
+  {x:-(centerW+sideW)*.5,z:-d*.045,w:sideW,d:pavilionD,f:floors,feature:'end'},
+  {x:(centerW+sideW)*.5,z:-d*.045,w:sideW,d:pavilionD,f:floors,feature:'end'}
+ ];
+ // Each facade is assembled around openings, with a white back plane inset from its outer surface.
+ function elevation(b,axis,sgn){
+  const alongX=axis==='z',span=alongX?b.w:b.d,depth=alongX?b.d:b.w;
+  const face=(alongX?b.z:b.x)+sgn*depth*.5;
+  const bays=clamp(Math.round(span/UNIVERSITY_STUDIO_V4.windowPitch),2,22),pitch=span/bays;
+  const isMainFront=alongX&&sgn===-1&&b.feature==='main';
+  const isFront=alongX&&sgn===-1;
+  const plank=(u,depthPos,len,th,h,y)=>box(alongX?b.x+u:b.x+depthPos,alongX?b.z+depthPos:b.z+u,alongX?len:th,alongX?th:len,h,y);
+  const outer=sgn*depth*.5,skin=outer-sgn*inset*.5,backPlane=outer-sgn*(inset+.027);
+  for(let f=0;f<b.f;f++)for(let j=0;j<bays;j++){
+   const y=f*fh,mid=-span*.5+(j+.5)*pitch;
+   const central=isMainFront&&(j===Math.floor((bays-1)/2)||j===Math.ceil((bays-1)/2));
+   // First floor windows are tall, and upper windows retain matching vertical rhythms.
+   const winW=clamp(pitch*(f===0?.49:.51),1.1,2.55);
+   const sill=f===0?fh*.22:fh*.23,top=fh*(f===0?.86:.83);
+   if(central&&f===0){plank(mid,skin,pitch,inset,fh,y);continue}
+   const side=(pitch-winW)*.5;
+   for(const sx of [-1,1])plank(mid+sx*(winW+side)*.5,skin,side,inset,fh,y);
+   plank(mid,skin,winW,inset,sill,y);
+   plank(mid,skin,winW,inset,fh-top,y+top);
+   plank(mid,backPlane,winW,.045,top-sill,y+sill);
+   if(detail>.30&&isFront){
+    plank(mid,outer+sgn*.03,winW+.22,.12,.12,y+top+.075);
+    plank(mid,outer+sgn*.03,winW+.18,.12,.085,y+sill-.10);
+   }
+  }
+ }
+ // Main volumes overlap slightly, giving continuous structural walls and no exposed hollow ends.
+ for(const b of blocks){
+  const t=Math.min(inset,Math.min(b.w,b.d)*.06);
+  box(b.x,b.z,b.w-2*t,b.d-2*t,H);
+  for(const sg of [-1,1]){elevation(b,'z',sg);elevation(b,'x',sg)}
+  box(b.x,b.z,b.w,b.d,.14,H-.14);
+  // Low, shallow pediment-style rooflines, never oversized shed roofs.
+  const rise=Math.min(UNIVERSITY_STUDIO_V4.roofRiseMax,b.d*.055,fh*.30);
+  const xa=b.x-b.w/2,xb=b.x+b.w/2,za=b.z-b.d/2,zb=b.z+b.d/2,zc=b.z;
+  // Use a restrained ridge volume; the roof silhouette is shallow relative to the facade.
+  const poly=(points,desired)=>{let v=points[1].map((n,i)=>n-points[0][i]),u=points[2].map((n,i)=>n-points[0][i]);let n=[v[1]*u[2]-v[2]*u[1],v[2]*u[0]-v[0]*u[2],v[0]*u[1]-v[1]*u[0]];if(n.reduce((q,a,i)=>q+a*desired[i],0)<0){points=[...points].reverse();n=n.map(a=>-a)}const l=Math.hypot(...n)||1;n=n.map(a=>a/l);for(let i=1;i<points.length-1;i++)m.tri(points[0],points[i],points[i+1],n,c)};
+  poly([[xa,H,za],[xb,H,za],[xb,H+rise,zc],[xa,H+rise,zc]],[0,1,-1]);
+  poly([[xa,H,zb],[xa,H+rise,zc],[xb,H+rise,zc],[xb,H,zb]],[0,1,1]);
+  poly([[xa,H,za],[xa,H+rise,zc],[xa,H,zb]],[-1,0,0]);poly([[xb,H,za],[xb,H,zb],[xb,H+rise,zc]],[1,0,0]);
+  if(detail>.2){box(b.x,b.z-b.d*.5-.065,b.w+.16,.13,.24,H-.16);box(b.x,b.z+b.d*.5+.065,b.w+.16,.13,.24,H-.16)}
+ }
+ // Strong unified frontage: floor division lines and end pavilion vertical pilasters.
+ for(const level of [fh,H-.27]){
+  box(0,front+d*.10-.10,centerW,.18,.20,level);
+  for(const b of blocks.slice(1))box(b.x,pavilionFront+.07,b.w,.17,.21,level);
+ }
+ for(const b of blocks.slice(1))for(const edge of [-1,1])box(b.x+edge*(b.w*.5-.22),pavilionFront-.06,.44,.32,H-.23,.12);
+ // A central, genuine architectural portico sits directly against the main block's facade.
+ // Scale is tied to storeys, preventing an oversized or detached entrance.
+ const mainFront=blocks[0].z-blocks[0].d*.5,porticoW=clamp(w*.265,7.2,14),projection=clamp(d*.105,1.7,3.1);
+ const face=mainFront-projection*.80,topY=fh*1.13;
+ // Solid rear entrance wall is integrated into the main building; pillars and lintel read at normal zoom.
+ box(0,mainFront-projection*.13,porticoW*.94,projection*.48,topY);
+ const numCols=porticoW>10?6:4;
+ for(let k=0;k<numCols;k++){
+  const x=-porticoW*.44+k*porticoW*.88/(numCols-1);
+  box(x,face,.42,.48,topY-.38,.13);
+  box(x,face,.68,.69,.15,topY-.35);
+ }
+ box(0,face,porticoW*1.08,projection*.76,.37,topY);
+ box(0,face,porticoW*1.13,projection*.81,.18,topY+.37);
+ // A wide inset front door framed within the portico, no dark-coloured surfaces.
+ const doorW=clamp(porticoW*.32,2.45,4.0),doorH=Math.min(fh*.87,3.25),doorZ=mainFront-projection*.40;
+ for(const sign of [-1,1])box(sign*(doorW*.5+.14),doorZ,.30,.26,doorH,.04);
+ box(0,doorZ,doorW+.60,.26,.26,doorH+.02);
+ box(0,doorZ+.16,doorW,.04,doorH,.05);
+ // Shallow steps make the formal entrance readable, but no roads / landscaping are exported.
+ if(detail>.42)for(let step=0;step<3;step++)box(0,face-projection*.38-step*.36,porticoW*.74+step*.26,.38,.15*(3-step),0);
+}
+
 function generateMesh(s){for(const k of Object.keys(materials))delete materials[k];mesh={v:[],f:[]};const gen=new CityBuildingGenerator,raw=new MeshBuilder,r=new RNG(s.seed+':'+s.type),cfg={buildingDetail:s.buildingDetail,cityDetailBias:'balanced',shapeVariation:.72};gen._settings=cfg;
 const forms=s.type===1?['rect','step','offset','slab']:['rect','slab','compound','step'];const form=s.type===0?'warehouse':s.form==='auto'?r.pick(forms):s.form;
-if(s.type===8)petrolArchitectureV1(raw,s);else if(s.type===7)supermarketArchitectureV1(raw,s);else if(s.type===6)motelArchitectureV1(raw,s);else if(s.type===5)factoryArchitectureV1(raw,s);else if(s.type===3)terracedHousingArchitectureV2(raw,s);else if(s.type===4)retailCommercialArchitectureV2(raw,s);else if(s.type===2)apartmentArchitectureV2(raw,s);else if(s.type===1)officeTowerArchitecture(raw,s,r);else simpleWarehouseArchitecture(raw,s);
+if(s.type===9)universityArchitectureV4(raw,s);else if(s.type===8)petrolArchitectureV1(raw,s);else if(s.type===7)supermarketArchitectureV1(raw,s);else if(s.type===6)motelArchitectureV1(raw,s);else if(s.type===5)factoryArchitectureV1(raw,s);else if(s.type===3)terracedHousingArchitectureV2(raw,s);else if(s.type===4)retailCommercialArchitectureV2(raw,s);else if(s.type===2)apartmentArchitectureV2(raw,s);else if(s.type===1)officeTowerArchitecture(raw,s,r);else simpleWarehouseArchitecture(raw,s);
 for(let i=0;i<raw.p.length;i+=9){const offset=mesh.v.length;for(let k=0;k<3;k++)mesh.v.push(raw.p.slice(i+k*3,i+k*3+3));const color=raw.c.slice(i,i+3),mat='city_'+color.map(n=>Math.round(n*10000)).join('_');materials[mat]=color;mesh.f.push({ids:[offset,offset+1,offset+2],normal:raw.n.slice(i,i+3),mat,part:'city_building'})}
 for(const f of mesh.f){const a=mesh.v[f.ids[0]],b=mesh.v[f.ids[1]],c=mesh.v[f.ids[2]],u=b.map((n,i)=>n-a[i]),v=c.map((n,i)=>n-a[i]),cross=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];if(cross.reduce((sum,n,i)=>sum+n*f.normal[i],0)<0)f.ids.reverse()}
 let lo=[Infinity,Infinity,Infinity],hi=[-Infinity,-Infinity,-Infinity];for(const v of mesh.v)for(let i=0;i<3;i++){lo[i]=Math.min(lo[i],v[i]);hi[i]=Math.max(hi[i],v[i])}const shift=[(lo[0]+hi[0])/2,lo[1],(lo[2]+hi[2])/2];for(const v of mesh.v)for(let i=0;i<3;i++)v[i]-=shift[i];bounds={width:hi[0]-lo[0],height:hi[1]-lo[1],depth:hi[2]-lo[2]};return mesh}
-function rebuild(){settings=read();$('towerControls').hidden=settings.type!==1;$('officeControls').hidden=settings.type!==1;$('apartmentWindowControls').hidden=settings.type!==2;$('o_windowVariation').textContent=Math.round(settings.windowVariation*100)+'%';$('retailV2Controls').hidden=settings.type!==4;$('o_retailVariation').textContent=Math.round(settings.retailVariation*100)+'%';$('terraceV2Controls').hidden=settings.type!==3;$('o_terraceVariation').textContent=Math.round(settings.terraceVariation*100)+'%';$('factoryV1Controls').hidden=settings.type!==5;$('motelV1Controls').hidden=settings.type!==6;$('supermarketV1Controls').hidden=settings.type!==7;$('petrolV1Controls').hidden=settings.type!==8;$('roofControls').hidden=settings.type!==3;$('o_roofRise').textContent=settings.roofRise.toFixed(1)+' m';$('form').disabled=settings.type===0||settings.type===3||settings.type===4||settings.type===5||settings.type===6||settings.type===7||settings.type===8;specs.forEach(([id,,,step,,,])=>$('o_'+id).textContent=+$(id).value+(specs.find(a=>a[0]===id)[6]?' '+specs.find(a=>a[0]===id)[6]:''));generateMesh(settings);$('title').textContent=categories[settings.type];$('subtitle').textContent=settings.seed+' / '+settings.floors+' FLOORS / '+settings.form.toUpperCase();$('stats').textContent=mesh.v.length.toLocaleString()+' VERTICES · '+mesh.f.length.toLocaleString()+' FACES';dirty=true}
-function apply(s){type.value=s.type;specs.forEach(([id])=>{if(s[id]!==undefined)$(id).value=s[id]});['seed','form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation','officeArchitecture','officeWindowStyle','terraceArchitecture','terraceVariation','retailArchitecture','retailLayout','retailShopfront','retailUpper','retailVariation','factoryArchitecture','factorySize','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelFloors','motelReception','motelCorridor','marketSize','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolSize','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart'].forEach(id=>{if(s[id]!==undefined)$(id).value=s[id]});rebuild()}
-function seeded(){const i=+type.value,r=new RNG($('seed').value+':defaults:'+i);apply({type:i,seed:$('seed').value,width:Math.round(i===8?($('petrolSize').value==='small'?r.range(23,28):$('petrolSize').value==='medium'?r.range(36,44):$('petrolSize').value==='large'?r.range(51,61):r.range(26,58)):i===0?r.range(65,110):i===1?r.range(26,42):i===4?r.range(9,38):i===7?($('marketSize').value==='small'?r.range(17,29):$('marketSize').value==='medium'?r.range(36,62):$('marketSize').value==='large'?r.range(70,130):r.range(20,119)):i===6?r.range(29,78):i===5?($('factorySize').value==='small'?r.range(24,39):$('factorySize').value==='large'?r.range(72,105):$('factorySize').value==='medium'?r.range(42,71):r.range(28,95)):r.range(38,62)),depth:Math.round(i===8?($('petrolSize').value==='small'?r.range(22,26):$('petrolSize').value==='medium'?r.range(28,35):$('petrolSize').value==='large'?r.range(37,44):r.range(24,42)):i===0?r.range(38,65):i===4?r.range(8,14):i===7?($('marketSize').value==='small'?r.range(15,26):$('marketSize').value==='medium'?r.range(27,51):$('marketSize').value==='large'?r.range(47,89):r.range(19,78)):i===6?r.range(25,53):i===5?($('factorySize').value==='small'?r.range(20,30):$('factorySize').value==='large'?r.range(44,67):$('factorySize').value==='medium'?r.range(29,47):r.range(23,65)):i===3?r.range(14,18):i===2?r.range(16,28):r.range(20,34)),floors:i===8?1:i===7?1:i===6?($('motelFloors').value==='auto'?r.int(1,3):+$('motelFloors').value):i===5?1:i===0?1:i===4?r.int(1,4):i===3?r.int(2,3):i===1?r.int(16,38):i===2?(r.chance(.12)?r.int(7,9):r.int(2,6)):r.int(5,11),floorHeight:i===8?5.3:i===7?($('marketSize').value==='small'?5.3:$('marketSize').value==='large'?9.4:7.1):i===6?3.05:i===5?r.range(6.5,11):i===0?7:i===4?3.8:i===3?3:3.35,buildingDetail:.75,form:'auto',towerStyle:$('towerStyle').value||'auto',windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value,terraceRoof:i===3?'auto':$('terraceRoof').value});frame()}
+function rebuild(){settings=read();$('towerControls').hidden=settings.type!==1;$('officeControls').hidden=settings.type!==1;$('apartmentWindowControls').hidden=settings.type!==2;$('o_windowVariation').textContent=Math.round(settings.windowVariation*100)+'%';$('retailV2Controls').hidden=settings.type!==4;$('o_retailVariation').textContent=Math.round(settings.retailVariation*100)+'%';$('terraceV2Controls').hidden=settings.type!==3;$('o_terraceVariation').textContent=Math.round(settings.terraceVariation*100)+'%';$('factoryV1Controls').hidden=settings.type!==5;$('motelV1Controls').hidden=settings.type!==6;$('supermarketV1Controls').hidden=settings.type!==7;$('petrolV1Controls').hidden=settings.type!==8;$('universityV1Controls').hidden=settings.type!==9;$('o_uniVariation').textContent=Math.round(settings.uniVariation*100)+'%';$('roofControls').hidden=settings.type!==3;$('o_roofRise').textContent=settings.roofRise.toFixed(1)+' m';$('form').disabled=settings.type===0||settings.type===3||settings.type===4||settings.type===5||settings.type===6||settings.type===7||settings.type===8||settings.type===9;specs.forEach(([id,,,step,,,])=>$('o_'+id).textContent=+$(id).value+(specs.find(a=>a[0]===id)[6]?' '+specs.find(a=>a[0]===id)[6]:''));generateMesh(settings);$('title').textContent=categories[settings.type];$('subtitle').textContent=settings.seed+' / '+settings.floors+' FLOORS / '+settings.form.toUpperCase();$('stats').textContent=mesh.v.length.toLocaleString()+' VERTICES · '+mesh.f.length.toLocaleString()+' FACES';dirty=true}
+function apply(s){type.value=s.type;specs.forEach(([id])=>{if(s[id]!==undefined)$(id).value=s[id]});['seed','form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation','officeArchitecture','officeWindowStyle','terraceArchitecture','terraceVariation','retailArchitecture','retailLayout','retailShopfront','retailUpper','retailVariation','factoryArchitecture','factorySize','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelFloors','motelReception','motelCorridor','marketSize','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolSize','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart','uniType','uniStyle','uniPlan','uniEntrance','uniVariation'].forEach(id=>{if(s[id]!==undefined)$(id).value=s[id]});rebuild()}
+function seeded(){const i=+type.value,r=new RNG($('seed').value+':defaults:'+i);apply({type:i,seed:$('seed').value,width:Math.round(i===9?r.range(30,79):i===8?($('petrolSize').value==='small'?r.range(23,28):$('petrolSize').value==='medium'?r.range(36,44):$('petrolSize').value==='large'?r.range(51,61):r.range(26,58)):i===0?r.range(65,110):i===1?r.range(26,42):i===4?r.range(9,38):i===7?($('marketSize').value==='small'?r.range(17,29):$('marketSize').value==='medium'?r.range(36,62):$('marketSize').value==='large'?r.range(70,130):r.range(20,119)):i===6?r.range(29,78):i===5?($('factorySize').value==='small'?r.range(24,39):$('factorySize').value==='large'?r.range(72,105):$('factorySize').value==='medium'?r.range(42,71):r.range(28,95)):r.range(38,62)),depth:Math.round(i===9?r.range(22,54):i===8?($('petrolSize').value==='small'?r.range(22,26):$('petrolSize').value==='medium'?r.range(28,35):$('petrolSize').value==='large'?r.range(37,44):r.range(24,42)):i===0?r.range(38,65):i===4?r.range(8,14):i===7?($('marketSize').value==='small'?r.range(15,26):$('marketSize').value==='medium'?r.range(27,51):$('marketSize').value==='large'?r.range(47,89):r.range(19,78)):i===6?r.range(25,53):i===5?($('factorySize').value==='small'?r.range(20,30):$('factorySize').value==='large'?r.range(44,67):$('factorySize').value==='medium'?r.range(29,47):r.range(23,65)):i===3?r.range(14,18):i===2?r.range(16,28):r.range(20,34)),floors:i===9?r.int(2,3):i===8?1:i===7?1:i===6?($('motelFloors').value==='auto'?r.int(1,3):+$('motelFloors').value):i===5?1:i===0?1:i===4?r.int(1,4):i===3?r.int(2,3):i===1?r.int(16,38):i===2?(r.chance(.12)?r.int(7,9):r.int(2,6)):r.int(5,11),floorHeight:i===9?r.range(3.35,4.30):i===8?5.3:i===7?($('marketSize').value==='small'?5.3:$('marketSize').value==='large'?9.4:7.1):i===6?3.05:i===5?r.range(6.5,11):i===0?7:i===4?3.8:i===3?3:3.35,buildingDetail:.75,form:'auto',towerStyle:$('towerStyle').value||'auto',windowStyle:$('windowStyle').value,windowVariation:+$('windowVariation').value,officeArchitecture:$('officeArchitecture').value,officeWindowStyle:$('officeWindowStyle').value,terraceArchitecture:$('terraceArchitecture').value,terraceVariation:+$('terraceVariation').value,retailArchitecture:$('retailArchitecture').value,retailLayout:$('retailLayout').value,retailShopfront:$('retailShopfront').value,retailUpper:$('retailUpper').value,retailVariation:+$('retailVariation').value,factoryArchitecture:$('factoryArchitecture').value,factorySize:$('factorySize').value,factoryRoof:$('factoryRoof').value,factoryLayout:$('factoryLayout').value,factoryOffice:$('factoryOffice').value,factoryService:$('factoryService').value,factoryWindows:$('factoryWindows').value,motelStyle:$('motelStyle').value,motelLayout:$('motelLayout').value,motelFloors:$('motelFloors').value,motelReception:$('motelReception').value,motelCorridor:$('motelCorridor').value,marketSize:$('marketSize').value,marketStyle:$('marketStyle').value,marketEntrance:$('marketEntrance').value,marketRoof:$('marketRoof').value,marketLoading:$('marketLoading').value,petrolStyle:$('petrolStyle').value,petrolSize:$('petrolSize').value,petrolLayout:$('petrolLayout').value,petrolCanopy:$('petrolCanopy').value,petrolExtras:$('petrolExtras').value,petrolDetail:$('petrolDetail').value,petrolPart:$('petrolPart').value,uniType:$('uniType').value,uniStyle:$('uniStyle').value,uniPlan:$('uniPlan').value,uniEntrance:$('uniEntrance').value,uniVariation:+$('uniVariation').value,terraceRoof:i===3?'auto':$('terraceRoof').value});frame()}
 const canvas=$('view'),gl=canvas.getContext('webgl',{antialias:true,alpha:false});let cw=1,ch=1,dpr=1;
 if(!gl)throw Error('This preview requires a browser with WebGL enabled.');
 function shader(type,source){const s=gl.createShader(type);gl.shaderSource(s,source);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s}
@@ -1865,12 +2301,12 @@ function tick(){if(spinning){yaw+=.004;dirty=true}if(dirty){renderGL();dirty=fal
 function frame(){zoom=1;pan=[0,0];dirty=true}$('frame').onclick=frame;canvas.ondblclick=frame;canvas.oncontextmenu=e=>e.preventDefault();const pointers=new Map();let drag=null,lastPinch=0;canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,[e.clientX,e.clientY]);drag={x:e.clientX,y:e.clientY,pan:e.shiftKey||e.button===2};if(pointers.size===2){const a=[...pointers.values()];lastPinch=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])}};canvas.onpointermove=e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,[e.clientX,e.clientY]);if(pointers.size===2){const a=[...pointers.values()],dist=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);zoom=Math.max(.25,Math.min(5,zoom*dist/Math.max(1,lastPinch)));lastPinch=dist}else if(drag){let dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(drag.pan){pan[0]+=dx;pan[1]+=dy}else{yaw+=dx*.008;pitch=Math.max(-.12,Math.min(1.4,pitch+dy*.008))}}drag={...drag,x:e.clientX,y:e.clientY};dirty=true};canvas.onpointerup=canvas.onpointercancel=e=>{pointers.delete(e.pointerId);drag=null};canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.25,Math.min(5,zoom*Math.exp(-e.deltaY*.001)));dirty=true},{passive:false});
 function toast(t){$('toast').textContent=t;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',3000)}
 function download(name,data,mime){let url=URL.createObjectURL(new Blob([data],{type:mime})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000)}
-function metadata(){return{studio:'Cold Routes Building Studio',version:22,petrolFamily:'v1-hybrid-component-white-forecourt',supermarketFamily:'v1-independent-small-medium-large-all-white',motelFamily:'v1-roadside-external-gallery-straight-l-u-solid-endwalls-white',factoryFamily:'v1-modular-white-manufacturing-geometry',retailFamily:'v2-white-recessed-shopfronts-single-parade-corner-mixed-use',terraceFamily:'v2-mixed-residential-row-recessed-white-facades',warehouseFamily:'v2-modular-seeded-industrial-architecture-pure-white',towerSilhouette:settings.type===1?currentTowerStyle:null,officeFamily:'v2-six-preserved-silhouettes-five-recessed-facades-white',apartmentFamily:'v2-window-variation-six-building-coherent-styles-pure-white',visualStyle:'original-city-generator-building-routines',source:'city_generator_v7_9_waterfront.html',category:categories[settings.type],units:'metres',upAxis:'Y',origin:'ground-level bounding-box center',buildingOnly:true,settings:{...settings},bounds:{...bounds},geometry:{vertices:mesh.v.length,faces:mesh.f.length},materials}}
+function metadata(){return{studio:'Cold Routes Building Studio',version:24,universityFamily:'v2-reference-informed-academic-landmarks-white',petrolFamily:'v1-hybrid-component-white-forecourt',supermarketFamily:'v1-independent-small-medium-large-all-white',motelFamily:'v1-roadside-external-gallery-straight-l-u-solid-endwalls-white',factoryFamily:'v1-modular-white-manufacturing-geometry',retailFamily:'v2-white-recessed-shopfronts-single-parade-corner-mixed-use',terraceFamily:'v2-mixed-residential-row-recessed-white-facades',warehouseFamily:'v2-modular-seeded-industrial-architecture-pure-white',towerSilhouette:settings.type===1?currentTowerStyle:null,officeFamily:'v2-six-preserved-silhouettes-five-recessed-facades-white',apartmentFamily:'v2-window-variation-six-building-coherent-styles-pure-white',visualStyle:'original-city-generator-building-routines',source:'city_generator_v7_9_waterfront.html',category:categories[settings.type],units:'metres',upAxis:'Y',origin:'ground-level bounding-box center',buildingOnly:true,settings:{...settings},bounds:{...bounds},geometry:{vertices:mesh.v.length,faces:mesh.f.length},materials}}
 function obj(){let lines=['# Cold Routes Building Studio | metres | Y up','mtllib building.mtl','o Cold_Routes_Building'];mesh.v.forEach(v=>lines.push('v '+v.map(x=>x.toFixed(5)).join(' ')));mesh.f.forEach(f=>lines.push('vn '+f.normal.join(' ')));let mat='',part='',normal=0;for(const f of mesh.f){if(part!==f.part){part=f.part;lines.push('g '+part)}if(mat!==f.mat){mat=f.mat;lines.push('usemtl '+mat)}normal++;lines.push('f '+f.ids.map(i=>(i+1)+'//'+normal).join(' '))}return lines.join('\n')+'\n'}
 function mtl(){return Object.entries(materials).map(([name,c])=>'newmtl '+name+'\nKa '+c.map(n=>(n*.25).toFixed(4)).join(' ')+'\nKd '+c.join(' ')+'\nKs 0.08 0.08 0.08\nNs 24\nd 1\nillum 2\n').join('\n')}
 function crc32(bytes){let c=0xffffffff;for(let b of bytes){c^=b;for(let k=0;k<8;k++)c=(c>>>1)^((c&1)?0xedb88320:0)}return(c^0xffffffff)>>>0}
 function zip(files){const enc=new TextEncoder(),parts=[],central=[];let offset=0;function header(size){const b=new Uint8Array(size);return[b,new DataView(b.buffer)]}for(const [name,content]of Object.entries(files)){const nb=enc.encode(name),data=enc.encode(content),crc=crc32(data),[h,v]=header(30+nb.length);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,nb.length,true);h.set(nb,30);parts.push(h,data);const [c,cv]=header(46+nb.length);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nb.length,true);cv.setUint32(42,offset,true);c.set(nb,46);central.push(c);offset+=h.length+data.length}const cs=central.reduce((a,b)=>a+b.length,0),[end,ev]=header(22);ev.setUint32(0,0x06054b50,true);ev.setUint16(8,central.length,true);ev.setUint16(10,central.length,true);ev.setUint32(12,cs,true);ev.setUint32(16,offset,true);return new Blob([...parts,...central,end],{type:'application/zip'})}
-$('export').onclick=()=>{const blob=zip({'building.obj':obj(),'building.mtl':mtl(),'metadata.json':JSON.stringify(metadata(),null,2)});download('Cold_Routes_'+categories[settings.type].replace(/[^a-z0-9]/gi,'_')+'.zip',blob,'application/zip');toast('Building ZIP exported')};$('save').onclick=()=>download('cold_routes_settings.json',JSON.stringify(metadata(),null,2),'application/json');$('load').onclick=()=>$('file').click();$('file').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text()),s=data.settings;if(!s||!Number.isInteger(s.type)||s.type<0||s.type>=categories.length||typeof s.seed!=='string'||s.seed.length>100||!['auto','rect','step','slab','offset','compound'].includes(s.form))throw Error('Invalid settings file');for(const [id,options] of Object.entries({factoryArchitecture:['auto',...FACTORY_STUDIO_V1.architectures],factorySize:['auto',...FACTORY_STUDIO_V1.sizes],factoryRoof:['auto',...FACTORY_STUDIO_V1.roofs],factoryLayout:['auto',...FACTORY_STUDIO_V1.layouts],factoryOffice:FACTORY_STUDIO_V1.offices,factoryService:FACTORY_STUDIO_V1.services,factoryWindows:FACTORY_STUDIO_V1.windows,motelStyle:['auto',...MOTEL_STUDIO_V1.styles],motelLayout:['auto',...MOTEL_STUDIO_V1.layouts],motelFloors:['auto','1','2','3'],motelReception:MOTEL_STUDIO_V1.reception,motelCorridor:MOTEL_STUDIO_V1.corridors,marketSize:['auto',...SUPERMARKET_STUDIO_V1.sizes],marketStyle:['auto',...SUPERMARKET_STUDIO_V1.styles],marketEntrance:['auto',...SUPERMARKET_STUDIO_V1.entrances],marketRoof:['auto',...SUPERMARKET_STUDIO_V1.roofs],marketLoading:SUPERMARKET_STUDIO_V1.loading,petrolStyle:['auto',...PETROL_STUDIO_V1.styles],petrolSize:['auto',...PETROL_STUDIO_V1.sizes],petrolLayout:['auto',...PETROL_STUDIO_V1.layouts],petrolCanopy:['auto',...PETROL_STUDIO_V1.canopies],petrolExtras:PETROL_STUDIO_V1.extras,petrolDetail:PETROL_STUDIO_V1.details,petrolPart:PETROL_STUDIO_V1.parts})){s[id]??=(id==='factoryOffice'?'integrated':id==='factoryService'?'balanced':id==='factoryWindows'?'mixed':id==='motelReception'?'integrated':id==='motelCorridor'?'external':id==='marketLoading'?'balanced':id==='petrolExtras'||id==='petrolDetail'?'balanced':id==='petrolPart'?'complete':'auto');if(!options.includes(s[id]))throw Error('Invalid '+id)}s.recessDepth??=.20;s.windowStyle??='auto';s.windowVariation??=.35;if(!['auto',...APARTMENT_STUDIO_V2.windowStyles].includes(s.windowStyle))throw Error('Invalid window style');if(!Number.isFinite(s.windowVariation)||s.windowVariation<0||s.windowVariation>1)throw Error('Invalid window variation');for(const [id,,min,max]of specs)if(!Number.isFinite(s[id])||s[id]<min||s[id]>max)throw Error('Invalid '+id);s.terraceArchitecture??='auto';s.terraceVariation??=.48;if(!TERRACE_STUDIO_V2.styles.includes(s.terraceArchitecture)||!Number.isFinite(s.terraceVariation)||s.terraceVariation<0||s.terraceVariation>1)throw Error('Invalid terrace V2 settings');s.officeArchitecture??='auto';s.officeWindowStyle??='auto';if(!OFFICE_STUDIO_V2.architectures.includes(s.officeArchitecture)||!OFFICE_STUDIO_V2.windows.includes(s.officeWindowStyle))throw Error('Invalid office settings');if(s.towerStyle&&!['auto',...TOWER_STYLES_V3].includes(s.towerStyle))throw Error('Invalid tower style');if(s.terraceRoof&&!['flat','pitched','hipped','auto'].includes(s.terraceRoof))throw Error('Invalid housing roof');if(s.roofRise!==undefined&&(!Number.isFinite(s.roofRise)||s.roofRise<.5||s.roofRise>4))throw Error('Invalid roof rise');apply({...s,recessDepth:s.recessDepth??.20,towerStyle:s.towerStyle||'auto',terraceRoof:s.terraceRoof||'flat',roofRise:s.roofRise??1.8});frame();toast('Settings restored')}catch(err){toast(err.message)}e.target.value=''};
+$('export').onclick=()=>{const blob=zip({'building.obj':obj(),'building.mtl':mtl(),'metadata.json':JSON.stringify(metadata(),null,2)});download('Cold_Routes_'+categories[settings.type].replace(/[^a-z0-9]/gi,'_')+'.zip',blob,'application/zip');toast('Building ZIP exported')};$('save').onclick=()=>download('cold_routes_settings.json',JSON.stringify(metadata(),null,2),'application/json');$('load').onclick=()=>$('file').click();$('file').onchange=async e=>{try{const data=JSON.parse(await e.target.files[0].text()),s=data.settings;if(!s||!Number.isInteger(s.type)||s.type<0||s.type>=categories.length||typeof s.seed!=='string'||s.seed.length>100||!['auto','rect','step','slab','offset','compound'].includes(s.form))throw Error('Invalid settings file');for(const [id,options] of Object.entries({factoryArchitecture:['auto',...FACTORY_STUDIO_V1.architectures],factorySize:['auto',...FACTORY_STUDIO_V1.sizes],factoryRoof:['auto',...FACTORY_STUDIO_V1.roofs],factoryLayout:['auto',...FACTORY_STUDIO_V1.layouts],factoryOffice:FACTORY_STUDIO_V1.offices,factoryService:FACTORY_STUDIO_V1.services,factoryWindows:FACTORY_STUDIO_V1.windows,motelStyle:['auto',...MOTEL_STUDIO_V1.styles],motelLayout:['auto',...MOTEL_STUDIO_V1.layouts],motelFloors:['auto','1','2','3'],motelReception:MOTEL_STUDIO_V1.reception,motelCorridor:MOTEL_STUDIO_V1.corridors,marketSize:['auto',...SUPERMARKET_STUDIO_V1.sizes],marketStyle:['auto',...SUPERMARKET_STUDIO_V1.styles],marketEntrance:['auto',...SUPERMARKET_STUDIO_V1.entrances],marketRoof:['auto',...SUPERMARKET_STUDIO_V1.roofs],marketLoading:SUPERMARKET_STUDIO_V1.loading,petrolStyle:['auto',...PETROL_STUDIO_V1.styles],petrolSize:['auto',...PETROL_STUDIO_V1.sizes],petrolLayout:['auto',...PETROL_STUDIO_V1.layouts],petrolCanopy:['auto',...PETROL_STUDIO_V1.canopies],petrolExtras:PETROL_STUDIO_V1.extras,petrolDetail:PETROL_STUDIO_V1.details,petrolPart:PETROL_STUDIO_V1.parts,uniType:['auto',...UNIVERSITY_STUDIO_V1.types],uniStyle:['auto',...UNIVERSITY_STUDIO_V1.styles],uniPlan:['auto',...UNIVERSITY_STUDIO_V1.plans],uniEntrance:['auto',...UNIVERSITY_STUDIO_V1.entrances]})){s[id]??=(id==='factoryOffice'?'integrated':id==='factoryService'?'balanced':id==='factoryWindows'?'mixed':id==='motelReception'?'integrated':id==='motelCorridor'?'external':id==='marketLoading'?'balanced':id==='petrolExtras'||id==='petrolDetail'?'balanced':id==='petrolPart'?'complete':'auto');if(!options.includes(s[id]))throw Error('Invalid '+id)}s.uniVariation??=.45;if(!Number.isFinite(s.uniVariation)||s.uniVariation<0||s.uniVariation>1)throw Error('Invalid university variation');s.recessDepth??=.20;s.windowStyle??='auto';s.windowVariation??=.35;if(!['auto',...APARTMENT_STUDIO_V2.windowStyles].includes(s.windowStyle))throw Error('Invalid window style');if(!Number.isFinite(s.windowVariation)||s.windowVariation<0||s.windowVariation>1)throw Error('Invalid window variation');for(const [id,,min,max]of specs)if(!Number.isFinite(s[id])||s[id]<min||s[id]>max)throw Error('Invalid '+id);s.terraceArchitecture??='auto';s.terraceVariation??=.48;if(!TERRACE_STUDIO_V2.styles.includes(s.terraceArchitecture)||!Number.isFinite(s.terraceVariation)||s.terraceVariation<0||s.terraceVariation>1)throw Error('Invalid terrace V2 settings');s.officeArchitecture??='auto';s.officeWindowStyle??='auto';if(!OFFICE_STUDIO_V2.architectures.includes(s.officeArchitecture)||!OFFICE_STUDIO_V2.windows.includes(s.officeWindowStyle))throw Error('Invalid office settings');if(s.towerStyle&&!['auto',...TOWER_STYLES_V3].includes(s.towerStyle))throw Error('Invalid tower style');if(s.terraceRoof&&!['flat','pitched','hipped','auto'].includes(s.terraceRoof))throw Error('Invalid housing roof');if(s.roofRise!==undefined&&(!Number.isFinite(s.roofRise)||s.roofRise<.5||s.roofRise>4))throw Error('Invalid roof rise');apply({...s,recessDepth:s.recessDepth??.20,towerStyle:s.towerStyle||'auto',terraceRoof:s.terraceRoof||'flat',roofRise:s.roofRise??1.8});frame();toast('Settings restored')}catch(err){toast(err.message)}e.target.value=''};
 $('generate').onclick=seeded;$('seed').onkeydown=e=>{if(e.key==='Enter')seeded()};$('random').onclick=()=>{const a=new Uint32Array(2);crypto.getRandomValues(a);$('seed').value='CR-'+a[0].toString(36)+a[1].toString(36);seeded()};type.onchange=seeded;['form','towerStyle','terraceRoof','roofRise','windowStyle','windowVariation','officeArchitecture','officeWindowStyle','terraceArchitecture','terraceVariation'].forEach(id=>$(id).onchange=rebuild);$('spin').onclick=()=>{spinning=!spinning;$('spin').setAttribute('aria-pressed',spinning);$('spin').textContent=spinning?'Stop orbit':'Auto orbit'};$('wire').onclick=()=>{wire=!wire;$('wire').setAttribute('aria-pressed',wire);dirty=true};
-for(const id of ['factoryArchitecture','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelReception','motelCorridor','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart'])$(id).onchange=rebuild;$('factorySize').onchange=seeded;$('motelFloors').onchange=seeded;$('marketSize').onchange=seeded;$('petrolSize').onchange=seeded;$('roofRise').oninput=rebuild;$('windowVariation').oninput=rebuild;seeded();resize();tick();
+for(const id of ['factoryArchitecture','factoryRoof','factoryLayout','factoryOffice','factoryService','factoryWindows','motelStyle','motelLayout','motelReception','motelCorridor','marketStyle','marketEntrance','marketRoof','marketLoading','petrolStyle','petrolLayout','petrolCanopy','petrolExtras','petrolDetail','petrolPart','uniType','uniStyle','uniPlan','uniEntrance'])$(id).onchange=rebuild;$('factorySize').onchange=seeded;$('motelFloors').onchange=seeded;$('marketSize').onchange=seeded;$('petrolSize').onchange=seeded;$('uniVariation').oninput=rebuild;$('roofRise').oninput=rebuild;$('windowVariation').oninput=rebuild;seeded();resize();tick();
 </script></body></html>
